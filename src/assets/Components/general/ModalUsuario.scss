@@ -1,0 +1,65 @@
+.user-modal {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    width: 250px;
+    background-color: var(--background-color-content);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--light-shadow1);
+    z-index: 1000;
+    color: var(--base-text-color);
+    text-align: center;
+  
+    &__header {
+      margin-bottom: 16px;
+    }
+  
+    &__avatar {
+      font-size: 48px;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+    }
+  
+    &__name {
+      font-family: var(--font-family-afacad);
+      color: var(--xl-text-color);
+      font-size: var(--font-title-small);
+      margin: 4px 0;
+    }
+  
+    &__email {
+      font-size: var(--font-text-small);
+      color: var(--lg-text-color);
+    }
+  
+    &__body {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    &__option {
+      background-color: var(--side-link-hover-color);
+      color: var(--base-text-color);
+      font-size: var(--font-text-small);
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--default-transition);
+      cursor: pointer;
+  
+      &:hover {
+        background-color: var(--secondary-color);
+        color: var(--text-color-inverted);
+      }
+  
+      & .user-modal__icon {
+        margin-right: 8px;
+      }
+    }
+  }
+  

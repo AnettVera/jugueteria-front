@@ -36,7 +36,7 @@
         border-radius: 10px;
         &:hover {
           color: var(--light-color);
-          border: 1px solid(--light-color);
+          border: 1px solid#fff;
         }
       }
   
@@ -48,7 +48,6 @@
         font-family: var(--font-family-afacad);
         font-size: var(--font-text-small);
         transition: var(--default-transition);
-        border: none;
         &:hover {
           background-color: var(--light-color);
         }
