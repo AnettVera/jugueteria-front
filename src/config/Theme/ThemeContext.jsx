@@ -1,26 +1,33 @@
-import { createContext, useState } from "react";
+// ThemeContext.jsx
+import { createContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { DARK_THEME,LIGTH_THEME } from "./ThemeConstants";
+import { DARK_THEME, LIGHT_THEME } from "./ThemeConstants";
 
 export const ThemeContext = createContext({});
-export const ThemeProvaider= ({children})=>{
-    const [theme, setTheme]= useState(LIGTH_THEME);//Inicia por defecto en el tema claro
-    window.localStorage.setItem("themeMode", theme) //Se guarda la eleccion en el local storage
 
-    const toggleTheme=()=>{
-        setTheme((prevTheme)=> prevTheme == LIGTH_THEME ? DARK_THEME : LIGTH_THEME)
-        window.localStorage.setItem("themeMode", theme)
-    }
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("themeMode") || LIGHT_THEME;
+  });
 
-    return(
-        <ThemeContext.Provider value={{
-            theme, toggleTheme
-        }}>
-            {children}
-        </ThemeContext.Provider>
-    )
-}
+// ThemeContext.jsx
+useEffect(() => {
+  localStorage.setItem("themeMode", theme);
+  document.body.classList.toggle('dark-mode', theme === DARK_THEME);
+}, [theme]);
 
-ThemeProvaider.propTypes={
-    children: PropTypes.node.isRequired
-}
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === LIGHT_THEME ? DARK_THEME : LIGHT_THEME));
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+ThemeProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

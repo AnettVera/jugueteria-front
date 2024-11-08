@@ -2,30 +2,28 @@
     position: absolute;
     top: 60px;
     right: 20px;
-    width: 250px;
+    width: 300px;
     background-color: var(--background-color-content);
-    padding: 20px;
+    padding: 10px 20px;
     border-radius: 8px;
-    box-shadow: var(--light-shadow1);
     z-index: 1000;
     color: var(--base-text-color);
     text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 24px;
   
     &__header {
-      margin-bottom: 16px;
+      margin-bottom: 15px;
     }
   
     &__avatar {
       font-size: 48px;
       color: var(--primary-color);
-      margin-bottom: 8px;
     }
   
     &__name {
       font-family: var(--font-family-afacad);
       color: var(--xl-text-color);
       font-size: var(--font-title-small);
-      margin: 4px 0;
     }
   
     &__email {
@@ -37,15 +35,24 @@
       display: flex;
       flex-direction: column;
     }
-  
-    &__option {
-      background-color: var(--side-link-hover-color);
+    &__themebutton{
+      width: 50px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background-color: var(--background-color-content);
+      &:hover{
+        background-color: var(--side-link-hover-color);
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 24px;
+      }
+    }
+    &__history {
+      background-color: var(--background-color-content);
       color: var(--base-text-color);
       font-size: var(--font-text-small);
-      border: none;
-      padding: 10px;
-      border-radius: 6px;
-      margin-top: 8px;
+      border-color: var(--border-color-inverted);
+      padding: 1px ;
+      border-radius: 10px;
+      margin-bottom: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -53,7 +60,27 @@
       cursor: pointer;
   
       &:hover {
-        background-color: var(--secondary-color);
+        background-color: var(--side-link-hover-color);
+        color: var(--text-color-inverted);
+      }
+    }
+  
+    &__option {
+      background-color: var(--background-color);
+      color: var(--base-text-color);
+      font-size: var(--font-text-small);
+      border: none;
+      padding: 5px ;
+      border-radius: 6px;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--default-transition);
+      cursor: pointer;
+  
+      &:hover {
+        background-color: var(--side-link-hover-color);
         color: var(--text-color-inverted);
       }
   

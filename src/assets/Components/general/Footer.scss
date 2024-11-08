@@ -67,7 +67,7 @@
       transition: var(--default-transition);
   
       &:hover {
-        color: var(--yellow-color);
+        text-decoration: underline;
       }
   
       i {

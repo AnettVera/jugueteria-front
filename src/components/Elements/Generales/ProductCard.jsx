@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "././../../../assets/Components/general/ProductCard.scss";
-import { IoIosHeartEmpty } from "react-icons/io";
-import { IoMdHeart } from "react-icons/io";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import { PiShoppingCartSimpleFill,PiShoppingCartSimpleBold } from "react-icons/pi";
 
 
@@ -21,7 +20,7 @@ const ProductCard = ({ name, image, description, price }) => {
         className={`product-card__favorite ${isFavorite ? "active" : ""}`}
         onClick={toggleFavorite}
     >
-        {isFavorite ? ( <IoMdHeart /> ) : ( <IoIosHeartEmpty /> )}
+        {isFavorite ? ( <GoHeartFill /> ) : ( <GoHeart /> )}
     </button>
 </div>
       <div className="product-card__body">
