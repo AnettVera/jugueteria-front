@@ -1,4 +1,3 @@
-// ThemeContext.jsx
 import { createContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { DARK_THEME, LIGHT_THEME } from "./ThemeConstants";
@@ -10,7 +9,6 @@ export const ThemeProvider = ({ children }) => {
     return localStorage.getItem("themeMode") || LIGHT_THEME;
   });
 
-// ThemeContext.jsx
 useEffect(() => {
   localStorage.setItem("themeMode", theme);
   document.body.classList.toggle('dark-mode', theme === DARK_THEME);

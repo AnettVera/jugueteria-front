@@ -71,8 +71,8 @@
 @mixin darkMode {
   --primary-color: #EF1A23;
   --secondary-color: #FFC100;
-  --secondary-back-color: #2e2e48;
-  --background-color-content: #36365e; //Este color es para los modales cards, recuadros para el producto principal
+  --secondary-back-color: #3d3d51;
+  --background-color-content: #29293e; //Este color es para los modales cards, recuadros para el producto principal
   --background-color: #383854;
   --side-link-hover-color: #525270;
   --side-text-color: #e1e1e1;
@@ -111,6 +111,7 @@ body {
   &.dark-mode {
     @include darkMode();
   }
+ 
 }
 
 a {
@@ -131,21 +132,21 @@ ul {
 }
 
 /* Definir variables según tamaño de fuente activo */
-.font-small {
+@mixin fontSizeSmall {
   --font-title: var(--font-title-small);
   --font-subtitle: var(--font-subtitle-small);
   --font-text: var(--font-text-small);
   --font-placeholder: var(--font-placeholder-small);
 }
 
-.font-normal {
+@mixin fontSizeNormal {
   --font-title: var(--font-title-normal);
   --font-subtitle: var(--font-subtitle-normal);
   --font-text: var(--font-text-normal);
   --font-placeholder: var(--font-placeholder-normal);
 }
 
-.font-large {
+@mixin fontSizeLarge {
   --font-title: var(--font-title-large);
   --font-subtitle: var(--font-subtitle-large);
   --font-text: var(--font-text-large);

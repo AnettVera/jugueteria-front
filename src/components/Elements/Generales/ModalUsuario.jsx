@@ -1,4 +1,3 @@
-// ModalUsuario.jsx
 import React, { useEffect, useContext } from 'react';
 import { PiUserCircleFill, PiGearSix } from 'react-icons/pi';
 import { BiHistory, BiLogOut } from 'react-icons/bi';
