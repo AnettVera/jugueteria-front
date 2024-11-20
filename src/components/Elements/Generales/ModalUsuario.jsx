@@ -1,11 +1,13 @@
 import React, { useEffect, useContext } from 'react';
 import { PiUserCircleFill, PiGearSix } from 'react-icons/pi';
-import { BiHistory, BiLogOut } from 'react-icons/bi';
+import { BiLogOut } from 'react-icons/bi';
 import { ThemeContext } from './../../../config/Theme/ThemeContext';
 import './../../../assets/Components/general/ModalUsuario.scss';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-const ModalUsuario = ({ userType, userName, userEmail, onClose }) => {
+const ModalUsuario = ({ role, name, email, onClose }) => {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
@@ -17,12 +19,20 @@ const ModalUsuario = ({ userType, userName, userEmail, onClose }) => {
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [onClose]);
 
+  const handleLogout = () => {
+    localStorage.removeItem('jwt_token');
+    localStorage.removeItem('user_id');
+    navigate(location.pathname, {replace:true})
+    window.location.reload();
+  };
+
   return (
     <div className="user-modal">
       <div className="user-modal__header">
         <PiUserCircleFill className="user-modal__avatar" />
-        <h3 className="user-modal__name">{userName}</h3>
-        <p className="user-modal__email">{userEmail}</p>
+        <h3 className="user-modal__name">{name}</h3>
+        <p className="user-modal__email">{email}</p>
+        <p className="user-modal__role">{role}</p>
       </div>
       <button className="user-modal__themebutton" onClick={toggleTheme}>
         <span className="theme-icon">
@@ -30,20 +40,13 @@ const ModalUsuario = ({ userType, userName, userEmail, onClose }) => {
         </span>
       </button>
       <div className="user-modal__body">
-        {userType === 'cliente' && (
-          <button className="user-modal__history">
-            <BiHistory className="user-modal__icon" /> Historial de compras
-          </button>
-        )}
-
         <button className="user-modal__option">
           <PiGearSix className="user-modal__icon" /> Gestionar perfil
         </button>
-        <button className="user-modal__option">
+        <button className="user-modal__option" onClick={handleLogout}>
           <BiLogOut className="user-modal__icon" /> Cerrar sesión
         </button>
       </div>
-
     </div>
   );
 };
