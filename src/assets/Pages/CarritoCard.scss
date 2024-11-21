@@ -1,0 +1,123 @@
+.carritoPage__cartItem {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    width: 100%;
+    padding: 15px 0;
+    border-top: var(--placeholder-text-color) 1px solid;
+    border-bottom: var(--placeholder-text-color) 1px solid;
+    //margin-bottom: 10px;
+    gap: 15px;
+    /* Separación entre columnas */
+
+    img {
+        width: 80px;
+        height: auto;
+        border-radius: 5px;
+    }
+}
+
+.carritoPage__cartItemDetails {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+
+    h3 {
+        margin: 0;
+        font-size: var(--font-text-large);
+        color: var(--dark-color);
+        font-weight: unset;
+    }
+
+    p {
+        margin: 5px 0 0;
+        font-size: var(--font-text-small);
+        color: var(--base-text-color);
+    }
+}
+
+.carritoPage__cartItemPrice {
+    text-align: start;
+
+    p {
+        color: #74CF00;
+        font-size: var(--font-text-large);
+        font-weight: bold;
+    }
+}
+
+.carritoPage__cartItemQuantity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    overflow: hidden;
+    width: 100px;
+    height: 40px;
+    margin-right: 200px;
+
+    button {
+        all: unset;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30%;
+        height: 100%;
+        cursor: pointer;
+        font-size: 16px;
+        background-color: var(--light-color);
+        border-right: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        color: var(--dark-color);
+        transition: background-color 0.2s ease;
+
+        &:last-child {
+            border-right: none;
+        }
+
+        &:hover {
+            background-color: #eee;
+        }
+    }
+
+    input {
+        all: unset;
+        text-align: center;
+        width: 40%;
+        font-size: 16px;
+        height: 100%;
+        background-color: #fff;
+        color: var(--dark-color);
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
+
+
+.carritoPage__cartItemDelete {
+    display: flex;
+    justify-content: center;
+    margin-right: 60px;
+
+    button {
+        background: none;
+        border: none;
+        cursor: pointer;
+
+        img {
+            width: 50px;
+            height: 50px;
+            filter: grayscale(100%);
+            transition: filter 0.2s;
+
+            &:hover {
+                filter: none;
+            }
+        }
+    }
+}

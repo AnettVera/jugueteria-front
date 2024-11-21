@@ -30,6 +30,7 @@ const RegisterPage = () => {
 
     return (
         <div className='containerPadreR'>
+            <Header />
             <div className='containerPrincipalR'>
                 <div className='containerFormR'>
                     <h2>!Bienvenido!</h2>
