@@ -4,8 +4,13 @@ import { AuthContext } from '../config/context/auth-context';
 import RegisterPage from './../modules/auth/RegisterPage';
 import SignInPage from './../modules/auth/SignInPage';
 import NotFound from "../modules/errors/NotFound";
-import DashboardPage from "../modules/admin/DashboardPage";
+
 import LandingPage from "../modules/user/LandingPage";
+
+//Admin
+import AdminLayout from "./../components/Admin/layout/AdminLayout";
+import DashboardPage from "../modules/admin/DashboardPage";
+import ProductsPage from "../modules/admin/ProductsPage";
 
 const AppRouter = () => {
   const { user, dispatch } = useContext(AuthContext);
@@ -23,7 +28,13 @@ const AppRouter = () => {
   const routesFromRole = (role) => {
     switch (role) {
       case 'ADMIN':
-        return <Route path="/" element={<DashboardPage />} />;
+        return (
+          <Route path="/" element={<AdminLayout />}>
+            <Route index element={<DashboardPage />} />
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="productos" element={<ProductsPage />} />
+          </Route>
+        );
       case 'CLIENT':
         return <Route path="/" element={<LandingPage />} />;
       default:
