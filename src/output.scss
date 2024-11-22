@@ -48,6 +48,7 @@
 @mixin lightMode {
   --primary-color: #EF1A23;
   --secondary-color: #FFC100;
+  --secondary-color-b:#fefefe;
   --background-color: #F2F2F2; //Este es el color usado para el fondo de todos los body
   --background-color-content: #ffffff; //Este color es para los modales cards, recuadros para el producto principal
   --side-link-hover-color: #f9f9f9; // Se usa muy pocas ve
@@ -60,10 +61,10 @@
   --bg-color-inverted: #ffffff;
   --border-color-inverted: #455A64;
   --toggle-btn-border-color: #f3f3f3;
-  --toggle-btn-bg-color: #fff;
+  --toggle-btn-bg-color: #405D72;
   --toggle-btn-icon-color: var(--primary-color);
   --thead-bg-color: #f2f4ff;
-  --tbl-border-color: #455A64;
+  --tbl-border-color: #2f3f46;
   --scroll-track-bg-color: #fff;
   --scroll-thumb-bg-color: #e9e9e9;
 }
@@ -71,7 +72,7 @@
 @mixin darkMode {
   --primary-color: #EF1A23;
   --secondary-color: #FFC100;
-  --secondary-back-color: #3d3d51 ;
+  --secondary-color-b: #3d3d51 ;
   --background-color-content:#03031f ; //Este color es para los modales cards, recuadros para el producto principal
   --background-color:   #13131f;
   --side-link-hover-color: #100e27;
@@ -84,10 +85,10 @@
   --bg-color-inverted: #292929;
   --border-color-inverted: #56565b;
   --toggle-btn-border-color: #525270;
-  --toggle-btn-bg-color: #525270;
+  --toggle-btn-bg-color: #405D72;
   --toggle-btn-icon-color: #bdbdbd;
   --thead-bg-color: #383854;
-  --tbl-border-color: #383854;
+  --tbl-border-color: #1c1c30;
   --scroll-track-bg-color: #2e2e48;
   --scroll-thumb-bg-color: #575777;
 }

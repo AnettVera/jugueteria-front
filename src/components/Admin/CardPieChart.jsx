@@ -12,11 +12,14 @@ const colorMap = {
 };
 
 const CardPieChart = ({ name, cantidad }) => {
+  const adjustedCantidad = Math.min(cantidad, 500);
+  
   const data = [
-    { name: '500 o más', value: cantidad },
-    { name: 'Productos en almacen', value: 200 - cantidad }
+    { name: 'Cantidad', value: adjustedCantidad },
+    { name: 'Restante', value: 500 - adjustedCantidad }
   ];
 
+  // Define los colores según si la cantidad es >= 500 o menor.
   const COLORS = [colorMap[name] || '#FFBB28', '#E0E0E0'];
 
   return (
@@ -27,7 +30,7 @@ const CardPieChart = ({ name, cantidad }) => {
         <p className="card__text">Productos en almacen</p>
       </div>
       <div className="card__chart">
-        <ResponsiveContainer >
+        <ResponsiveContainer>
           <PieChart>
             <Pie
               data={data}

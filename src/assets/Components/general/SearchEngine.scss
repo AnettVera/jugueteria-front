@@ -1,0 +1,33 @@
+.search-engine {
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+    font-family: var(--font-family-afacad);
+    width: 90%;
+  
+  
+    .input-search {
+      width: 100%;
+      padding: 5px 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      font-size: 1rem;
+      outline: none;
+      background-color: var(--secondary-color-b);
+      color: var(--base-text-color);
+      transition: border-color 0.3s ease;
+  
+      &:focus {
+        border-color: var(--primary-color);
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .search-engine {
+      .input-search {
+        width: 100%;
+      }
+    }
+  }
+  

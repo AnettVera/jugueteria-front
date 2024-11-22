@@ -1,0 +1,70 @@
+.custom-data-table {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: var(--font-family-afacad);
+  color: var(--xl-text-color);
+
+  .rdt_Table {
+    width: 100%;
+    border-collapse: collapse;
+
+   
+    .rdt_TableHead {
+      background-color: var(--background-color-content);
+      font-weight: bold;
+
+      .rdt_TableHeadRow {
+        background-color: var(--background-color-content);
+        font-weight: bold;
+        text-align: left;
+
+        .rdt_TableCol {
+          padding: 10px;
+          font-size: 1rem;
+          color: var(--xl-text-color); 
+        }
+      }
+    }
+
+    .rdt_TableRow {
+      margin: 0;
+
+      &:nth-child(odd) {
+        background-color: var(--side-link-hover-color);
+        color: var(--text-color-inverted);
+      }
+
+      &:nth-child(even) {
+        background-color: var(--background-color-content);
+        color: var(--text-color-inverted);
+      }
+
+      &:hover {
+        background-color: var(--thead-bg-color);
+      }
+
+      .rdt_TableCell {
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .rdt_Pagination {
+    background-color: var(--side-link-hover-color);
+    color: var(--text-color-inverted);
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-data-table {
+    .rdt_Table {
+      .rdt_TableCol,
+      .rdt_TableCell {
+        padding: 8px;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+.products-page {
+  margin: 20px auto;
+  width: 100%;
+  max-width: 1200px;
+
+  .top-content {
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 10px; 
+    margin-bottom: 20px; 
+
+    .content-search {
+      flex: 1; 
+      display: flex; 
+    }
+
+    .add-button {
+      background-color: var(--toggle-btn-bg-color);
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: var(--tbl-border-color);
+      }
+
+      svg {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .edit-button {
+    background-color: var(--toggle-btn-bg-color);
+    color: white;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: var(--tbl-border-color);
+    }
+
+    svg {
+      font-size: 1rem;
+    }
+  }
+
+
+}
