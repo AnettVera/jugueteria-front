@@ -1,5 +1,8 @@
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { BsFillPatchCheckFill, BsFillInfoCircleFill  } from "react-icons/bs";
+import { IoMdCloseCircle } from "react-icons/io";
+
 
 /*
     Todos los titulos error, success, confirm

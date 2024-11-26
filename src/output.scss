@@ -38,7 +38,7 @@
 
   // graficas
   --chart-primary-color: #0004F9;
-  --chart-secondary-color: #74CF00;
+  --chart-secondary-color: #4caf50;
 
   // box shadow
   --light-shadow1: rgba(0, 0, 0, 0.02) 0px 4px 12px;
@@ -48,7 +48,7 @@
 @mixin lightMode {
   --primary-color: #EF1A23;
   --secondary-color: #FFC100;
-  --secondary-color-b:#fefefe;
+  --secondary-color-b:#f9f9f9;
   --background-color: #F2F2F2; //Este es el color usado para el fondo de todos los body
   --background-color-content: #ffffff; //Este color es para los modales cards, recuadros para el producto principal
   --side-link-hover-color: #f9f9f9; // Se usa muy pocas ve
@@ -58,13 +58,13 @@
   --lg-text-color: #1f2437;
   --base-text-color: #676767;
   --text-color-inverted: #292929;
-  --bg-color-inverted: #ffffff;
+  --bg-color-inverted: #e1e1e1;
   --border-color-inverted: #455A64;
   --toggle-btn-border-color: #f3f3f3;
   --toggle-btn-bg-color: #405D72;
   --toggle-btn-icon-color: var(--primary-color);
   --thead-bg-color: #f2f4ff;
-  --tbl-border-color: #2f3f46;
+  --tbl-border-color: #f3f3f3;
   --scroll-track-bg-color: #fff;
   --scroll-thumb-bg-color: #e9e9e9;
 }
@@ -76,6 +76,7 @@
   --background-color-content:#03031f ; //Este color es para los modales cards, recuadros para el producto principal
   --background-color:   #13131f;
   --side-link-hover-color: #100e27;
+  --placeholder-text-color: #929495;
   --side-text-color: #e1e1e1;
   --logo-color: #fff;
   --xl-text-color: #ffff;

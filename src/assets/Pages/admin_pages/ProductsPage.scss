@@ -1,5 +1,5 @@
 .products-page {
-  margin: 20px auto;
+  margin: 55px auto;
   width: 100%;
   max-width: 1200px;
 
@@ -28,7 +28,7 @@
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: var(--tbl-border-color);
+        background-color: var(--border-color-inverted);
       }
 
       svg {
@@ -50,7 +50,7 @@
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: var(--tbl-border-color);
+      background-color: var(--border-color-inverted);
     }
 
     svg {

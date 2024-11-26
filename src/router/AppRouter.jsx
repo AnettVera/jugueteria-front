@@ -6,6 +6,7 @@ import SignInPage from './../modules/auth/SignInPage';
 import NotFound from "../modules/errors/NotFound";
 
 import LandingPage from "../modules/user/LandingPage";
+import Product from "../modules/user/Product";
 
 //Admin
 import AdminLayout from "./../components/Admin/layout/AdminLayout";
@@ -45,7 +46,7 @@ const AppRouter = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<Product/>}/>
         {user.signed ? (
           <>
             {routesFromRole(user?.roles[0]?.type)}

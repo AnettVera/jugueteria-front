@@ -75,9 +75,7 @@ const AddProductModal = ({ categories, onClose, onSave }) => {
   return (
     <div className="modal-container">
       <div className="modal add-product-modal">
-        <button className="close-button" onClick={onClose}>
-          ×
-        </button>
+        <button className="close-button" onClick={onClose}>×</button>
         <form onSubmit={formik.handleSubmit}>
           <div className="modal-content">
             <div className="modal-left">

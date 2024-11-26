@@ -1,52 +1,93 @@
-.sidebar-layout {
+.main-content {
+  position: relative; 
+
+  .sidebar-layout {
     display: flex;
-    font-family: var(--font-family-afacad);
+    flex-direction: column; 
+    box-shadow: var(--light-shadow1);
+
+    .sidebar {
+      position: fixed; 
+      top: 55px;
+      left: 0;
+      width: 250px;
+      height: 100vh;
+      z-index: 10; 
+      background-color: var(--secondary-color-b);
+      transition: width 0.3s ease;
+      overflow: hidden;
+    }
+
+ 
+      .sidebar.closed {
+        width: 60px;
+        .sidebar-menu li {
+          padding: 10px 10px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+        }
+      } 
+
+      .menu-link {
+        text-decoration: none;
+        color: var(--base-text-color);
+      }
+    
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center; 
+      padding: 10px;
+      color: var(--primary-color);
+      background-color: var(--secondary-color-b);
+      font-weight: bold;
+      font-size: 1.2rem;
+
+      .toggle-button-side {
+        font-size: 1.2rem;
+        color: var(--base-text-color);
+
+        &:hover {
+          background-color: var(--thead-bg-color);
+          padding: 3px 5px;
+          border-radius: 15px;
+        }
+      }
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-family: var(--font-family-afacad);
+
+      li {
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--thead-bg-color);
+          color: var(--primary-color);
+          border-radius: 10px;
+        }
+
+        .menu-icon {
+          font-size: 1.4rem;
+          margin-right: 10px;
+        }
+      }
+    }
   }
-  
-  .sidebar {
-    width: 250px;
-    background-color: #1e293b;
-    color: white;
-    height: 100vh;
-    transition: width 0.3s;
-  }
-  
-  .sidebar.closed {
-    width: 60px;
-  }
-  
-  .sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #0f172a;
-  }
-  
-  .toggle-button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
-  .sidebar-menu {
-    list-style: none;
-    padding: 10px;
-  }
-  
-  .sidebar-menu li {
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
-  .sidebar-menu li:hover {
-    background-color: #334155;
-  }
-  
-  .content {
-    flex: 1;
+
+  .admin-content {
+    margin-left: 60px;
     padding: 20px;
+    height: 100vh;
+    overflow: auto; // Permitir desplazamiento si el contenido es más grande que la pantalla
+    background-color: var(--background-color-content); // Ajusta el color de fondo si lo necesitas
   }
-  
+}
