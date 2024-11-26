@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../../components/Elements/Generales/Header';
 import '../../assets/Pages/SignInPage.scss';
+import login from '../../assets/images/login.svg'
 
 function SignInPage() {
   const [email, setEmail] = useState('');
@@ -33,7 +34,7 @@ function SignInPage() {
       <Header />
       <div className='containerPrincipal'>
         <div className='containerImage'>
-          Aqui va una imagen xd
+          <img src={login} alt='Imagen de inicio de sesión' />
         </div>
         <div className='containerForm'>
           <h2>!Bienvenido!</h2>

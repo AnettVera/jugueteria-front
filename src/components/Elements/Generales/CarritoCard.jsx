@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../../assets/Pages/CarritoCard.scss';
-import Trashcan from '../../../assets/images/compartimiento.png';
+import Trashcan from '../../../assets/images/Trashcan.svg';
 
 const CarritoCard = ({ id, name, description, price, quantity, handleIncrement, handleDecrement, handleInputChange }) => {
     return (

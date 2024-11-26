@@ -3,6 +3,7 @@ import Header from '../../components/Elements/Generales/Header'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
 import '../../assets/Pages/RegisterPage.scss'
+import Register from '../../assets/images/Register.svg'
 
 const RegisterPage = () => {
 
@@ -106,20 +107,22 @@ const RegisterPage = () => {
                         ) : null}
 
                         <button
-                            className='buttonFormR' 
+                            className='buttonFormR'
                             type="submit"
                             {
-                                ...formik.errors.username || formik.errors.email || formik.errors.tel || formik.errors.password || formik.errors.passwordConfirm ? { disabled: true } : null
+                            ...formik.errors.username || formik.errors.email || formik.errors.tel || formik.errors.password || formik.errors.passwordConfirm ? { disabled: true } : null
                             }
-                            
-                            >Registrarse</button>
+
+                        >Registrarse</button>
                     </form>
                 </div>
                 <div className='containerImageR'>
                     <div className='containerImageText'>
                         <h1>!Encuentra un mundo lleno de diversión!</h1>
                     </div>
-                    <div className='image'><img src="https://via.placeholder.com/450" alt="imagenRegister" /></div>
+                    <div className='image'>
+                        <img src={Register} alt="imagenRegister" />
+                    </div>
                 </div>
             </div>
             <div className='circulo1'></div>
