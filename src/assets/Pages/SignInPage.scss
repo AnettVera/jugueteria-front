@@ -1,9 +1,9 @@
 .containerPadre {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
 
   .containerPrincipal {
     display: flex;
@@ -13,13 +13,13 @@
     width: 1300px;
     height: 520px;
   }
-  
+
   .containerImage,
   .containerForm {
     height: 100%;
     width: 50%;
   }
-  
+
   .containerImage {
     text-align: center;
     display: flex;
@@ -28,7 +28,7 @@
     background-color: var(--light-color);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
-  
+
   .containerForm {
     background-color: var(--red-color);
     padding: 20px;
@@ -38,17 +38,17 @@
     justify-content: center;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
-  
+
   form {
     display: flex;
     flex-direction: column;
   }
-  
+
   form div {
     display: flex;
     align-items: center;
   }
-  
+
   label {
     margin-right: 8px;
     font-weight: bold;
@@ -57,25 +57,25 @@
     font-size: var(--font-subtitle-small);
     color: var(--light-color)
   }
-  
+
   input {
     flex: 1;
     padding: 8px;
     border-radius: 10px;
     background-color: var(--light-color);
     border: none;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
     width: 100%;
     align-self: center;
   }
-  
+
   //placeholder
-  
+
   input::placeholder {
     font-family: var(--font-family-afacad);
     font-size: var(--font-placeholder-small);
   }
-  
+
   .buttonForm {
     padding: 10px;
     color: var(--light-color);
@@ -88,8 +88,25 @@
     height: 50px;
     font-family: var(--font-family-afacad);
     font-size: var(--font-subtitle-small);
+
+    &:hover {
+      background-color: var(--light-color);
+      color: var(--red-color);
+    }
   }
-  
+
+  .buttonNewPass {
+    margin-top: 10px;
+    text-align: center;
+    font-family: var(--font-family-afacad);
+    font-size: var(--font-placeholder-small);
+    color: var(--light-color);
+
+    &:hover {
+      color: var(--dark-color);
+    }
+  }
+
   h2 {
     text-align: center;
     margin-bottom: 60px;
@@ -97,8 +114,8 @@
     font-size: var(--font-title-small);
     color: var(--light-color);
   }
-  
-  
+
+
   .circulo1 {
     position: absolute;
     width: 400px;
@@ -109,184 +126,201 @@
     z-index: -1;
     border: 50px solid #EF1A23;
   }
-  
+
   .circulo2 {
     position: absolute;
     width: 300px;
     height: 300px;
     border-radius: 50%;
     bottom: 30px;
-    left: 30px; 
+    left: 30px;
     z-index: -1;
     border: 40px solid #FFC100;
   }
-  
+
   /* Media Queries */
   @media (max-width: 1440px) {
     .containerPrincipal {
       width: 90%;
       height: auto;
     }
-  
+
     .containerImage,
     .containerForm {
       width: 100%;
       height: auto;
       margin-top: 20px;
     }
-  
+
     .containerForm {
       width: 100%;
       padding: 20px;
     }
-  
+
     .buttonForm {
       width: 100%;
     }
-  
-    .circulo1, .circulo2 {
+
+    .circulo1,
+    .circulo2 {
       display: none;
     }
   }
-  
+
   @media (max-width: 1024px) {
     .containerPrincipal {
       flex-direction: column;
       width: 90%;
       height: auto;
     }
-  
+
     .containerImage,
     .containerForm {
       width: 100%;
       height: auto;
       margin-top: 20px;
     }
-  
+
     .containerForm {
       width: 70%;
       padding: 20px;
     }
-  
+
     .buttonForm {
       width: 100%;
     }
-  
-    .circulo1, .circulo2 {
+
+    .circulo1,
+    .circulo2 {
       display: none;
     }
   }
-  
+
   @media (max-width: 768px) {
     .containerPrincipal {
       flex-direction: column;
       width: 100%;
       height: auto;
     }
-  
+
     .containerImage,
     .containerForm {
       width: 100%;
       height: auto;
       margin-top: 20px;
     }
-  
+
     .containerForm {
       width: 70%;
       padding: 20px;
     }
-  
+
     .buttonForm {
       width: 100%;
     }
-  
-    .circulo1, .circulo2 {
+
+    .circulo1,
+    .circulo2 {
       display: none;
     }
   }
-  
+
   @media (max-width: 425px) {
     .containerPrincipal {
       flex-direction: column;
       width: 90%;
       height: auto;
     }
-  
+
     .containerImage,
     .containerForm {
       width: 100%;
       height: auto;
       margin-top: 20px;
     }
-  
+
     .containerForm {
       width: 100%;
       padding: 20px;
     }
-  
+
     .buttonForm {
       width: 100%;
     }
-  
-    .circulo1, .circulo2 {
+
+    .circulo1,
+    .circulo2 {
       display: none;
     }
   }
-  
+
   @media (max-width: 375px) {
     .containerPrincipal {
       flex-direction: column;
       width: 90%;
       height: auto;
     }
-  
+
     .containerImage,
     .containerForm {
       width: 100%;
       height: auto;
       margin-top: 20px;
     }
-  
+
     .containerForm {
       width: 100%;
       padding: 20px;
     }
-  
+
     .buttonForm {
       width: 100%;
     }
-  
-    .circulo1, .circulo2 {
+
+    .circulo1,
+    .circulo2 {
       display: none;
     }
   }
-  
+
   @media (max-width: 320px) {
     .containerPrincipal {
       flex-direction: column;
       width: 90%;
       height: auto;
     }
-  
+
     .containerImage,
     .containerForm {
       width: 100%;
       height: auto;
       margin-top: 20px;
     }
-  
+
     .containerForm {
       width: 100%;
       padding: 20px;
     }
-  
+
     .buttonForm {
       width: 100%;
     }
-  
-    .circulo1, .circulo2 {
+
+    .circulo1,
+    .circulo2 {
       display: none;
     }
   }
+
+  span {
+    color: var(--light-color);
+    font-family: var(--font-family-afacad);
+    font-size: var(--font-placeholder-small);
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .contraseña{
+    margin-top: 30px;
+  }
 }
-  

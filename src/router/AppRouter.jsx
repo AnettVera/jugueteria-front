@@ -8,6 +8,9 @@ import NotFound from "../modules/errors/NotFound";
 import LandingPage from "../modules/user/LandingPage";
 import Product from "../modules/user/Product";
 
+import PasswordRecovery from "../modules/auth/PasswordRecovery";
+import NewPassword from "../modules/auth/NewPassword";
+
 //Admin
 import AdminLayout from "./../components/Admin/layout/AdminLayout";
 import DashboardPage from "../modules/admin/DashboardPage";
@@ -46,7 +49,7 @@ const AppRouter = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<LandingPage/>}/>
+        <Route path="/" element={<LandingPage />}/>
         {user.signed ? (
           <>
             {routesFromRole(user?.roles[0]?.type)}
@@ -56,6 +59,7 @@ const AppRouter = () => {
           <>
             <Route path="login" element={<SignInPage />} />
             <Route path="register" element={<RegisterPage />} />
+            <Route path="recovery-password" element={<PasswordRecovery />} />
             <Route path="*" element={<NotFound />} />
           </>
         )}

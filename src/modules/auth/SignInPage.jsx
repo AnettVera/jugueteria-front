@@ -1,33 +1,42 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../../components/Elements/Generales/Header';
 import '../../assets/Pages/SignInPage.scss';
-import login from '../../assets/images/login.svg'
+import login from '../../assets/images/login.svg';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 
 function SignInPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log('Enviando datos:', { email, password });
-    try {
-      const response = await axios.post('http://localhost:6868/toystore/login', {
-        email,
-        password,
-      });
-      const { token, userId } = response.data;
-      localStorage.setItem('jwt_token', token);
-      localStorage.setItem('user_id', userId);
-      navigate('/');
-    } catch (err) {
-      console.error('Error al iniciar sesión:', err.response || err.message);
-      setError('Error al iniciar sesión. Por favor, verifica tus credenciales.');
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: yup.object({
+      email: yup.string().email('El email no es valido').required('El email es obligatorio'),
+      password: yup.string().required('La contraseña es obligatoria'),
+    }),
+    onSubmit: async (values) => {
+      console.log('Enviando datos:', values);
+      try {
+        const response = await axios.post('http://localhost:6868/toystore/login', {
+          email: values.email,
+          password: values.password,
+        });
+        const { token, userId } = response.data;
+        localStorage.setItem('jwt_token', token);
+        localStorage.setItem('user_id', userId);
+        navigate('/');
+      } catch (err) {
+        console.error('Error al iniciar sesión:', err.response || err.message);
+        setError('Error al iniciar sesión. Por favor, verifica tus credenciales.');
+      }
+    },
+  });
 
   return (
     <div className='containerPadre'>
@@ -38,27 +47,36 @@ function SignInPage() {
         </div>
         <div className='containerForm'>
           <h2>!Bienvenido!</h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={formik.handleSubmit}>
             <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               name="email"
               placeholder='Escribe tu email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               required
             />
-            <label htmlFor="password">Contraseña</label>
+            {formik.touched.email && formik.errors.email ? (
+              <span>{formik.errors.email}</span>
+            ) : null}
+            <label className='contraseña' htmlFor="password">Contraseña</label>
             <input
               type="password"
               id="password"
               name="password"
               placeholder='***********'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               required
             />
+            {formik.touched.password && formik.errors.password ? (
+              <span>{formik.errors.password}</span>
+            ) : null}
+            <Link className='buttonNewPass' to="/recovery-password">Olvidaste tu contraseña?</Link>
             {error && <p className="error">{error}</p>}
             <button className='buttonForm' type="submit">Ingresar</button>
           </form>
@@ -70,4 +88,4 @@ function SignInPage() {
   );
 }
 
-export default SignInPage
+export default SignInPage;
