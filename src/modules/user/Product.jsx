@@ -34,8 +34,8 @@ const productData = {
 
 const Product = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
-    const [alert, setAlert] = useState(null); // Estado para manejar la alerta
+    const [isModalOpen, setIsModalOpen] = useState(false); 
+    const [alert, setAlert] = useState(null); 
 
     const product = productData;
 
@@ -63,7 +63,7 @@ const Product = () => {
     };
 
     const handleCloseAlert = () => {
-        setAlert(null); // Cerrar la alerta
+        setAlert(null); 
     };
 
     return (
@@ -115,7 +115,6 @@ const Product = () => {
                 ))}
             </div>
 
-            {/* Modal de opciones de envío */}
             {isModalOpen && <ShippingOptions onClose={handleModalClose} />}
 
             {/* Componente de alerta */}

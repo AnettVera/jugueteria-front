@@ -46,7 +46,7 @@ const AppRouter = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<Product/>}/>
+        <Route path="/" element={<LandingPage/>}/>
         {user.signed ? (
           <>
             {routesFromRole(user?.roles[0]?.type)}
