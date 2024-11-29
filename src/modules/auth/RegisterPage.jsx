@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 import Header from '../../components/Elements/Generales/Header'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
+import { useNavigate } from 'react-router-dom';
 import '../../assets/Pages/RegisterPage.scss'
 import Register from '../../assets/images/Register.svg'
 
 const RegisterPage = () => {
-
+    const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
             name: '',
@@ -30,14 +32,22 @@ const RegisterPage = () => {
             try {
                 const response = await axios.post('http://localhost:6868/toystore/register', {
                     name: values.name,
-                    lastname: values.lastname,
+                    last_name: values.lastname,
                     email: values.email,
                     phone_number: values.tel,
                     password: values.password
                 });
-                console.log('Usuario creado:', response.data);
+                console.log(response.data);
+                const { token, userId } = response.data;
+                localStorage.setItem('jwt_token', token);
+                localStorage.setItem('user_id', userId);
+                navigate('/');
             } catch (error) {
-                console.error('Error al crear el usuario:', error.response.data);
+                if (error.response) {
+                    console.error('Error al crear el usuario:', error.response.data);
+                } else {
+                    console.error('Error al crear el usuario:', error.message);
+                }
             }
         }
     });
