@@ -60,6 +60,7 @@ const AppRouter = () => {
             <Route path="login" element={<SignInPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="recovery-password" element={<PasswordRecovery />} />
+            <Route path="new-password" element={<NewPassword />} />
             <Route path="*" element={<NotFound />} />
           </>
         )}

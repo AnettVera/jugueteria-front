@@ -1,12 +1,40 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import Header from '../../components/Elements/Generales/Header'
 import login from '../../assets/images/login.svg'
 import '../../assets/Pages/NewPassword.scss'
-
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 const NewPassword = () => {
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const [isTokenValid, setIsTokenValid] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const token = searchParams.get('token');
+
+    useEffect(() => {
+        const verifyToken = async () => {
+            try {
+                const response = await axios.post('http://localhost:6868/toystore/verify-token', {
+                    token
+                });
+                setIsTokenValid(true);
+            } catch (error) {
+                setError('El token no es valido o ha expirado');
+            } finally {
+                setLoading(false);
+            }
+        }
+        if (token) {
+            verifyToken();
+        } else {
+            setError("No se proporcionó un token.");
+            setLoading(false);
+        }
+    }, [token]);
 
     const formik = useFormik({
         initialValues: {
@@ -63,12 +91,11 @@ const NewPassword = () => {
                         <button
                             className='buttonForm'
                             type="submit"
-                            {
-                                ...formik.errors.password || formik.errors.passwordConfirm ? { disabled: true } : null
-                            }
-                            
+                            disabled={formik.errors.password || formik.errors.passwordConfirm || loading}
+                        >
+                            Cambiar contraseña
+                        </button>
 
-                        >Cambiar contraseña</button>
                     </form>
                 </div>
             </div>

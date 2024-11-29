@@ -76,7 +76,7 @@ function SignInPage() {
             {formik.touched.password && formik.errors.password ? (
               <span>{formik.errors.password}</span>
             ) : null}
-            <Link className='buttonNewPass' to="/recovery-password">Olvidaste tu contraseña?</Link>
+            <Link className='buttonNewPass' to="/recovery-password">¿Olvidaste tu contraseña?</Link>
             {error && <p className="error">{error}</p>}
             <button className='buttonForm' type="submit">Ingresar</button>
           </form>

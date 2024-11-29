@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from '../../components/Elements/Generales/Header';
-import login from '../../assets/images/login.svg';
+import login from '../../assets/images/Forgot password-amico.svg';
 import '../../assets/Pages/PaswordRecovery.scss';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -27,7 +27,7 @@ const PasswordRecovery = () => {
                     <img src={login} alt='Imagen de inicio de sesión' />
                 </div>
                 <div className='containerForm'>
-                    <h2>Ya casi lo logramos!</h2>
+                    <h2>¡Ya casi lo logramos!</h2>
                     <form onSubmit={formik.handleSubmit}>
                         <label htmlFor="email">Email</label>
                         <input
