@@ -9,14 +9,16 @@ const RegisterPage = () => {
 
     const formik = useFormik({
         initialValues: {
-            username: '',
+            name: '',
+            lastname: '',
             email: '',
             tel: '',
             password: '',
-            passwordConfirm: '',
+            passwordConfirm: ''
         },
         validationSchema: yup.object({
-            username: yup.string().required('El nombre de usuario es obligatorio'),
+            name: yup.string().required('El nombre es obligatorio'),
+            lastname: yup.string().required('El apellido es obligatorio'),
             email: yup.string().email('El email no es valido').required('El email es obligatorio'),
             tel: yup.string()
                 .matches(/^[0-9]{10}$/, 'El telefono debe tener exactamente 10 números')
@@ -24,10 +26,21 @@ const RegisterPage = () => {
             password: yup.string().required('La contraseña es obligatoria'),
             passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas no coinciden').required('La confirmación de la contraseña es obligatoria')
         }),
-        onSubmit: (values) => {
-            console.log(values)
+        onSubmit: async (values) => {
+            try {
+                const response = await axios.post('http://localhost:6868/toystore/register', {
+                    name: values.name,
+                    lastname: values.lastname,
+                    email: values.email,
+                    phone_number: values.tel,
+                    password: values.password
+                });
+                console.log('Usuario creado:', response.data);
+            } catch (error) {
+                console.error('Error al crear el usuario:', error.response.data);
+            }
         }
-    })
+    });
 
     return (
         <div className='containerPadreR'>
@@ -36,18 +49,32 @@ const RegisterPage = () => {
                 <div className='containerFormR'>
                     <h2>!Bienvenido!</h2>
                     <form className='FormR' onSubmit={formik.handleSubmit}>
-                        <label className='LabelR' htmlFor="username">Nombre de Usuario</label>
+                        <label className='LabelR' htmlFor="name">Nombre(s)</label>
                         <input className='inputR'
                             type="text"
-                            id="username"
-                            name="username"
-                            placeholder='Escribe tu nombre de usuario'
-                            value={formik.values.username}
+                            id="name"
+                            name="name"
+                            placeholder='Escribe tu nombre'
+                            value={formik.values.name}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                         />
-                        {formik.touched.username && formik.errors.username ? (
-                            <span>{formik.errors.username}</span>
+                        {formik.touched.name && formik.errors.name ? (
+                            <span>{formik.errors.name}</span>
+                        ) : null}
+
+                        <label className='LabelR' htmlFor="lastname">Apellido(s)</label>
+                        <input className='inputR'
+                            type="text"
+                            id="lastname"
+                            name="lastname"
+                            placeholder='Escribe tu apellido'
+                            value={formik.values.lastname}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                        />
+                        {formik.touched.lastname && formik.errors.lastname ? (
+                            <span>{formik.errors.lastname}</span>
                         ) : null}
 
                         <label className='LabelR' htmlFor="email">Email</label>
@@ -55,7 +82,7 @@ const RegisterPage = () => {
                             type="email"
                             id='email'
                             name='email'
-                            placeholder='example@gmail.com'
+                            placeholder='example@domain.com'
                             value={formik.values.email}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -69,7 +96,7 @@ const RegisterPage = () => {
                             type="tel"
                             id='tel'
                             name='tel'
-                            placeholder='777-000-00-00'
+                            placeholder='000-000-00-00'
                             value={formik.values.tel}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -133,3 +160,4 @@ const RegisterPage = () => {
 }
 
 export default RegisterPage
+

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Logo from './../../../../public/Logo.png';
+import Logo from './../../../assets/images/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { PiUserCircleFill } from "react-icons/pi";
 import './../../../assets/Components/general/Header.scss';
