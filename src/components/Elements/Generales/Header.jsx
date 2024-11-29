@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Logo from './../../../assets/images/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { PiUserCircleFill } from "react-icons/pi";
 import './../../../assets/Components/general/Header.scss';
 import ModalUsuario from './ModalUsuario';
+import { AuthContext } from './../../../config/context/auth-context';
 import axios from 'axios';
 import { HiMenu } from "react-icons/hi";
 
 const Header = () => {
+  const { user: authUser } = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false); // Control del menú
@@ -58,10 +60,19 @@ const Header = () => {
       </button>
 
       <nav className={`header__nav ${menuOpen ? 'header__nav--open' : ''}`}>
-        {user ? (
+
+         {authUser.signed ? (
           <>
-            <a href="#quienes-somos" className="header__link">¿Quiénes somos?</a>
-            <a href="#contactanos" className="header__link">Contáctanos</a>
+            {authUser.roles.some(role => role.type === 'ADMIN') ? (
+              <>
+                <Link to="/dashboard" className="header__link">Panel de Administrador</Link>
+              </>
+            ) : (
+              <>
+                <a href="#quienes-somos" className="header__link">¿Quiénes somos?</a>
+                <a href="#contactanos" className="header__link">Contáctanos</a>
+              </>
+            )}
             <button className="header__user-icon" onClick={toggleModal}>
               <PiUserCircleFill />
             </button>
@@ -83,6 +94,7 @@ const Header = () => {
           </>
         )}
       </nav>
+
     </header>
   );
 };
