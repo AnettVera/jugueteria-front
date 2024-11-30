@@ -3,6 +3,7 @@ import Header from '../../components/Elements/Generales/Header';
 import login from '../../assets/images/Forgot password-amico.svg';
 import '../../assets/Pages/PaswordRecovery.scss';
 import { useFormik } from 'formik';
+import axios from 'axios';
 import * as yup from 'yup';
 
 const PasswordRecovery = () => {
@@ -14,8 +15,19 @@ const PasswordRecovery = () => {
         validationSchema: yup.object({
             email: yup.string().email('El email no es valido').required('El email es obligatorio'),
         }),
-        onSubmit: (values) => {
-            console.log(values)
+        onSubmit: async (values) => {
+            try {
+                const response = await axios.post('http://localhost:6868/toystore/users/recovery-password', {
+                    email: values.email
+                });
+                if (response.status === 200) {
+                    alert('Se ha enviado un correo para recuperar la contraseña');
+                } else {
+                    alert('Error al enviar el correo');
+                }
+            } catch (error) {
+                console.error('Error al enviar correo:', error.response || error.message);
+            }
         }
     });
 

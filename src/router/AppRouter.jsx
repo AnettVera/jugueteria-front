@@ -24,7 +24,7 @@ const AppRouter = () => {
   useEffect(() => {
     const token = localStorage.getItem('jwt_token');
     if (token) {
-    const roles = [{ type: 'CLIENT' }];
+      const roles = [{ type: 'CLIENT' }];
       dispatch({ type: 'SIGNIN', payload: { roles } });
     }
   }, [dispatch]);
@@ -37,7 +37,7 @@ const AppRouter = () => {
             <Route index element={<DashboardPage />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="productos" element={<ProductsPage />} />
-            <Route path="devoluciones" element={<ReturnPage/>}/>
+            <Route path="devoluciones" element={<ReturnPage />} />
             <Route path="/devoluciones/producto/:productId" element={<SpecificReturnPage />} />
           </Route>
         );
@@ -51,7 +51,12 @@ const AppRouter = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<LandingPage />}/>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="login" element={<SignInPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        <Route path="recovery-password" element={<PasswordRecovery />} />
+        <Route path="reset-password" element={<NewPassword />} />
+
         {user.signed ? (
           <>
             {routesFromRole(user?.roles[0]?.type)}
@@ -59,10 +64,6 @@ const AppRouter = () => {
           </>
         ) : (
           <>
-            <Route path="login" element={<SignInPage />} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="recovery-password" element={<PasswordRecovery />} />
-            <Route path="reset-password" element={<NewPassword />} />
             <Route path="*" element={<NotFound />} />
           </>
         )}
