@@ -98,7 +98,7 @@
           font-size: 1rem;
           font-weight: bold;
           background-color: var(--background-color-content);
-          color: var(--toggle-btn-bg-color);
+          color: var(--text-button);
           transition: background-color 0.3s;
   
           &:hover {
@@ -132,6 +132,8 @@
             }
   
             input {
+              background-color: var(--background-color-content);
+              color: var(--lg-text-color);
               width: 60px;
               padding: 0.5rem;
               border: 1px solid var(--placeholder-text-color);

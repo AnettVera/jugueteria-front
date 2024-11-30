@@ -70,7 +70,7 @@ const Sidebar = ({ children }) => {
               {isOpen && <span>Exterior</span>}
             </li>
           </Link>
-          <Link to="/productos?category=devoluciones" className="menu-link">
+          <Link to="/devoluciones" className="menu-link">
             <li>
               <TbTruckReturn className="menu-icon" />
               {isOpen && <span>Devoluciones</span>}

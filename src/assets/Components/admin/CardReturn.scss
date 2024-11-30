@@ -4,18 +4,20 @@
     display: flex;
     align-items: center;
     width: 90%;
-    height: 100%;
+    height: auto;
     //scale
     transform: scale(1);
     transition: 0.3s;
     background-color: var(--side-link-hover-color);
-    color: var(--dark-color);
+    color: var(--xl-text-color);
+    font-family: var(--font-family-afacad);
+
 
 
 
     &:hover {
         transform: scale(1.02);
-        box-shadow: 0 0 10px var(--dark-color);
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
 
 
@@ -26,7 +28,7 @@
         gap: 10px;
         width: 100%;
         height: 100%;
-        color: var(--dark-color);
+        color: var(--xl-text-color);
 
     }
 
@@ -42,25 +44,22 @@
     }
 
     &__title {
-        font-family: var(--font-family-afacad);
-        font-size: var(--font-subtitle-normal);
+        font-size: 1.1rem;
         margin: 0;
         font-weight: bold;
-        color: var(--dark-color);
+        color: var(--xl-text-color);
 
     }
 
     &__problema {
         flex: 1;
         margin: 0;
-        color: var(--dark-color);
-        font-family: var(--font-family-afacad);
+        color: var(--xl-text-color);
 
         span {
-            font-family: var(--font-family-afacad);
             font-weight: bold;
             margin-right: 100px;
-            color: var(--dark-color);
+            color: var(--xl-text-color);
 
 
         }
@@ -73,20 +72,18 @@
         gap: 10px;
         width: 100%;
         height: 100%;
-        color: var(--dark-color);
+        color: var(--xl-text-color);
 
     }
 
     &__fechaDeCompra,
     &__fechaDeSolicitud {
-        font-family: var(--font-family-afacad);
-        color: var(--dark-color);
+        color: var(--xl-text-color);
 
         span {
-            font-family: var(--font-family-afacad);
             font-weight: bold;
             margin-right: 100px;
-            color: var(--dark-color);
+            color: var(--xl-text-color);
 
         }
 
@@ -97,10 +94,9 @@
             background-color: var(--red-color);
             color: var(--light-color);
             border: none;
-            border-radius: 50px;
+            border-radius: 5px;
             padding: 5px 10px;
             cursor: pointer;
-            font-family: var(--font-family-afacad);
             font-size: var(--font-text-small);
             margin-right: 50px;
             width: 100px;

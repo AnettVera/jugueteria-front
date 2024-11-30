@@ -1,12 +1,22 @@
 import React from "react";
-import '../../assets/Pages/admin_pages/SpecificReturnPage.scss'
-import Header from "../../components/Elements/Generales/Header";
+import { useLocation, useNavigate } from "react-router-dom"; // Importamos useNavigate
+import "../../assets/Pages/admin_pages/SpecificReturnPage.scss";
+import { IoIosArrowBack } from "react-icons/io";
 
 const SpecificReturnPage = () => {
+    const location = useLocation();
+    const navigate = useNavigate(); 
+    const { nameProduct, problema, fechaDeCompra, fechaDeSolicitud } = location.state || {};
+
+    const handleBackClick = () => {
+        navigate(-1); 
+    };
+
     return (
         <div className="specificReturnPage">
-            <Header />
-            <p>DEVOLUCIONES</p>
+            <button className="back" onClick={handleBackClick}>
+                <IoIosArrowBack /> DEVOLUCIONES
+            </button>
 
             <div className="specificReturnPage__content">
                 <div className="specificReturnPage__content-Image">
@@ -29,13 +39,21 @@ const SpecificReturnPage = () => {
                     </div>
 
                     <h3>Descripción:</h3>
-                    <span>Al intentar usar el robot no enciende, aún cambiándole las pilas, el robot sigue sin funcionar o encender, desde que llegó.</span>
+                    <span>
+                        Al intentar usar el robot no enciende, aún cambiándole las pilas, el robot sigue sin
+                        funcionar o encender, desde que llegó.
+                    </span>
 
                     <div className="specificReturnPage__content-Info-Buttons">
-
-                        <button className="specificReturnPage__content-Info-Buttons-button1">Contactar por correo</button>
-                        <button className="specificReturnPage__content-Info-Buttons-button2">Rechazar devolución</button>
-                        <button className="specificReturnPage__content-Info-Buttons-button3">Aceptar devolución</button>
+                        <button className="specificReturnPage__content-Info-Buttons-button1">
+                            Contactar por correo
+                        </button>
+                        <button className="specificReturnPage__content-Info-Buttons-button2">
+                            Rechazar devolución
+                        </button>
+                        <button className="specificReturnPage__content-Info-Buttons-button3">
+                            Aceptar devolución
+                        </button>
                     </div>
                 </div>
             </div>

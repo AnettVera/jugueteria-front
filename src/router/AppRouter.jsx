@@ -7,6 +7,8 @@ import NotFound from "../modules/errors/NotFound";
 
 import LandingPage from "../modules/user/LandingPage";
 import Product from "../modules/user/Product";
+import PurchaseHistory from "../modules/user/PurchaseHistory";
+import PurchaseDetails from "../modules/user/PurchaseDetails";
 
 import PasswordRecovery from "../modules/auth/PasswordRecovery";
 import NewPassword from "../modules/auth/NewPassword";
@@ -15,6 +17,8 @@ import NewPassword from "../modules/auth/NewPassword";
 import AdminLayout from "./../components/Admin/layout/AdminLayout";
 import DashboardPage from "../modules/admin/DashboardPage";
 import ProductsPage from "../modules/admin/ProductsPage";
+import ReturnPage from "./../modules/admin/RetunrPage";
+import SpecificReturnPage from "./../modules/admin/SpecificReturnPage"
 
 const AppRouter = () => {
   const { user, dispatch } = useContext(AuthContext);
@@ -37,6 +41,8 @@ const AppRouter = () => {
             <Route index element={<DashboardPage />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="productos" element={<ProductsPage />} />
+            <Route path="devoluciones" element={<ReturnPage />} />
+            <Route path="/devoluciones/producto/:productId" element={<SpecificReturnPage />} />
           </Route>
         );
       case 'CLIENT':
@@ -49,7 +55,12 @@ const AppRouter = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
+<<<<<<< Updated upstream
         <Route path="/" element={<LandingPage />}/>
+=======
+          <Route path="/" element={<LandingPage />}/>
+
+>>>>>>> Stashed changes
         {user.signed ? (
           <>
             {routesFromRole(user?.roles[0]?.type)}

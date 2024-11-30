@@ -1,42 +1,39 @@
 .modal-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.1); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    font-family: var(--font-family-afacad);
-  
-    .modal {
-      background-color: var(--secondary-color-b);
-      border-radius: 20px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-      max-height: 500px;
-      overflow-y: auto;
-      padding: 20px;
-      position: relative;
-  
-      .close-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        color: var(--base-text-color);
-        cursor: pointer;
-        transition: transform 0.2s;
-  
-        &:hover {
-          transform: scale(1.2); 
-        }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.24);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  font-family: var(--font-family-afacad);
+
+  .modal {
+    background-color: var(--side-link-hover-color);
+    border-radius: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    padding: 20px;
+    position: relative;
+  }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--xl-text-color);
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.2);
       }
     }
-  
     .edit-product-modal,
     .add-product-modal {
       display: flex;
@@ -184,7 +181,7 @@
       h2 {
         font-size: 1.5rem;
         font-weight: bold;
-        color: #333;
+        color: var(--xl-text-color);
         text-align: center;
         margin-bottom: 1rem;
       }
@@ -196,14 +193,16 @@
 
         input {
           flex: 1;
-          padding: 0.8rem;
+          padding: 0.4rem;
           border: 1px solid #ddd;
+          background-color: var(--secondary-color-b);
+          color: var(--xl-text-color);
           border-radius: 8px;
           font-size: 1rem;
         }
 
         button {
-          padding: 0.8rem 1.2rem;
+          padding: 0.4rem 1.2rem;
           border: none;
           border-radius: 8px;
           background-color: black; 
@@ -222,21 +221,32 @@
       .shipping-details {
         font-size: 1rem;
         line-height: 1.5;
-        color: #444;
+        color: var(--lg-text-color);
         display: flex;
         flex-direction: column;
-        align-items: center; /* Centra horizontalmente */
+        justify-content: center;
         text-align: center;
+
+        span {
+          width: 100%;
+          text-align: center;
+          font-size: 1.1rem;
+          color: var(--lg-text-color);
+          margin: auto;
+        }
+
       }
-      
+
+
       .disclaimer {
         display: flex;
         flex-direction: column;
-        align-items: center; /* Centra horizontalmente */
+        align-items: center;
+        color: var(--lg-text-color);
       }
       
       .icon {
-        margin: 0 auto; /* Asegura que el margen sea auto para centrarlo */
+        margin: 0 auto; 
         height: fit-content;
         width: fit-content;
       }
@@ -250,5 +260,125 @@
       
 
     }
-  }
+
+
+    .returns-modal {
+      h2 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+        color: var(--xl-text-color);
+      }
+
+      .upload-container {
+        text-align: center;
+        margin-bottom: 8px;
+
+        .upload-button {
+          background-color: var(--toggle-btn-bg-color);
+          color: #fff;
+          border: none;
+          padding: 6px 15px;
+          border-radius: 10px;
+          font-size: 0.9rem;
+          margin-top: 10px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #555;
+          }
+        }
+
+        .image-placeholder {
+          width: 100%;
+          height: 120px;
+          margin-top: 10px;
+          border: 2px dashed #ccc;
+          border-radius: 10px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: var(--base-text-color);
+          font-size: 1rem;
+        }
+
+        .upload-instructions {
+          margin-top: 5px;
+          font-size: 0.6rem;
+          color: var(--base-text-color);
+        }
+      }
+
+      form {
+        .form-group {
+          margin-bottom: 5px;
+          text-align: left;
+
+          label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--xl-text-color);
+            margin-bottom: 4px;
+          }
+
+          input[type='text'],
+          textarea {
+            width: 100%;
+            padding: 8px;
+            background-color: var(--side-link-hover-color);
+            border: 1px solid var(--bg-color-inverted);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color:var(--xl-text-color);
+          }
+
+          textarea {
+            resize: none;
+            height: 60px;
+          }
+        }
+
+        .modal-buttons {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 10px;
+
+          .cancel-button,
+          .save-button {
+            flex: 1;
+            padding: 6px 15px;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            cursor: pointer;
+
+            &:not(:last-child) {
+              margin-right: 10px;
+            }
+          }
+
+          .cancel-button {
+            background-color: transparent;
+            border: 2px solid var(--toggle-btn-bg-color);
+            color: var(--text-button);
+
+            &:hover {
+              background-color: var(--background-color);
+            }
+          }
+
+          .save-button {
+            background-color: var(--toggle-btn-bg-color);
+            border: none;
+            color: #fff;
+
+            &:hover {
+              background-color: var(--border-color-inverted);
+            }
+          }
+        }
+      }
+    }
   
+}

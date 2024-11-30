@@ -40,9 +40,10 @@ const Alerts = ({ message, type, onClose }) => {
       <div className='modal'>
         <div className='shipping-details'>
           <div className='disclaimer'>
-            <div style={{textAlign:'center', fontWeight:'bold'}}>{style.messagedefault}</div>
+            <div style={{textAlign:'center', fontWeight:'bold', color:'var(--lg-text-color'}}>{style.messagedefault}</div>
             <div className='icon'>{style.icon}</div>
-            <span>{message}</span>
+            <div style={{textAlign:'center', color:'var(--lg-text-color'}}>{message}</div>
+
           </div>
         </div>
       </div>

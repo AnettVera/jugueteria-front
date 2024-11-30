@@ -1,7 +1,6 @@
 .returnPage {
     margin-top: 55px;
     width: 100%;
-    height: 100%;
     padding: 15px;
     display: flex;
     flex-direction: column;
@@ -9,11 +8,11 @@
     
 
     h3 {
-        color: var(--dark-color);
+        color: var(--xl-text-color);
     }
 
     p {
-        color: var(--dark-color);
+        color: var(--xl-text-color);
     }
 
     &__content {
@@ -22,7 +21,6 @@
         justify-content: center;
         gap: 20px;
         padding: 10px 15px;
-        //background-color: var(--side-link-hover-color);
         margin: 20px;
         border-radius: 10px;
     }

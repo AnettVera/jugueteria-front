@@ -5,10 +5,12 @@ import { PiUserCircleFill } from "react-icons/pi";
 import './../../../assets/Components/general/Header.scss';
 import ModalUsuario from './ModalUsuario';
 import axios from 'axios';
+import { HiMenu } from "react-icons/hi";
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false); // Control del menú
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,14 +42,22 @@ const Header = () => {
     setIsModalOpen(false);
   };
 
+  const toggleMenu = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
   return (
     <header className="header">
       <div className="header__logo">
         <Link to="/"><img src={Logo} alt="Logo" /></Link>
         {user && <span>Bienvenido, {user.name}</span>}
       </div>
-      
-      <nav className="header__nav">
+
+      <button className="header__menu-icon" onClick={toggleMenu}>
+        <HiMenu />
+      </button>
+
+      <nav className={`header__nav ${menuOpen ? 'header__nav--open' : ''}`}>
         {user ? (
           <>
             <a href="#quienes-somos" className="header__link">¿Quiénes somos?</a>

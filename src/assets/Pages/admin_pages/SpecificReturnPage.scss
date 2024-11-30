@@ -1,15 +1,13 @@
 .specificReturnPage {
-    margin-top: 55px;
     width: 100%;
     height: 100%;
-    padding: 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: var(light-color);
+
 
     p {
-        color: var(--dark-color);
+        color: var(--xl-text-color);
     }
 
     &__content {
@@ -17,15 +15,16 @@
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: flex-start;
+        font-family: var(--font-family-afacad);
         gap: 20px;
         padding: 20px;
         margin: 20px;
-        background-color: var(--light-color);
+        background-color: var(--background-color);
 
         &-Image {
             flex: 1;
             text-align: center;
-            max-width: 300px;
+            max-width: 400px;
             align-items: center;
             justify-content: center;
             flex-direction: column;
@@ -35,6 +34,7 @@
                 font-weight: bold;
                 font-family: var(--font-family-afacad);
                 text-align: start;
+                color: var(--xl-text-color);
             }
 
             img {
@@ -52,7 +52,7 @@
             flex-direction: column;
             gap: 15px;
             font-size: var(--font-placeholder-small);
-            color: var(--dark-color);
+            color: var(--lg-text-color);
             margin: 10px;
             padding: 15px;
 
@@ -64,19 +64,18 @@
                 margin: 0;
                 font-size: 14px;
                 font-weight: bold;
-                color: var(--dark-color);
+                color: var(--lg-text-color);
                 font-family: var(--font-family-afacad);
             }
 
             span {
                 display: block;
                 font-size: 14px;
-                color: var(--dark-color);
+                color: var(--lg-text-color);
             }
 
             div {
                 display: flex;
-                //justify-content: space-between;
                 align-items: center;
                 gap: 10px;
             }
@@ -87,40 +86,34 @@
                 margin-top: 20px;
 
                 &-button1 {
-                    background-color: var(--dark-color);
-                    color: var(--light-color);
+                    color: var(--text-button);
                     padding: 10px 20px;
                     border-radius: 5px;
+                    border: 2px solid var(--border-color-inverted);
                     cursor: pointer;
                     transition: background-color 0.3s;
-                    font-family: var(--font-family-afacad);
 
                     &:hover {
-                        background-color: var(--light-color);
-                        color: var(--dark-color);
-                        border: 2px solid var(--dark-color);
+                        background-color: var(--secondary-color-b);
                     }
                 }
 
                 &-button2 {
-                    background-color: var(--dark-color);
-                    color: var(--light-color);
+                    color: var(--text-button);
                     padding: 10px 20px;
                     border-radius: 5px;
+                    border: 2px solid var(--border-color-inverted);
                     cursor: pointer;
                     transition: background-color 0.3s;
-                    font-family: var(--font-family-afacad);
 
                     &:hover {
-                        background-color: var(--light-color);
-                        color: var(--dark-color);
-                        border: 2px solid var(--dark-color);
+                        background-color: var(--secondary-color-b);
                     }
                 }
 
                 &-button3 {
-                    background-color: var(--light-color);
-                    color: var(--dark-color);
+                    background-color: var(--toggle-btn-bg-color);
+                  color: var(--toggle-btn-text-color);
                     padding: 10px 20px;
                     border-radius: 5px;
                     cursor: pointer;
