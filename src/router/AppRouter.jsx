@@ -24,9 +24,7 @@ const AppRouter = () => {
   useEffect(() => {
     const token = localStorage.getItem('jwt_token');
     if (token) {
-      // Aquí puedes agregar lógica para verificar el token y obtener el rol del usuario
-      // Por ejemplo, decodificar el token y obtener el rol
-      const roles = [{ type: 'CLIENT' }]; // Reemplaza esto con la lógica real para obtener el rol
+    const roles = [{ type: 'CLIENT' }];
       dispatch({ type: 'SIGNIN', payload: { roles } });
     }
   }, [dispatch]);
@@ -64,7 +62,7 @@ const AppRouter = () => {
             <Route path="login" element={<SignInPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="recovery-password" element={<PasswordRecovery />} />
-            <Route path="new-password" element={<NewPassword />} />
+            <Route path="reset-password" element={<NewPassword />} />
             <Route path="*" element={<NotFound />} />
           </>
         )}

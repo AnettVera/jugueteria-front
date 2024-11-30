@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import Header from '../../components/Elements/Generales/Header'
 import login from '../../assets/images/login.svg'
 import '../../assets/Pages/NewPassword.scss'
@@ -7,34 +8,17 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 const NewPassword = () => {
-    const [searchParams] = useSearchParams();
-    const navigate = useNavigate();
-    const [isTokenValid, setIsTokenValid] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
+    const [ searchParams ] = useSearchParams();
+    const [loading, setLoading] = useState(false); // Estado para la carga
     const token = searchParams.get('token');
 
     useEffect(() => {
-        const verifyToken = async () => {
-            try {
-                const response = await axios.post('http://localhost:6868/toystore/verify-token', {
-                    token
-                });
-                setIsTokenValid(true);
-            } catch (error) {
-                setError('El token no es valido o ha expirado');
-            } finally {
-                setLoading(false);
-            }
+        console.log('SearchParams:', searchParams.toString());  
+        console.log('Token:', token);
+        if (!token) {
+            alert('No se ha proporcionado un token para actualizar la contraseña');
         }
-        if (token) {
-            verifyToken();
-        } else {
-            setError("No se proporcionó un token.");
-            setLoading(false);
-        }
-    }, [token]);
+    }, [searchParams, token]);
 
     const formik = useFormik({
         initialValues: {
@@ -45,10 +29,27 @@ const NewPassword = () => {
             password: yup.string().required('La contraseña es obligatoria'),
             passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas no coinciden').required('La confirmación de la contraseña es obligatoria')
         }),
-        onSubmit: (values) => {
-            console.log(values)
+        onSubmit: async (values) => {
+            setLoading(true);
+            try {
+                const response = await axios.post('http://localhost:6868/toystore/users/update-password', {
+                    token,
+                    password: values.password
+                });
+                if (response.status === 200) {
+                    alert('Contraseña actualizada correctamente');
+                } else {
+                    alert('Error al actualizar contraseña');
+                }
+            } catch (error) {
+                console.error('Error al actualizar contraseña:', error.response || error.message);
+                alert('Error al actualizar contraseña');
+            } finally {
+                setLoading(false);
+            }
         }
     });
+
 
     return (
         <div className='containerPadrePassword'>
@@ -93,7 +94,7 @@ const NewPassword = () => {
                             type="submit"
                             disabled={formik.errors.password || formik.errors.passwordConfirm || loading}
                         >
-                            Cambiar contraseña
+                            {loading ? 'Cargando...' : 'Actualizar contraseña'}
                         </button>
 
                     </form>
