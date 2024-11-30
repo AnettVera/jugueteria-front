@@ -4,7 +4,7 @@ import { FaCartShopping } from "react-icons/fa6";
 import './../../assets/Pages/user/Product.scss';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import ShippingOptions from '../../components/user/ShippingOptions';
-import Alerts from '../../components/Elements/Generales/Alerts'; 
+import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert';
 
 const productData = {
   "brand": "ENERGIZE LAB",
@@ -33,100 +33,94 @@ const productData = {
 };
 
 const Product = () => {
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [isModalOpen, setIsModalOpen] = useState(false); 
-    const [alert, setAlert] = useState(null); 
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const product = productData;
+  const { alert, showAlert } = useCustomAlert();
 
-    const handlePrevClick = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex - 1 + product.images.length) % product.images.length);
-    };
+  const product = productData;
 
-    const handleNextClick = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % product.images.length);
-    };
+  const handlePrevClick = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + product.images.length) % product.images.length);
+  };
 
-    const handleModalOpen = () => {
-        setIsModalOpen(true); 
-    };
+  const handleNextClick = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % product.images.length);
+  };
 
-    const handleModalClose = () => {
-        setIsModalOpen(false); 
-    };
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
 
-    const handleAddToCart = () => {
-        setAlert({
-            message: '¡Producto agregado al carrito exitosamente!',
-            type: 'success'
-        });
-    };
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
 
-    const handleCloseAlert = () => {
-        setAlert(null); 
-    };
+  const handleAddToCart = async () => {
+    console.log("Producto agregado al carrito");
 
-    return (
-        <div className="product-details">
-            <div className='content-details'>
-                <div className="image-carousel">
-                    <button className="carousel-control prev" onClick={handlePrevClick}>{<IoIosArrowBack />}</button>
-                    <img
-                        src={product.images[currentImageIndex]}
-                        alt="Producto"
-                        className="product-image"
-                    />
-                    <button className="carousel-control next" onClick={handleNextClick}>{<IoIosArrowForward />}</button>
-                </div>
+    await showAlert({
+      title: "Producto agregado",
+      text: `${product.name} se ha añadido al carrito correctamente.`,
+      icon: "success",
+    });
+  };
 
-                <div className="product-info">
-                    <h2 className="product-brand">{product.brand}</h2>
-                    <h1 className="product-name">{product.name}</h1>
-                    <p className="product-description">{product.description}</p>
-                    <div className="actions">
-                        <div className="product-rating">
-                            {[...Array(product.rating)].map((_, i) => (
-                                <FaStar key={i} className="star" />
-                            ))}
-                        </div>
-                        <div className="quantity-selector">
-                            <label htmlFor="quantity">Cantidad:</label>
-                            <input id="quantity" type="number" min="1" defaultValue="1" />
-                        </div>
-                    </div>
-                    <button className="zipcode-btn" onClick={handleModalOpen}>
-                        <FaMapMarkerAlt /> Realiza un pedido a domicilio de México
-                    </button>
-                    <div className="actions">
-                        <button className="add-to-cart" onClick={handleAddToCart}>
-                            <FaCartShopping /> Agregar al carrito
-                        </button>
-                        <span className="price-label">${product.price.toFixed(2)} {product.currency}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div className="product-comments">
-                <h3>Comentarios:</h3>
-                {product.comments.map((comment, index) => (
-                    <p key={index} className="comments-text">
-                        {comment.user}: {comment.comment}
-                    </p>
-                ))}
-            </div>
-
-            {isModalOpen && <ShippingOptions onClose={handleModalClose} />}
-
-            {/* Componente de alerta */}
-            {alert && (
-                <Alerts
-                    message={alert.message}
-                    type={alert.type}
-                    onClose={handleCloseAlert}
-                />
-            )}
+  return (
+    <div className="product-details">
+      <div className='content-details'>
+        <div className="image-carousel">
+          <button className="carousel-control prev" onClick={handlePrevClick}>{<IoIosArrowBack />}</button>
+          <img
+            src={product.images[currentImageIndex]}
+            alt="Producto"
+            className="product-image"
+          />
+          <button className="carousel-control next" onClick={handleNextClick}>{<IoIosArrowForward />}</button>
         </div>
-    );
+
+        <div className="product-info">
+          <h2 className="product-brand">{product.brand}</h2>
+          <h1 className="product-name">{product.name}</h1>
+          <p className="product-description">{product.description}</p>
+          <div className="actions">
+            <div className="product-rating">
+              {[...Array(product.rating)].map((_, i) => (
+                <FaStar key={i} className="star" />
+              ))}
+            </div>
+            <div className="quantity-selector">
+              <label htmlFor="quantity">Cantidad:</label>
+              <input id="quantity" type="number" min="1" defaultValue="1" />
+            </div>
+          </div>
+          <button className="zipcode-btn" onClick={handleModalOpen}>
+            <FaMapMarkerAlt /> Realiza un pedido a domicilio de México
+          </button>
+          <div className="actions">
+            <button className="add-to-cart" onClick={handleAddToCart}>
+              <FaCartShopping /> Agregar al carrito
+            </button>
+            <span className="price-label">${product.price.toFixed(2)} {product.currency}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="product-comments">
+        <h3>Comentarios:</h3>
+        {product.comments.map((comment, index) => (
+          <p key={index} className="comments-text">
+            {comment.user}: {comment.comment}
+          </p>
+        ))}
+      </div>
+
+      {isModalOpen && <ShippingOptions onClose={handleModalClose} />}
+      
+      {/* Renderizar*/}
+      {alert}
+    </div>
+  );
 };
 
 export default Product;

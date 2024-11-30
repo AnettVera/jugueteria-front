@@ -19,6 +19,50 @@
     padding: 20px;
     position: relative;
   }
+  .alert {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+  
+    .icon {
+      width: fit-content;
+      margin: auto;
+    }
+  
+    .custom-alert-title {
+      text-align: center;
+      color: var(--xl-text-color);
+    }
+  
+    .custom-alert-text {
+      text-align: center;
+      color: var(--xl-text-color);
+    }
+  
+    .button {
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      width: 100%; 
+  
+      button {
+        font-size: 0.9rem;
+        padding: 3px 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        background-color: var(--background-color-content);
+        border: 2px solid var(--toggle-btn-bg-color);
+        color: var(--text-button);
+  
+        &:hover {
+          background-color: var(--background-color);
+        }
+      }
+    }
+  }
+  
+
 
     .close-button {
       position: absolute;
