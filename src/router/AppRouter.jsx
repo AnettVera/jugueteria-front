@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 import { AuthContext } from '../config/context/auth-context';
 
@@ -16,9 +16,11 @@ import NewPassword from "../modules/auth/NewPassword";
 import AdminLayout from "./../components/Admin/layout/AdminLayout";
 import DashboardPage from "../modules/admin/DashboardPage";
 import ProductsPage from "../modules/admin/ProductsPage";
+import ReturnPage from "../modules/admin/ReturnPage";
+import SpecificReturnPage from "../modules/admin/SpecificReturnPage";
 
 const AppRouter = () => {
-  const { user } = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
 
   useEffect(() => {
     const token = localStorage.getItem('jwt_token');
@@ -36,17 +38,40 @@ const AppRouter = () => {
             <Route index element={<DashboardPage />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="productos" element={<ProductsPage />} />
+            <Route path="devoluciones" element={<ReturnPage />} />
+            <Route path="devoluciones/producto/:productId" element={<SpecificReturnPage />} />
           </Route>
-        ) : (
-          <Route path="/" element={<LandingPage />} />
-        )}
-
-        <Route path="login" element={<SignInPage />} />
-        <Route path="register" element={<RegisterPage />} />
-        <Route path="*" element={<NotFound />} />
-      </>
-    ))} />
-   );
+        );
+      case 'CLIENT':
+        return <Route path="/" element={<LandingPage />} />;
+      default:
+        return null;
+    }
   };
+
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        <Route path="/" element={<LandingPage />} />
+        {user.signed ? (
+          <>
+            {routesFromRole(user?.roles[0]?.type)}
+            <Route path="*" element={<NotFound />} />
+          </>
+        ) : (
+          <>
+            <Route path="login" element={<SignInPage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="recovery-password" element={<PasswordRecovery />} />
+            <Route path="reset-password" element={<NewPassword />} />
+            <Route path="*" element={<NotFound />} />
+          </>
+        )}
+      </>
+    )
+  );
+
+  return <RouterProvider router={router} />;
+};
 
 export default AppRouter;
