@@ -1,0 +1,34 @@
+//sugerencia de estilos para el botón flotante
+.floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ffcc00; 
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .floating-button:hover {
+    transform: scale(1.1); 
+  }
+  
+  .floating-button:active {
+    transform: scale(0.95); 
+  }
+  
+  .floating-button > svg,
+  .floating-button > img {
+    width: 24px;
+    height: 24px;
+    fill: #ffffff;
+  }
+  

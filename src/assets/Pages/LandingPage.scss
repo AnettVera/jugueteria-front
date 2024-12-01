@@ -1,6 +1,6 @@
 .bg-background {
   background-color: var(--background-color);
-  padding-top: 0%;
+  padding-top: 50px;
 
 .text-center {
   text-align: center;
@@ -15,14 +15,15 @@
 
   &__input {
     margin-top: 1rem;
-    padding: 0.75rem 1rem 0.75rem 3rem; // Ajusta el padding para el ícono
+    padding: 0.75rem 1rem 0.75rem 3rem; 
     border: 1px solid var(--border-color-inverted);
-    border-radius: 1.5rem; // Bordes redondeados
+    border-radius: 1.5rem; 
     width: 100%;
-    max-width: 800px; // Aumenta el ancho máximo
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); // Sombra sutil
+    max-width: 800px; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
     font-size: 1rem;
-    font-style: var(--secondary-color-b);
+    font-style: var(--font-subtitle-small);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     transition: all 0.3s ease;
     outline: none;
     display: inline-flex;
@@ -30,7 +31,7 @@
 
     &::placeholder {
       color: var(--text-muted);
-      font-style: italic;
+      font-style: var(--font-text-normal);
     }
 
     &:focus {
@@ -112,6 +113,11 @@
 }
 }
 
+.products{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .hero-section {
   position: relative; 
   background-color: #F2F2F2; 
@@ -137,6 +143,7 @@
   display: flex;
   flex-direction: column;
   margin-left: 0px;
+  margin-top: 0%;
 }
 
 .hero-image img {
@@ -228,3 +235,73 @@
   }
 }
 
+// Variables para los breakpoints
+$small-screen: 380px;
+$medium-screen: 768px;
+$large-screen: 1024px;
+
+// Ajustes generales para pantallas pequeñas
+@media (max-width: $small-screen) {
+  .hero-content {
+    flex-direction: column;
+    text-align: center;
+    .hero-text {
+      max-width: 100%;
+    }
+    .hero-image img {
+      max-width: 70%;
+      margin: 0 auto;
+    }
+  }
+
+  .search-wrapper {
+    width: 90%; 
+  }
+
+  .branches-grid {
+    grid-template-columns: 1fr; 
+    gap: 10px; 
+  }
+
+  .rounded-image {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+// Ajustes para pantallas medianas
+@media (max-width: $medium-screen) {
+  .hero-content {
+    flex-direction: column;
+    .hero-text {
+      max-width: 100%;
+      text-align: center;
+    }
+    .hero-image img {
+      max-width: 80%;
+    }
+  }
+
+  .branches-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+}
+
+// Ajustes para pantallas grandes
+@media (min-width: $large-screen) {
+  .hero-content {
+    flex-direction: row;
+    .hero-text {
+      max-width: 50%;
+    }
+    .hero-image img {
+      max-width: 50%;
+    }
+  }
+
+  .branches-grid {
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 20px;
+  }
+}
