@@ -1,12 +1,29 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Select from 'react-select';
 import './../../assets/Components/general/Modal.scss';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import axios from 'axios';
+import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert';
 
-const AddProductModal = ({ categories, onClose, onSave }) => {
+const AddProductModal = ({ onClose, onSave }) => {
   const fileInputRefs = useRef([]);
-  const [images, setImages] = useState([null, null, null, null, null]);
+  const [images, setImages] = useState([null]);
+  const [categories, setCategories] = useState([]);
+  const { alert, showAlert } = useCustomAlert();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:6868/toystore/categories');
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const validationSchema = yup.object({
     name: yup
@@ -32,8 +49,9 @@ const AddProductModal = ({ categories, onClose, onSave }) => {
       .required('Las categorías son obligatorias'),
     images: yup
       .array()
-      .test('all-images-present', 'Debes subir las 5 imágenes', (value) =>
-        value.every((image) => image !== null)
+      .min(1, 'Debes subir al menos una imagen')
+      .test('at-least-one-image', 'Debes subir al menos una imagen', (value) =>
+        value.some((image) => image !== null)
       ),
   });
 
@@ -47,8 +65,42 @@ const AddProductModal = ({ categories, onClose, onSave }) => {
       images: images,
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      onSave({ ...values });
+    onSubmit: async (values) => {
+      onClose(); // Cerrar el modal inmediatamente después de enviar el formulario
+      try {
+        const category = categories.find(cat => cat.name === values.categories[0]);
+        const formData = new FormData();
+        formData.append('name', values.name);
+        formData.append('description', values.description);
+        formData.append('price', values.price);
+        formData.append('category_id', category.id);
+        formData.append('stock', values.quantity);
+        values.images.forEach((image) => {
+          if (image) {
+            formData.append('images', image); // Usar 'images' como nombre del campo
+          }
+        });
+
+        const response = await axios.post('http://localhost:6868/toystore/products', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        onSave(response.data.product);
+        await showAlert({
+          title: "Producto agregado",
+          text: "El producto se ha añadido correctamente.",
+          icon: "success",
+        });
+      } catch (error) {
+        await showAlert({
+          title: "Error",
+          text: "Ocurrió un error al crear el producto. Por favor, intenta de nuevo.",
+          icon: "error",
+        });
+        console.error('Error al crear el producto:', error);
+      }
     },
   });
 
@@ -62,21 +114,25 @@ const AddProductModal = ({ categories, onClose, onSave }) => {
     const file = event.target.files[0];
     if (file) {
       const newImages = [...formik.values.images];
-      newImages[index] = URL.createObjectURL(file);
+      newImages[index] = file;
       formik.setFieldValue('images', newImages);
     }
   };
 
+  const addImageField = () => {
+    setImages([...images, null]);
+  };
+
   const categoryOptions = categories.map((category) => ({
-    value: category,
-    label: category,
+    value: category.name,
+    label: category.name,
   }));
 
   return (
     <div className="modal-container">
       <div className="modal add-product-modal">
         <button className="close-button" onClick={onClose}>×</button>
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} encType="multipart/formdata">
           <div className="modal-content">
             <div className="modal-left">
               <h3>Imágenes</h3>
@@ -84,7 +140,7 @@ const AddProductModal = ({ categories, onClose, onSave }) => {
                 {formik.values.images.map((image, index) => (
                   <div className="image-item" key={index}>
                     {image ? (
-                      <img src={image} alt={`Producto ${index}`} />
+                      <img src={URL.createObjectURL(image)} alt={`Producto ${index}`} />
                     ) : (
                       <div className="image-placeholder">Imagen</div>
                     )}
@@ -103,6 +159,7 @@ const AddProductModal = ({ categories, onClose, onSave }) => {
                     />
                   </div>
                 ))}
+                <button type="button" onClick={addImageField}>Agregar otra imagen</button>
               </div>
               {formik.errors.images && formik.touched.images && (
                 <div className="error-message">{formik.errors.images}</div>
@@ -176,6 +233,10 @@ const AddProductModal = ({ categories, onClose, onSave }) => {
                   id="categories"
                   isMulti
                   options={categoryOptions}
+                  value={formik.values.categories.map((cat) => ({
+                    value: cat,
+                    label: cat,
+                  }))}
                   onChange={(selectedOptions) =>
                     formik.setFieldValue(
                       'categories',
@@ -205,6 +266,7 @@ const AddProductModal = ({ categories, onClose, onSave }) => {
           </div>
         </form>
       </div>
+      {alert}
     </div>
   );
 };

@@ -25,11 +25,10 @@ const Alert = ({ title, text, icon, onClose }) => {
         <h2 className="custom-alert-title">{title}</h2>
         <p className="custom-alert-text">{text}</p>
         <div className='button'>
-        <button onClick={onClose} className="custom-alert-button">
-          Aceptar
-        </button>
+          <button onClick={onClose} className="custom-alert-button">
+            Aceptar
+          </button>
         </div>
-       
       </div>
     </div>,
     document.body

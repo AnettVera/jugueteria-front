@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from "react";
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Navigate } from 'react-router-dom';
 import { AuthContext } from '../config/context/auth-context';
 
 import RegisterPage from './../modules/auth/RegisterPage';
@@ -19,15 +19,25 @@ import ProductsPage from "../modules/admin/ProductsPage";
 import ReturnPage from "../modules/admin/ReturnPage";
 import SpecificReturnPage from "../modules/admin/SpecificReturnPage";
 
+import Loading from "../components/shared/Loading";
+
 const AppRouter = () => {
   const { user, dispatch } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('jwt_token');
-    if (token) {
-      const roles = [{ type: 'CLIENT' }];
+    const role = localStorage.getItem('role');
+    if (token && role) {
+      const roles = [{ type: role }];
       dispatch({ type: 'SIGNIN', payload: { roles } });
     }
+    // Agregar un retraso artificial de 2 segundos
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [dispatch]);
 
   const routesFromRole = (role) => {
@@ -52,14 +62,16 @@ const AppRouter = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<LandingPage />} />
-        {user.signed ? (
+        {loading ? (
+          <Route path="*" element={<Loading />} />
+        ) : user.signed ? (
           <>
             {routesFromRole(user?.roles[0]?.type)}
             <Route path="*" element={<NotFound />} />
           </>
         ) : (
           <>
+            <Route path="/" element={<LandingPage />} />
             <Route path="login" element={<SignInPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="recovery-password" element={<PasswordRecovery />} />
