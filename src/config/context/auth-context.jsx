@@ -1,14 +1,21 @@
-import { createContext, useReducer } from 'react';
+import { createContext, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import { authManager } from './auth-manager';
 
-const AuthContext = createContext();
+const initialAuthState = {
+  user: {
+    signed: false,
+    roles: [{type: localStorage.getItem('role') || 'CLIENT'}],
+  },
+};
+
+const AuthContext = createContext(initialAuthState);
 
 export const AuthProvider = ({ children }) => {
-  const [user, dispatch] = useReducer(authManager, { signed: false });
+  const [state, dispatch] = useReducer(authManager, initialAuthState);
 
   return (
-    <AuthContext.Provider value={{ user, dispatch }}>
+    <AuthContext.Provider value={{ ...state, dispatch }}>
       {children}
     </AuthContext.Provider>
   );

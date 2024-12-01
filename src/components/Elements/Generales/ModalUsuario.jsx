@@ -8,6 +8,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const ModalUsuario = ({ role, name, email, onClose }) => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
@@ -22,7 +23,12 @@ const ModalUsuario = ({ role, name, email, onClose }) => {
   const handleLogout = () => {
     localStorage.removeItem('jwt_token');
     localStorage.removeItem('user_id');
-    navigate(location.pathname, {replace:true})
+    localStorage.removeItem('role');
+    if (role === 'ADMIN') {
+      navigate('/', { replace: true });
+    } else {
+      navigate(location.pathname, { replace: true });
+    }
     window.location.reload();
   };
 

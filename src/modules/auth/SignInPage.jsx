@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../config/context/auth-context';
 import axios from 'axios';
 import Header from '../../components/Elements/Generales/Header';
 import '../../assets/Pages/SignInPage.scss';
@@ -10,6 +11,7 @@ import * as yup from 'yup';
 function SignInPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {
@@ -21,18 +23,18 @@ function SignInPage() {
       password: yup.string().required('La contraseña es obligatoria'),
     }),
     onSubmit: async (values) => {
-      console.log('Enviando datos:', values);
       try {
         const response = await axios.post('http://localhost:6868/toystore/login', {
           email: values.email,
           password: values.password,
         });
-        const { token, userId } = response.data;
+        const { token, userId, role } = response.data;
         localStorage.setItem('jwt_token', token);
         localStorage.setItem('user_id', userId);
+        localStorage.setItem('role', role);
+        dispatch({ type: 'SIGNIN', payload: { roles: [{ type: role }] } });
         navigate('/');
       } catch (err) {
-        console.error('Error al iniciar sesión:', err.response || err.message);
         setError('Error al iniciar sesión. Por favor, verifica tus credenciales.');
       }
     },
