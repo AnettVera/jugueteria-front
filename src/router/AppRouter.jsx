@@ -8,6 +8,10 @@ import NotFound from "../modules/errors/NotFound";
 
 import LandingPage from "../modules/user/LandingPage";
 import Product from "../modules/user/Product";
+import Carrito from "./../modules/user/Carrito";
+import PurchaseDetails from './../modules/user/PurchaseDetails';
+import PurchaseHistory from "./../modules/user/PurchaseHistory";
+
 
 import PasswordRecovery from "../modules/auth/PasswordRecovery";
 import NewPassword from "../modules/auth/NewPassword";
@@ -53,7 +57,16 @@ const AppRouter = () => {
           </Route>
         );
       case 'CLIENT':
-        return <Route path="/" element={<LandingPage />} />;
+        return (
+          <>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="producto/:productName" element={<Product />} />
+            <Route path="carrito-de-compras" element={<Carrito />} />
+            <Route path="historial" element={<PurchaseHistory />} />
+            <Route path="historial/detalles/:id" element={<PurchaseDetails />} />
+          </>
+        )
+
       default:
         return null;
     }
@@ -72,6 +85,8 @@ const AppRouter = () => {
         ) : (
           <>
             <Route path="/" element={<LandingPage />} />
+            <Route path="carrito-de-compras" element={<Carrito />} />
+            <Route path="producto/:id" element={<Product />} />
             <Route path="login" element={<SignInPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="recovery-password" element={<PasswordRecovery />} />

@@ -5,6 +5,9 @@ import './../../assets/Pages/user/Product.scss';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import ShippingOptions from '../../components/user/ShippingOptions';
 import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert';
+import FloatingButton from '../../components/shared/FloatingButton';
+import Header from '../../components/Elements/Generales/Header';
+import { useLocation, useNavigate } from "react-router-dom"; // Importamos useNavigate
 
 const productData = {
   "brand": "ENERGIZE LAB",
@@ -33,6 +36,17 @@ const productData = {
 };
 
 const Product = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
+  const handleFloatingButtonClick = () => {
+    console.log("Redirigiendo al carrito");
+    navigate("/carrito-de-compras");
+  };
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -67,59 +81,67 @@ const Product = () => {
   };
 
   return (
-    <div className="product-details">
-      <div className='content-details'>
-        <div className="image-carousel">
-          <button className="carousel-control prev" onClick={handlePrevClick}>{<IoIosArrowBack />}</button>
-          <img
-            src={product.images[currentImageIndex]}
-            alt="Producto"
-            className="product-image"
-          />
-          <button className="carousel-control next" onClick={handleNextClick}>{<IoIosArrowForward />}</button>
-        </div>
+    <>
+      <Header />
+      <div className="product-details">
+        <button className="back" onClick={handleBackClick}>
+          <IoIosArrowBack /> Productos
+        </button>
+        <FloatingButton onClick={handleFloatingButtonClick} />
 
-        <div className="product-info">
-          <h2 className="product-brand">{product.brand}</h2>
-          <h1 className="product-name">{product.name}</h1>
-          <p className="product-description">{product.description}</p>
-          <div className="actions">
-            <div className="product-rating">
-              {[...Array(product.rating)].map((_, i) => (
-                <FaStar key={i} className="star" />
-              ))}
-            </div>
-            <div className="quantity-selector">
-              <label htmlFor="quantity">Cantidad:</label>
-              <input id="quantity" type="number" min="1" defaultValue="1" />
-            </div>
+        <div className='content-details'>
+
+          <div className="image-carousel">
+            <button className="carousel-control prev" onClick={handlePrevClick}>{<IoIosArrowBack />}</button>
+            <img
+              src={product.images[currentImageIndex]}
+              alt="Producto"
+              className="product-image"
+            />
+            <button className="carousel-control next" onClick={handleNextClick}>{<IoIosArrowForward />}</button>
           </div>
-          <button className="zipcode-btn" onClick={handleModalOpen}>
-            <FaMapMarkerAlt /> Realiza un pedido a domicilio de México
-          </button>
-          <div className="actions">
-            <button className="add-to-cart" onClick={handleAddToCart}>
-              <FaCartShopping /> Agregar al carrito
+
+          <div className="product-info">
+            <h2 className="product-brand">{product.brand}</h2>
+            <h1 className="product-name">{product.name}</h1>
+            <p className="product-description">{product.description}</p>
+            <div className="actions">
+              <div className="product-rating">
+                {[...Array(product.rating)].map((_, i) => (
+                  <FaStar key={i} className="star" />
+                ))}
+              </div>
+              <div className="quantity-selector">
+                <label htmlFor="quantity">Cantidad:</label>
+                <input id="quantity" type="number" min="1" defaultValue="1" />
+              </div>
+            </div>
+            <button className="zipcode-btn" onClick={handleModalOpen}>
+              <FaMapMarkerAlt /> Realiza un pedido a domicilio de México
             </button>
-            <span className="price-label">${product.price.toFixed(2)} {product.currency}</span>
+            <div className="actions">
+              <button className="add-to-cart" onClick={handleAddToCart}>
+                <FaCartShopping /> Agregar al carrito
+              </button>
+              <span className="price-label">${product.price.toFixed(2)} {product.currency}</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="product-comments">
-        <h3>Comentarios:</h3>
-        {product.comments.map((comment, index) => (
-          <p key={index} className="comments-text">
-            {comment.user}: {comment.comment}
-          </p>
-        ))}
-      </div>
+        <div className="product-comments">
+          <h3>Comentarios:</h3>
+          {product.comments.map((comment, index) => (
+            <p key={index} className="comments-text">
+              {comment.user}: {comment.comment}
+            </p>
+          ))}
+        </div>
 
-      {isModalOpen && <ShippingOptions onClose={handleModalClose} />}
-      
-      {/* Renderizar*/}
-      {alert}
-    </div>
+        {isModalOpen && <ShippingOptions onClose={handleModalClose} />}
+
+        {alert}
+      </div>
+    </>
   );
 };
 

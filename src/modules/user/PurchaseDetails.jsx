@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import './../../assets/Pages/user/PurchaseDetails.scss';
 import ReturnModal from '../../components/user/ReturnModal';
+import { IoIosArrowBack } from "react-icons/io";
+import { useLocation, useNavigate } from "react-router-dom"; // Importamos useNavigate
 
 const PurchaseDetails = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const handleBackClick = () => {
+    navigate(-1);
+  };
   const [isModalOpen, setModalOpen] = useState(false);
 
   const openModal = () => {
@@ -14,9 +21,11 @@ const PurchaseDetails = () => {
   };
 
   return (
+    <>
     <div className='purchase'>
-      <h2 className="title">Detalle del pedido</h2>
-
+    <button className="back" onClick={handleBackClick}>
+          <IoIosArrowBack /> Detalles de la compra
+        </button>
       <div className="purchase-details-page">
         <div className="details-container">
           <div className="product-image">
@@ -74,6 +83,7 @@ const PurchaseDetails = () => {
 
       {isModalOpen && <ReturnModal onClose={closeModal} />}
     </div>
+    </>
   );
 };
 

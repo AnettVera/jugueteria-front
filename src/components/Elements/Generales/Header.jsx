@@ -12,7 +12,7 @@ const Header = () => {
   const { user: authUser } = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false); // Control del menú
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,6 +48,17 @@ const Header = () => {
     setMenuOpen((prev) => !prev);
   };
 
+  // Navegar y hacer scroll
+  const navigateAndScroll = (sectionId) => {
+    navigate('/');
+    setTimeout(() => {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100); // Pequeño retraso para asegurar que la página cargue.
+  };
+
   return (
     <header className="header">
       <div className="header__logo">
@@ -60,17 +71,14 @@ const Header = () => {
       </button>
 
       <nav className={`header__nav ${menuOpen ? 'header__nav--open' : ''}`}>
-
-         {authUser.signed ? (
+        {authUser.signed ? (
           <>
             {authUser.roles.some(role => role.type === 'ADMIN') ? (
-              <>
-                <Link to="/dashboard" className="header__link">Panel de Administrador</Link>
-              </>
+              <Link to="/dashboard" className="header__link">Panel de Administrador</Link>
             ) : (
               <>
-                <a href="#quienes-somos" className="header__link">¿Quiénes somos?</a>
-                <a href="#contactanos" className="header__link">Contáctanos</a>
+                <button className="header__link" onClick={() => navigateAndScroll('quienes-somos')}>¿Quiénes somos?</button>
+                <button className="header__link" onClick={() => navigateAndScroll('contactanos')}>Contáctanos</button>
               </>
             )}
             <button className="header__user-icon" onClick={toggleModal}>
@@ -78,23 +86,22 @@ const Header = () => {
             </button>
             {isModalOpen && (
               <ModalUsuario
-                role={user.role}
-                name={`${user.name} ${user.last_name}`}
-                email={user.email}
+                role={user?.role}
+                name={`${user?.name} ${user?.last_name}`}
+                email={user?.email}
                 onClose={closeModal}
               />
             )}
           </>
         ) : (
           <>
-            <a href="#quienes-somos" className="header__link">¿Quiénes somos?</a>
-            <a href="#contactanos" className="header__link">Contáctanos</a>
+            <button className="header__link" onClick={() => navigateAndScroll('quienes-somos')}>¿Quiénes somos?</button>
+            <button className="header__link" onClick={() => navigateAndScroll('contactanos')}>Contáctanos</button>
             <Link to="/login" className="header__link">Iniciar sesión</Link>
             <Link to="/register"><button className="header__register-btn">Registrarse</button></Link>
           </>
         )}
       </nav>
-
     </header>
   );
 };

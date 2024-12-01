@@ -4,8 +4,11 @@ import { BiLogOut } from 'react-icons/bi';
 import { ThemeContext } from './../../../config/Theme/ThemeContext';
 import './../../../assets/Components/general/ModalUsuario.scss';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { RiShoppingBag4Fill } from "react-icons/ri";
+
 
 const ModalUsuario = ({ role, name, email, onClose }) => {
+  
   const { theme, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,6 +35,11 @@ const ModalUsuario = ({ role, name, email, onClose }) => {
     window.location.reload();
   };
 
+  const handlePurchaseHistory = () => {
+    navigate('/historial');
+    onClose();
+  };
+
   return (
     <div className="user-modal">
       <div className="user-modal__header">
@@ -46,9 +54,15 @@ const ModalUsuario = ({ role, name, email, onClose }) => {
         </span>
       </button>
       <div className="user-modal__body">
+      {role === 'CLIENT' && (
+          <button className="user-modal__option" onClick={handlePurchaseHistory}>
+            <RiShoppingBag4Fill className="user-modal__icon" /> Historial de Compras
+          </button>
+        )}
         <button className="user-modal__option">
           <PiGearSix className="user-modal__icon" /> Gestionar perfil
         </button>
+      
         <button className="user-modal__option" onClick={handleLogout}>
           <BiLogOut className="user-modal__icon" /> Cerrar sesión
         </button>

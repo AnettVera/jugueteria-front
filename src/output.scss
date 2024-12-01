@@ -129,12 +129,13 @@ a {
   display: flex;
   align-items: center;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 20px;
   color: var(--lg-text-color); 
   margin-bottom: 10px;
   width: fit-content;
   padding: 5px 15px;
   border-radius: 5px;
+  font-family: var(--font-family-rounded);
 
 
   &:hover {

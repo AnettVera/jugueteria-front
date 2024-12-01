@@ -2,8 +2,18 @@ import React, { useState, useEffect } from 'react';
 import Header from '../../components/Elements/Generales/Header';
 import '../../assets/Pages/Carrito.scss';
 import CarritoCard from '../../components/Elements/Generales/CarritoCard';
+import { IoIosArrowBack } from "react-icons/io";
+import { useLocation, useNavigate } from "react-router-dom"; // Importamos useNavigate
+
+
 
 const Carrito = () => {
+    const location = useLocation();
+    const navigate = useNavigate(); 
+    const handleBackClick = () => {
+        navigate(-1); 
+    };
+
     const initialProducts = [
         { id: 1, name: "Energize Lab Eilik", description: "Robot de 10x25 cm blanco con azul", price: "75.00" },
         { id: 2, name: "Energize Lab Eilik 2", description: "Robot de 12x30 cm negro con rojo", price: "85.00" },
@@ -47,9 +57,12 @@ const Carrito = () => {
     };
 
     return (
+        <>
+        <Header/>
         <div className="carritoPage">
-            <Header />
-            <p>Carrito</p>
+            <button className="back" onClick={handleBackClick}>
+                <IoIosArrowBack /> Productos
+            </button>
             <div className="carritoPage__cart">
                 <div className="carritoPage__cartHeader">
                     <p>Productos en carrito</p>
@@ -74,6 +87,7 @@ const Carrito = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 
