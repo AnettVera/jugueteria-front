@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import axios from 'axios'
 import Header from '../../components/Elements/Generales/Header'
 import * as yup from 'yup'
@@ -6,9 +6,12 @@ import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom';
 import '../../assets/Pages/RegisterPage.scss'
 import Register from '../../assets/images/Register.svg'
+import { AuthContext } from '../../config/context/auth-context'
 
 const RegisterPage = () => {
     const navigate = useNavigate();
+    const { dispatch } = useContext(AuthContext);
+    
     const formik = useFormik({
         initialValues: {
             name: '',
@@ -37,10 +40,11 @@ const RegisterPage = () => {
                     phone_number: values.tel,
                     password: values.password
                 });
-                console.log(response.data);
-                const { token, userId } = response.data;
+                const { token, userId, role } = response.data;
                 localStorage.setItem('jwt_token', token);
                 localStorage.setItem('user_id', userId);
+                localStorage.setItem('role', role);
+                dispatch({ type: 'SIGNIN', payload: { roles: [{ type: role }] } });
                 navigate('/');
             } catch (error) {
                 if (error.response) {

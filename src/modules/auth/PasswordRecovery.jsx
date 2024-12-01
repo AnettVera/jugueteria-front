@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../../components/Elements/Generales/Header';
 import login from '../../assets/images/Forgot password-amico.svg';
 import '../../assets/Pages/PaswordRecovery.scss';
 import { useFormik } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as yup from 'yup';
 import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert';
+import { BeatLoader } from 'react-spinners';
 
 const PasswordRecovery = () => {
   const { alert, showAlert } = useCustomAlert(); // Hook para manejar las alertas
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -18,6 +22,7 @@ const PasswordRecovery = () => {
       email: yup.string().email('El email no es válido').required('El email es obligatorio'),
     }),
     onSubmit: async (values) => {
+      setIsLoading(true);
       try {
         const response = await axios.post('http://localhost:6868/toystore/users/recovery-password', {
           email: values.email,
@@ -27,12 +32,16 @@ const PasswordRecovery = () => {
             title: "Éxito",
             text: "El correo de recuperación fue enviado exitosamente.",
             icon: "success",
+          }).then(() => {
+            navigate('/');
           });
         } else {
           showAlert({
             title: "Error",
             text: "No se pudo enviar el correo de recuperación. Inténtalo nuevamente.",
             icon: "error",
+          }).then(() => {
+            navigate('/');
           });
         }
       } catch (error) {
@@ -41,7 +50,11 @@ const PasswordRecovery = () => {
           title: "Error",
           text: "Ocurrió un error al intentar enviar el correo de recuperación.",
           icon: "error",
+        }).then(() => {
+          navigate('/');
         });
+      } finally {
+        setIsLoading(false);
       }
     },
   });
@@ -73,9 +86,9 @@ const PasswordRecovery = () => {
             <button
               className='buttonForm'
               type="submit"
-              disabled={formik.errors.email || !formik.values.email}
+              disabled={formik.errors.email || !formik.values.email || isLoading}
             >
-              Mandar correo
+              {isLoading ? <BeatLoader size={15} color={"#EF1A23"} /> : 'Mandar correo'}
             </button>
           </form>
         </div>

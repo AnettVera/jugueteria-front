@@ -84,6 +84,14 @@ const AppRouter = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="carrito-de-compras" element={<Carrito />} />
+        <Route path="producto/:id" element={<Product />} />
+        <Route path="login" element={<SignInPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        <Route path="recovery-password" element={<PasswordRecovery />} />
+        <Route path="reset-password" element={<NewPassword />} />
+        
         {loading ? (
           <Route path="*" element={<Loading />} />
         ) : user.signed ? (
@@ -93,13 +101,6 @@ const AppRouter = () => {
           </>
         ) : (
           <>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="carrito-de-compras" element={<Carrito />} />
-            <Route path="producto/:id" element={<Product />} />
-            <Route path="login" element={<SignInPage />} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="recovery-password" element={<PasswordRecovery />} />
-            <Route path="reset-password" element={<NewPassword />} />
             <Route path="*" element={<NotFound />} />
           </>
         )}
