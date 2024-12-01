@@ -6,8 +6,6 @@ import { RiRobot2Fill, RiBearSmileFill } from "react-icons/ri";
 import { PiLegoDuotone } from "react-icons/pi";
 import { FaDice } from "react-icons/fa6";
 import { PiFlowerTulipFill } from "react-icons/pi";
-import Header from "./../../components/Elements/Generales/Header";
-import ProductCard from './../../components/Elements/Generales/ProductCard'
 
 const categories = {
   default: {
@@ -109,10 +107,14 @@ const CustomProducts = ({ onCategoryChange }) => {
           />
         ) : (
           <div className="header-circles">
+            <img src={Decorative} alt="Decorative"
+            className="image"/>
             <div
               className="circle"
               style={{ backgroundColor: color }}
-            ></div>
+            >
+
+            </div>
             <div
               className="circle"
               style={{ backgroundColor: `${color}80` }}

@@ -5,7 +5,6 @@ import { AuthContext } from "../../config/context/auth-context";
 import Header from "../../components/Elements/Generales/Header";
 import ProductCard from "../../components/Elements/Generales/ProductCard";
 import Footer from "../../components/Elements/Generales/Footer";
-import Categories from "../../components/Elements/Generales/Categories";
 import { CiSearch } from "react-icons/ci";
 import FloatingButton from "../../components/shared/FloatingButton";
 import CustomProducts from "./CustomProducts";

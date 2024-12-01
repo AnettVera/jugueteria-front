@@ -37,6 +37,7 @@
     .header-content {
       height: 100%;
       padding: 30px 0px;
+      z-index: 11;
       h1 {
         font-family: var(--font-family-rounded);
         font-size: 1.5rem;
@@ -51,6 +52,13 @@
     }
 
     .header-circles {
+     .image{
+      width: 200px;
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      z-index: 10;
+     }
       .circle {
         width: 65px;
         height: 65px;
