@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Importar useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import "../../assets/Pages/LandingPage.scss";
 import { AuthContext } from "../../config/context/auth-context";
 import Header from "../../components/Elements/Generales/Header";
@@ -8,8 +8,14 @@ import Footer from "../../components/Elements/Generales/Footer";
 import Categories from "../../components/Elements/Generales/Categories";
 import { CiSearch } from "react-icons/ci";
 import FloatingButton from "../../components/shared/FloatingButton";
+import CustomProducts from "./CustomProducts";
 
 const LandingPage = () => {
+
+  const [selectedProducts, setSelectedProducts] = useState("Lo más popular");
+  const handleCategoryChange = (products) => {
+    setSelectedProducts(products); 
+  };
   const products = [
     {
       id: 1,
@@ -61,32 +67,7 @@ const LandingPage = () => {
   return (
     <div className="bg-background">
       <Header />
-      <section className="hero-section">
-        <div className="hero-content">
-          <div className="hero-text">
-            <h1>Toy Store</h1>
-            <p>Juguetes que inspiran la imaginación de niños y adultos.</p>
-          </div>
-          <div className="hero-image">
-            <img
-              src="https://i.pinimg.com/originals/fb/14/dd/fb14dd15ec54616867445fc670cd8e5f.png"
-              alt="Juguetes felices"
-            />
-          </div>
-        </div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 320"
-          className="hero-wave"
-        >
-          <path
-            fill="#EF1A23"
-            fillOpacity="1"
-            d="M0,288L60,282.7C120,277,240,267,360,250.7C480,235,600,213,720,197.3C840,181,960,171,1080,186.7C1200,203,1320,245,1380,266.7L1440,288L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
-          ></path>
-        </svg>
-      </section>
-      <div className="text-center">
+      <CustomProducts onCategoryChange={handleCategoryChange} />      <div className="text-center">
         <div className="search-wrapper">
           <input
             type="text"
@@ -101,9 +82,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <Categories />
-      <h2 className="text-center">Los más populares</h2>
-      <FloatingButton onClick={handleFloatingButtonClick} /> 
+      <h2 className="text-center">{selectedProducts}</h2>      <FloatingButton onClick={handleFloatingButtonClick} /> 
       <div className="products">
         {products.map((product) => (
           <ProductCard
@@ -151,7 +130,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <Footer />
+      <Footer/>
     </div>
   );
 };

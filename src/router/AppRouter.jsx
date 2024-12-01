@@ -23,6 +23,9 @@ import ProductsPage from "../modules/admin/ProductsPage";
 import ReturnPage from "../modules/admin/ReturnPage";
 import SpecificReturnPage from "../modules/admin/SpecificReturnPage";
 
+//cajero
+import Home from "../modules/countersalesman/Home";
+
 import Loading from "../components/shared/Loading";
 
 const AppRouter = () => {
@@ -64,6 +67,12 @@ const AppRouter = () => {
             <Route path="carrito-de-compras" element={<Carrito />} />
             <Route path="historial" element={<PurchaseHistory />} />
             <Route path="historial/detalles/:id" element={<PurchaseDetails />} />
+          </>
+        )
+      case 'countersaleman':
+        return(
+          <>
+          <Route path="/" element={<Home/>}/>
           </>
         )
 
