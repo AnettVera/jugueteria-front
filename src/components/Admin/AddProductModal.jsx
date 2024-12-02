@@ -121,6 +121,7 @@ const AddProductModal = ({ onClose, onSave }) => {
 
   const addImageField = () => {
     setImages([...images, null]);
+    formik.setFieldValue('images', [...formik.values.images, null]);
   };
 
   const categoryOptions = categories.map((category) => ({

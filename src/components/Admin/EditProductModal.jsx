@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Select from 'react-select';
 import './../../assets/Components/general/Modal.scss';
 import { useFormik } from 'formik';
@@ -6,6 +6,7 @@ import * as yup from 'yup';
 
 const EditProductModal = ({ product, categories, onClose, onSave }) => {
   const fileInputRefs = useRef([]);
+  const [images, setImages] = useState(product.images ? product.images.map((image) => `http://localhost:6868/${image.image_url}`) : []);
 
   const handleFileSelect = (index) => {
     if (fileInputRefs.current[index]) {
@@ -20,6 +21,11 @@ const EditProductModal = ({ product, categories, onClose, onSave }) => {
       newImages[index] = URL.createObjectURL(file);
       formik.setFieldValue('images', newImages);
     }
+  };
+
+  const addImageField = () => {
+    setImages([...images, null]);
+    formik.setFieldValue('images', [...formik.values.images, null]);
   };
 
   const validationSchema = yup.object({
@@ -46,7 +52,8 @@ const EditProductModal = ({ product, categories, onClose, onSave }) => {
       .required('Las categorías son obligatorias'),
     images: yup
       .array()
-      .test('all-images-present', 'Debes subir las 5 imágenes', (value) =>
+      .min(1, 'Debes subir al menos una imagen')
+      .test('at-least-one-image', 'Debes subir al menos una imagen', (value) =>
         value.every((image) => image !== null)
       ),
   });
@@ -55,14 +62,14 @@ const EditProductModal = ({ product, categories, onClose, onSave }) => {
     initialValues: {
       name: product.name,
       description: product.description,
-      quantity: product.quantity,
+      quantity: product.stock,
       price: product.price,
-      categories: product.categories.map((cat) => cat),
-      images: product.images,
+      categories: product.category ? [product.category.name] : [],
+      images: images,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      onSave(values);
+      onSave({ ...product, ...values });
     },
   });
 
@@ -104,6 +111,7 @@ const EditProductModal = ({ product, categories, onClose, onSave }) => {
                     />
                   </div>
                 ))}
+                <button type="button" onClick={addImageField}>Agregar otra imagen</button>
               </div>
               {formik.errors.images && formik.touched.images && (
                 <div className="error-message">{formik.errors.images}</div>

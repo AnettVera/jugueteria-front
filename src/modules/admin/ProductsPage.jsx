@@ -1,48 +1,54 @@
 import { Button, Tooltip } from 'flowbite-react';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { HiPlus, HiOutlinePencilSquare } from "react-icons/hi2";
 import CustomDataTable from '../../components/shared/CustomDataTable';
 import SearchEngine from '../../components/Elements/Generales/SearchEngine';
 import EditProductModal from '../../components/Admin/EditProductModal';
 import AddProductModal from '../../components/Admin/AddProductModal'; 
 import './../../assets/Pages/admin_pages/ProductsPage.scss';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const ProductsPage = () => {
   const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      productName: 'Juguete A',
-      productDescription: 'Un juguete divertido para niños.',
-      stock: 50,
-      images: ['https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSQ4i2X-G487wY2XnnlCLxMrUyq-GDhpi5nBGciWdA3xalfo0OFmu3Sg5ENaMSdiAFoLRnO28UfxMNkfChg0bUGgkpPiA1Cgrq4EKlEpw4OIew04rQs00DZ9RnSpeCeGPi2UMyvMw&usqp=CAc'],
-      quantity: 50,
-      price: 100,
-      categories: ['Peluches'],
-    },
-    {
-      id: 2,
-      productName: 'Juguete B',
-      productDescription: 'Un juguete educativo.',
-      stock: 30,
-      images: ['https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTAyiYUi-R6YYUaR9Vb3jUXUk9LN0GyMa4iE3t_fQ7puiyZv-fUCaID88HD_LM2ZHNZoO7yEaRFX9EyDK5Gh1EYHpbMsvz3e4muj1wfZ4qRaMmR0OqjFKDSyaUHSn3mJRTnfWSOg1Lfyg&usqp=CAc'],
-      quantity: 30,
-      price: 200,
-      categories: ['Educativos', 'De mesa'],
-    },
-  ]);
+  const [products, setProducts] = useState([]);
   const [editProduct, setEditProduct] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); 
+  const location = useLocation();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const queryParams = new URLSearchParams(location.search);
+      const categoryId = queryParams.get('category');
+      try {
+        setLoading(true);
+        const response = await axios.get(`http://localhost:6868/toystore/products/category/${categoryId}`);
+        if (response.data.message === 'No se encontraron productos para esta categoría') {
+          setProducts([]);
+        } else {
+          setProducts(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [location.search]);
 
   const columns = useMemo(() => [
     {
       name: 'Nombre del producto',
-      selector: (row) => row.productName,
+      selector: (row) => row.name,
       sortable: true,
     },
     {
       name: 'Descripción del producto',
-      selector: (row) => row.productDescription,
+      selector: (row) => row.description,
+      sortable: true,
     },
     {
       name: 'Stock',
@@ -52,25 +58,56 @@ const ProductsPage = () => {
     {
       name: 'Acciones',
       cell: (row) => (
-          <Button onClick={() => handleEdit(row)} className='edit-button'>
-            <HiOutlinePencilSquare />
-          </Button>
+        <Button onClick={() => handleEdit(row)} className='edit-button'>
+          <HiOutlinePencilSquare />
+        </Button>
       ),
     },
   ], []);
 
-  const handleEdit = (product) => {
-    setEditProduct(product);
+  const handleEdit = async (product) => {
+    try {
+      const response = await axios.get(`http://localhost:6868/toystore/products/${product.product_id}`);
+      setEditProduct(response.data);
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+    }
   };
 
   const handleCloseEditModal = () => {
     setEditProduct(null);
   };
 
-  const handleSaveProduct = () => {
-    console.log('Guardando producto...');
-    handleCloseEditModal();
-  };
+  const handleSaveProduct = async (updatedProduct) => {
+    try {
+        const formData = new FormData();
+        formData.append('name', updatedProduct.name);
+        formData.append('description', updatedProduct.description);
+        formData.append('price', updatedProduct.price);
+        formData.append('category_id', updatedProduct.category_id);
+        formData.append('stock', updatedProduct.stock);
+
+        // Añadir las imágenes al FormData
+        if (updatedProduct.images && updatedProduct.images.length > 0) {
+            updatedProduct.images.forEach((image, index) => {
+                if (image) {
+                    formData.append('images', image);
+                }
+            });
+        }
+
+        await axios.put(`http://localhost:6868/toystore/products/${updatedProduct.product_id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        setProducts(products.map(product => product.product_id === updatedProduct.product_id ? updatedProduct : product));
+        handleCloseEditModal();
+    } catch (error) {
+        console.error('Error updating product:', error);
+    }
+};
 
   const handleAddProduct = () => {
     setIsAddModalOpen(true);

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import { Link } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom'; 
 import './../../assets/Components/admin/SideBar.scss';
+import axios from 'axios';
+import AddProductModal from '../../components/Admin/AddProductModal';
 
 import { IoSchoolSharp } from "react-icons/io5";
 import { MdDashboard } from "react-icons/md";
@@ -13,10 +15,39 @@ import { TbTruckReturn } from "react-icons/tb";
 
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [categories, setCategories] = useState([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleAddProduct = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
+  };
+
+  const handleSaveNewProduct = (newProduct) => {
+    // Aquí puedes manejar la lógica para guardar el nuevo producto
+    handleCloseAddModal();
+  };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:6868/toystore/categories');
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <div className="sidebar-layout">
@@ -34,42 +65,14 @@ const Sidebar = ({ children }) => {
               {isOpen && <span>Dashboard</span>}
             </li>
           </Link>
-          <Link to="/productos?category=educativos" className="menu-link">
-            <li>
-              <IoSchoolSharp className="menu-icon" />
-              {isOpen && <span>Educativos</span>}
+          {categories.map((category) => (
+            <li key={category.id} className="menu-link" onClick={() => navigate(`/productos?category=${category.id}`)}>
+              <span className="menu-icon">{category.name}</span>
             </li>
-          </Link>
-          <Link to="/productos?category=electronicos" className="menu-link">
-            <li>
-              <RiRobot2Fill className="menu-icon" />
-              {isOpen && <span>Electrónicos</span>}
-            </li>
-          </Link>
-          <Link to="/productos?category=construccion" className="menu-link">
-            <li>
-              <PiLegoDuotone className="menu-icon" />
-              {isOpen && <span>Construcción</span>}
-            </li>
-          </Link>
-          <Link to="/productos?category=de-mesa" className="menu-link">
-            <li>
-              <FaDice className="menu-icon" />
-              {isOpen && <span>De Mesa</span>}
-            </li>
-          </Link>
-          <Link to="/productos?category=peluches" className="menu-link">
-            <li>
-              <RiBearSmileFill className="menu-icon" />
-              {isOpen && <span>Peluches</span>}
-            </li>
-          </Link>
-          <Link to="/productos?category=exterior" className="menu-link">
-            <li>
-              <PiFlowerTulipFill className="menu-icon" />
-              {isOpen && <span>Exterior</span>}
-            </li>
-          </Link>
+          ))}
+          <li className="menu-link" onClick={handleAddProduct}>
+            <span className="menu-icon">Añadir nuevo producto</span>
+          </li>
           <Link to="/devoluciones" className="menu-link">
             <li>
               <TbTruckReturn className="menu-icon" />
@@ -81,6 +84,12 @@ const Sidebar = ({ children }) => {
       <div className="content">
         {children}
       </div>
+      {isAddModalOpen && (
+        <AddProductModal
+          onClose={handleCloseAddModal}
+          onSave={handleSaveNewProduct}
+        />
+      )}
     </div>
   );
 };
