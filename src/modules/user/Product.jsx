@@ -7,13 +7,13 @@ import ShippingOptions from '../../components/user/ShippingOptions';
 import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert';
 import FloatingButton from '../../components/shared/FloatingButton';
 import Header from '../../components/Elements/Generales/Header';
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
+import Footer from '../../components/Elements/Generales/Footer';
 
 const Product = () => {
-  const { productId } = useParams();  
+  const { productId } = useParams();
   const [product, setProduct] = useState(null);
-  //const [images, setImages] = useState(product.images ? product.images.map((image) => `http://localhost:6868/${image.image_url}`): []);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,12 +24,12 @@ const Product = () => {
     const fetchProductDetails = async () => {
       try {
         const response = await axios.get(`http://localhost:6868/toystore/products/${productId}`);
-        
+
         // Safely handle image formatting
-        const images = response.data?.images 
-          ? response.data.images.map(image => 
+        const images = response.data?.images
+          ? response.data.images.map(image =>
             `http://localhost:6868/${image.image_url}`
-            )
+          )
           : ["https://via.placeholder.com/300"];
 
         // Format product data with safe defaults
@@ -45,16 +45,14 @@ const Product = () => {
           comments: response.data.comments || []
         };
 
-
         setProduct(formattedProduct);
-        setProduct(product);
         setLoading(false);
       } catch (error) {
         console.error("Error al obtener los detalles del producto:", error);
         setLoading(false);
       }
     };
-    if (productId){
+    if (productId) {
       fetchProductDetails();
     }
   }, [productId]);
@@ -70,14 +68,14 @@ const Product = () => {
 
   const handlePrevClick = () => {
     if (!product || !product.images) return;
-    setCurrentImageIndex((prevIndex) => 
+    setCurrentImageIndex((prevIndex) =>
       (prevIndex - 1 + product.images.length) % product.images.length
     );
   };
 
   const handleNextClick = () => {
     if (!product || !product.images) return;
-    setCurrentImageIndex((prevIndex) => 
+    setCurrentImageIndex((prevIndex) =>
       (prevIndex + 1) % product.images.length
     );
   };
@@ -114,25 +112,25 @@ const Product = () => {
           <div className="image-carousel">
             <button className="carousel-control prev" onClick={handlePrevClick}>{<IoIosArrowBack />}</button>
             <img
-              src={product.images[currentImageIndex]}
+              src={product?.images[currentImageIndex] || "https://via.placeholder.com/300"}
               alt="Producto"
               className="product-image"
             />
-            <button 
-            className="carousel-control next" 
-            onClick={handleNextClick}
-            disabled={!product || product.images.length === 0}
+            <button
+              className="carousel-control next"
+              onClick={handleNextClick}
+              disabled={!product || product.images.length === 0}
             >
               {<IoIosArrowForward />}
             </button>
           </div>
 
           <div className="product-info">
-            <h1 className="product-name">{product.name}</h1>
-            <p className="product-description">{product.description}</p>
+            <h1 className="product-name">{product?.name || 'Producto sin nombre'}</h1>
+            <p className="product-description">{product?.description || 'Sin descripción'}</p>
             <div className="actions">
               <div className="product-rating">
-                {[...Array(product.rating)].map((_, i) => (
+                {[...Array(product?.rating || 5)].map((_, i) => (
                   <FaStar key={i} className="star" />
                 ))}
               </div>
@@ -148,14 +146,14 @@ const Product = () => {
               <button className="add-to-cart" onClick={handleAddToCart}>
                 <FaCartShopping /> Agregar al carrito
               </button>
-              <span className="price-label">${product.price.toFixed(2)} {product.currency}</span>
+              <span className="price-label">${product?.price?.toFixed(2) || '0.00'} {product?.currency || 'mx'}</span>
             </div>
           </div>
         </div>
 
         <div className="product-comments">
           <h3>Comentarios:</h3>
-          {product.comments.map((comment, index) => (
+          {product?.comments.map((comment, index) => (
             <p key={index} className="comments-text">
               {comment.user}: {comment.comment}
             </p>
@@ -166,6 +164,7 @@ const Product = () => {
 
         {alert}
       </div>
+      <Footer />
     </>
   );
 };
