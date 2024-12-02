@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./../../assets/Pages/user/CustomProducts.scss";
 import Decorative from "./../../assets/images/decorative.svg";
 import { IoSchoolSharp } from "react-icons/io5";
@@ -6,86 +6,77 @@ import { RiRobot2Fill, RiBearSmileFill } from "react-icons/ri";
 import { PiLegoDuotone } from "react-icons/pi";
 import { FaDice } from "react-icons/fa6";
 import { PiFlowerTulipFill } from "react-icons/pi";
+import axios from "axios";
 
-const categories = {
-  default: {
-    title: "Toy Store",
-    phrase: "Juguetes que inspiran la imaginación de niños y adultos.",
-    waveClass: "default-wave",
-    showImage: true,
-    showButton: false,
-    color: "#ff0000", 
-    products:'Lo más popular'
-  },
-  electronicos: {
-    title: "ELECTRONICOS",
-    phrase: "Encuentra tu animatrónico ideal y llena tu vida de diversión",
-    waveClass: "category-wave",
-    showImage: false,
-    showButton: true,
-    icon: <RiRobot2Fill />,
-    color: "#001eff", 
-    products:'Electronicos'
-  },
-  demesa: {
-    title: "JUEGOS DE MESA",
-    phrase: "Diviértete en familia",
-    waveClass: "category-wave",
-    showImage: false,
-    showButton: true,
-    icon: <FaDice />,
-    color: "#ff0000",
-    products:'Juegos de mesa'
-  },
-  Construccion: {
-    title: "JUEGOS DE CONSTRUCCIÓN",
-    phrase: "Construye tu diversión",
-    waveClass: "category-wave",
-    showImage: false,
-    showButton: true,
-    icon: <PiLegoDuotone />,
-    color: "#ffd700", 
-    products:'Juegos de construcción'
-  },
-  Exteriores: {
-    title: "JUEGOS PARA EXTERIORES",
-    phrase: "Diviértete mientras disfrutas de la naturaleza",
-    waveClass: "category-wave",
-    showImage: false,
-    showButton: true,
-    icon: <PiFlowerTulipFill />,
-    color: "#00ff00", 
-    products:'Juegos para exteriores'
-  },
-  Peluches: {
-    title: "Peluches",
-    phrase: "Encuentra a tu mejor amigo",
-    waveClass: "category-wave",
-    showImage: false,
-    showButton: true,
-    icon: <RiBearSmileFill />,
-    color: "#8b4513", 
-    products:'Peluches'
-  },
-  Educativos: {
-    title: "JUEGOS EDUCATIVOS",
-    phrase: "Aprende mientras juegas",
-    waveClass: "category-wave",
-    showImage: false,
-    showButton: true,
-    icon: <IoSchoolSharp />,
-    color: "#008000", 
-    products:'Juegos educativos'
-  },
-};
+const colorMapping = {
+  'Electrónicos': '#001eff',
+  'De Mesa': '#ff0000',
+  'Construcción': '#ffd700',
+  'Exterior': '#00ff00',
+  'Peluches': '#8b4513',
+  'Educativos': '#008000'
+}
+
+const iconMapping = {
+  'Electrónicos': <RiRobot2Fill />,
+  'De Mesa': <FaDice />,
+  'Construcción': <PiLegoDuotone />,
+  'Exterior': <PiFlowerTulipFill />,
+  'Peluches': <RiBearSmileFill />,
+  'Educativos': <IoSchoolSharp />
+}
 
 const CustomProducts = ({ onCategoryChange }) => {
   const [selectedCategory, setSelectedCategory] = useState("default");
+  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState({
+    default: {
+      title: "Toy Store",
+      phrase: "Juguetes que inspiran la imaginación de niños y adultos.",
+      waveClass: "default-wave",
+      showImage: true,
+      color: "#ff0000",
+      products: 'Lo más popular'
+    }
+  });  
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:6868/toystore/categories');  
+        const apiCategories = response.data.reduce((acc, category) => {
+          const normalizedKey = category.name.toLowerCase().replace(/\s+/g, '');
+          
+          acc[normalizedKey] = {
+            id: category.id,
+            title: category.name === 'De Mesa' ? 'De Mesa' : category.name , 
+            phrase: category.description,
+            waveClass: "category-wave",
+            showImage: false,
+            showButton: true,
+            icon: iconMapping[category.name],
+            color: colorMapping[category.name],
+            products: category.name
+          };
+          return acc;
+        }, { ...categories });
+        setCategories(apiCategories);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error al obtener las categorías:", error);
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
     if (onCategoryChange) {
-      onCategoryChange(categories[category]?.products || "Lo más popular");
+      onCategoryChange(
+        categories[category]?.products || "Lo más popular",
+        categories[category]?.id || null
+      );
     }
   };
 
@@ -113,7 +104,6 @@ const CustomProducts = ({ onCategoryChange }) => {
               className="circle"
               style={{ backgroundColor: color }}
             >
-
             </div>
             <div
               className="circle"
