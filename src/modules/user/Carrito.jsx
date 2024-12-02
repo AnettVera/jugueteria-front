@@ -1,56 +1,71 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from '../../components/Elements/Generales/Header';
 import '../../assets/Pages/Carrito.scss';
 import CarritoCard from '../../components/Elements/Generales/CarritoCard';
 import { IoIosArrowBack } from "react-icons/io";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from 'axios';
+import { useCart } from '../../config/context/useCart';
 
 const Carrito = () => {
+    const { getCart } = useCart();
+    const [products, setProducts] = useState([]);
+    const [quantities, setQuantities] = useState({});
     const navigate = useNavigate();
 
     const handleBackClick = () => {
         navigate(-1);
     };
 
-    const initialProducts = [
-        { id: 1, name: "Energize Lab Eilik", description: "Robot de 10x25 cm blanco con azul", price: 75.00 },
-        { id: 2, name: "Energize Lab Eilik 2", description: "Robot de 12x30 cm negro con rojo", price: 85.00 },
-    ];
-
-    // Inicializar el estado de cantidades
-    const [quantities, setQuantities] = useState(
-        initialProducts.reduce((acc, product) => {
-            acc[product.id] = 1; // Cantidad inicial: 1 para cada producto
-            return acc;
-        }, {})
-    );
+    useEffect(() => {
+        const fetchCart = async () => {
+            const cart = await getCart();
+            setProducts(cart);
+            console.log(cart);
+            const initialQuantities = cart.reduce((acc, product) => {
+                acc[product.id] = product.quantity || 1;
+                return acc;
+            }, {});
+            setQuantities(initialQuantities);
+        };
+        fetchCart();
+    }, [getCart]);
 
     const handleIncrement = (id) => {
-        setQuantities((prev) => ({
-            ...prev,
-            [id]: prev[id] + 1,
-        }));
+        console.log("Incrementando cantidad del producto con ID:", id);
+        setQuantities((prev) => {
+            const newQuantity = prev[id] + 1; // Calcula el nuevo valor
+            return {
+                ...prev,
+                [id]: newQuantity, // Actualiza solo este producto
+            };
+        });
     };
 
     const handleDecrement = (id) => {
-        setQuantities((prev) => ({
-            ...prev,
-            [id]: prev[id] > 1 ? prev[id] - 1 : 1,
-        }));
+        console.log("Decrementando cantidad del producto con ID:", id);
+        setQuantities((prev) => {
+            const newQuantity = Math.max(prev[id] - 1, 1); // Evita valores menores a 1
+            return {
+                ...prev,
+                [id]: newQuantity,
+            };
+        });
     };
 
     const handleInputChange = (id, value) => {
-        const parsedValue = parseInt(value, 10);
-        setQuantities((prev) => ({
-            ...prev,
-            [id]: parsedValue > 0 ? parsedValue : 1,
-        }));
+        const parsedValue = parseInt(value, 10); // Convierte a número
+        if (!isNaN(parsedValue) && parsedValue > 0) {
+            setQuantities((prev) => ({
+                ...prev,
+                [id]: parsedValue, // Actualiza el valor ingresado
+            }));
+        }
     };
 
     const handleCheckout = async () => {
         try {
-            const items = initialProducts.map((product) => ({
+            const items = products.map((product) => ({
                 name: product.name,
                 price: product.price,
                 quantity: quantities[product.id],
@@ -66,6 +81,13 @@ const Carrito = () => {
         }
     };
 
+    const displayedProducts = useMemo(() => {
+        return products.map((product) => ({
+            ...product,
+            quantity: quantities[product.id] || 1,
+        }));
+    }, [products, quantities]);
+
     return (
         <>
             <Header />
@@ -78,14 +100,14 @@ const Carrito = () => {
                         <p>Productos en carrito</p>
                     </div>
 
-                    {initialProducts.map((product) => (
+                    {displayedProducts.map(product => (
                         <CarritoCard
                             key={product.id}
                             id={product.id}
                             name={product.name}
                             description={product.description}
                             price={product.price}
-                            quantity={quantities[product.id]}
+                            quantity={quantities[product.id] || 1} // Usa la cantidad del estado
                             handleIncrement={handleIncrement}
                             handleDecrement={handleDecrement}
                             handleInputChange={handleInputChange}
