@@ -57,7 +57,6 @@ const Carrito = () => {
             }));
 
             const response = await axios.post('http://localhost:6868/toystore/checkout', { items });
-            console.log("Respuesta de la API:", response.data);
             if (response.data.url) {
                 window.location.replace(response.data.url);
             }

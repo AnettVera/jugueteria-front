@@ -63,7 +63,7 @@ const AppRouter = () => {
         return (
           <>
             <Route path="/" element={<LandingPage />} />
-            <Route path="producto/:productName" element={<Product />} />
+            <Route path="producto/:productId" element={<Product />} />
             <Route path="carrito-de-compras" element={<Carrito />} />
             <Route path="historial" element={<PurchaseHistory />} />
             <Route path="historial/detalles/:id" element={<PurchaseDetails />} />

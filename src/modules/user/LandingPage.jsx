@@ -16,7 +16,7 @@ const LandingPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentCategoryId, setCurrentCategoryId] = useState(null);
+  const [currentCategoryId, setCurrentCategoryId] = useState(0);
   const { user } = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
@@ -24,9 +24,9 @@ const LandingPage = () => {
   const fetchProductsByCategory = async (categoryId = null) => {
     setLoading(true);
     try {
-      let url = "http://localhost:6868/toystore/products/category";
+      let url = "http://localhost:6868/toystore/products/";
       if (categoryId) {
-        url += `/${categoryId}`;
+        url += `category/${categoryId}`;
       }
 
       const response = await axios.get(url);
@@ -72,8 +72,8 @@ const LandingPage = () => {
     navigate("/carrito-de-compras");
   };
 
-  const handleProductClick = (productName) => {
-    navigate(`/producto/${productName}`);
+  const handleProductClick = (productId) => {
+    navigate(`/producto/${productId}`);
   };
 
   const renderProducts = () => {
@@ -96,7 +96,7 @@ const LandingPage = () => {
         image={product.images[0]}
         description={product.description}
         price={product.price}
-        onClick={() => handleProductClick(product.name)}
+        onClick={() => handleProductClick(product.id)}
       />
     ));
   };

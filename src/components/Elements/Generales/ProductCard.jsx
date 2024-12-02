@@ -5,7 +5,6 @@ import { PiShoppingCartSimpleFill,PiShoppingCartSimpleBold } from "react-icons/p
 
 
 const ProductCard = ({ name, image, description, price, onClick }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
 
   const toggleFavorite = () => setIsFavorite(!isFavorite);
@@ -16,15 +15,6 @@ const ProductCard = ({ name, image, description, price, onClick }) => {
     <div className="product-card" onClick={onClick}>
       <div className="product-card__header">
         <img src={image} alt={name} className="product-card__image" />
-        <button
-          className={`product-card__favorite ${isFavorite ? "active" : ""}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleFavorite();
-          }}
-        >
-          {isFavorite ? <GoHeartFill /> : <GoHeart />}
-        </button>
       </div>
       <div className="product-card__body">
         <h3 className="product-card__name">{name}</h3>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaStar, FaMapMarkerAlt } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import './../../assets/Pages/user/Product.scss';
@@ -7,37 +7,58 @@ import ShippingOptions from '../../components/user/ShippingOptions';
 import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert';
 import FloatingButton from '../../components/shared/FloatingButton';
 import Header from '../../components/Elements/Generales/Header';
-import { useLocation, useNavigate } from "react-router-dom"; // Importamos useNavigate
-
-const productData = {
-  "brand": "ENERGIZE LAB",
-  "name": "Eilik",
-  "description": "Eilik es el compañero perfecto para niños y adultos amantes de las mascotas, ¡con abundantes emociones, animaciones ociosas y funciones interactivas!",
-  "price": 1300.00,
-  "currency": "mx",
-  "images": [
-    "https://manuals.plus/wp-content/uploads/2024/06/ENERGIZE-LAB-Eilik-Cute-Robot-Pet-product.png?ezimgfmt=rs:368x447/rscb1/ngcb1/notWebP",
-    "https://via.placeholder.com/300",
-    "https://via.placeholder.com/300",
-    "https://via.placeholder.com/300",
-    "https://via.placeholder.com/300"
-  ],
-  "rating": 5,
-  "comments": [
-    {
-      "user": "Ana",
-      "comment": "Lindo Robot Mascota para Niños y Adultos, Tu Perfecto Compañero Interactivo en Casa o en el Trabajo, Regalos Únicos para Niñas y Niños."
-    },
-    {
-      "user": "Carlos",
-      "comment": "Mis hijos aman a Eilik, es muy interactivo y divertido."
-    }
-  ]
-};
+import { useNavigate,useParams } from "react-router-dom";
+import axios from 'axios';
 
 const Product = () => {
-  const location = useLocation();
+  const { productId } = useParams();  
+  const [product, setProduct] = useState(null);
+  //const [images, setImages] = useState(product.images ? product.images.map((image) => `http://localhost:6868/${image.image_url}`): []);
+  const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { alert, showAlert } = useCustomAlert();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:6868/toystore/products/${productId}`);
+        
+        // Safely handle image formatting
+        const images = response.data?.images 
+          ? response.data.images.map(image => 
+            `http://localhost:6868/${image.image_url}`
+            )
+          : ["https://via.placeholder.com/300"];
+
+        // Format product data with safe defaults
+        const formattedProduct = {
+          id: response.data.id,
+          name: response.data.name || 'Producto sin nombre',
+          description: response.data.description || 'Sin descripción',
+          price: response.data.price || 0,
+          category: response.data.category?.name || 'Sin Categoría',
+          images: images,
+          currency: "mx",
+          rating: response.data.rating || 5,
+          comments: response.data.comments || []
+        };
+
+
+        setProduct(formattedProduct);
+        setProduct(product);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error al obtener los detalles del producto:", error);
+        setLoading(false);
+      }
+    };
+    if (productId){
+      fetchProductDetails();
+    }
+  }, [productId]);
+
   const handleBackClick = () => {
     navigate(-1);
   };
@@ -47,19 +68,18 @@ const Product = () => {
     navigate("/carrito-de-compras");
   };
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const { alert, showAlert } = useCustomAlert();
-
-  const product = productData;
-
   const handlePrevClick = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + product.images.length) % product.images.length);
+    if (!product || !product.images) return;
+    setCurrentImageIndex((prevIndex) => 
+      (prevIndex - 1 + product.images.length) % product.images.length
+    );
   };
 
   const handleNextClick = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % product.images.length);
+    if (!product || !product.images) return;
+    setCurrentImageIndex((prevIndex) => 
+      (prevIndex + 1) % product.images.length
+    );
   };
 
   const handleModalOpen = () => {
@@ -98,11 +118,16 @@ const Product = () => {
               alt="Producto"
               className="product-image"
             />
-            <button className="carousel-control next" onClick={handleNextClick}>{<IoIosArrowForward />}</button>
+            <button 
+            className="carousel-control next" 
+            onClick={handleNextClick}
+            disabled={!product || product.images.length === 0}
+            >
+              {<IoIosArrowForward />}
+            </button>
           </div>
 
           <div className="product-info">
-            <h2 className="product-brand">{product.brand}</h2>
             <h1 className="product-name">{product.name}</h1>
             <p className="product-description">{product.description}</p>
             <div className="actions">
