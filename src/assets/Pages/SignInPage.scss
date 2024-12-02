@@ -149,8 +149,14 @@
     .containerImage,
     .containerForm {
       width: 100%;
-      height: auto;
+      height: 100%;
       margin-top: 20px;
+    }
+
+    .containerImage {
+      img {
+        height: 438px;
+      }
     }
 
     .containerForm {
@@ -175,7 +181,6 @@
       height: auto;
     }
 
-    .containerImage,
     .containerForm {
       width: 100%;
       height: auto;
@@ -189,6 +194,10 @@
 
     .buttonForm {
       width: 100%;
+    }
+
+    .containerImage{
+      display: none;
     }
 
     .circulo1,
@@ -204,7 +213,6 @@
       height: auto;
     }
 
-    .containerImage,
     .containerForm {
       width: 100%;
       height: auto;
@@ -220,6 +228,10 @@
       width: 100%;
     }
 
+    .containerImage{
+      display: none;
+    }
+
     .circulo1,
     .circulo2 {
       display: none;
@@ -233,7 +245,6 @@
       height: auto;
     }
 
-    .containerImage,
     .containerForm {
       width: 100%;
       height: auto;
@@ -247,6 +258,10 @@
 
     .buttonForm {
       width: 100%;
+    }
+
+    .containerImage{
+      display: none;
     }
 
     .circulo1,
@@ -262,7 +277,6 @@
       height: auto;
     }
 
-    .containerImage,
     .containerForm {
       width: 100%;
       height: auto;
@@ -276,6 +290,10 @@
 
     .buttonForm {
       width: 100%;
+    }
+
+    .containerImage{
+      display: none;
     }
 
     .circulo1,
@@ -291,7 +309,6 @@
       height: auto;
     }
 
-    .containerImage,
     .containerForm {
       width: 100%;
       height: auto;
@@ -305,6 +322,10 @@
 
     .buttonForm {
       width: 100%;
+    }
+
+    .containerImage{
+      display: none;
     }
 
     .circulo1,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom';
 import './../../assets/Components/admin/SideBar.scss';
 import axios from 'axios';
 import AddProductModal from '../../components/Admin/AddProductModal';
@@ -18,6 +18,15 @@ const Sidebar = ({ children }) => {
   const [categories, setCategories] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const categoriesList = [
+    { id: 1, name: 'Electrónicos', icon: <RiRobot2Fill /> },
+    { id: 2, name: 'Demesa', icon: <FaDice /> },
+    { id: 3, name: 'Construcción', icon: <PiLegoDuotone /> },
+    { id: 4, name: 'Exteriores', icon: <PiFlowerTulipFill /> },
+    { id: 5, name: 'Peluches', icon: <RiBearSmileFill /> },
+    { id: 6, name: 'Educativos', icon: <IoSchoolSharp /> }
+  ];
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -65,9 +74,10 @@ const Sidebar = ({ children }) => {
               {isOpen && <span>Dashboard</span>}
             </li>
           </Link>
-          {categories.map((category) => (
-            <li key={category.id} className="menu-link" onClick={() => navigate(`/productos?category=${category.id}`)}>
-              <span className="menu-icon">{category.name}</span>
+          {categoriesList.map((category) => (
+            <li key={category.id} className="menu-link" onClick={() => navigate(`/productos?category=${category.name}`)}>
+              <span className="menu-icon">{category.icon}</span>
+              <span className="menu-text">{category.name}</span>
             </li>
           ))}
           <li className="menu-link" onClick={handleAddProduct}>

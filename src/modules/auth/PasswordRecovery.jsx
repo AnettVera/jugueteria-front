@@ -21,6 +21,8 @@ const PasswordRecovery = () => {
     validationSchema: yup.object({
       email: yup.string().email('El email no es válido').required('El email es obligatorio'),
     }),
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: async (values) => {
       setIsLoading(true);
       try {

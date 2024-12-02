@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import axios from 'axios'
 import Header from '../../components/Elements/Generales/Header'
 import * as yup from 'yup'
@@ -11,7 +11,7 @@ import { AuthContext } from '../../config/context/auth-context'
 const RegisterPage = () => {
     const navigate = useNavigate();
     const { dispatch } = useContext(AuthContext);
-    
+
     const formik = useFormik({
         initialValues: {
             name: '',
@@ -31,6 +31,8 @@ const RegisterPage = () => {
             password: yup.string().required('La contraseña es obligatoria'),
             passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas no coinciden').required('La confirmación de la contraseña es obligatoria')
         }),
+        validateOnChange: true,
+        validateOnBlur: true,
         onSubmit: async (values) => {
             try {
                 const response = await axios.post('http://localhost:6868/toystore/register', {
@@ -55,6 +57,10 @@ const RegisterPage = () => {
             }
         }
     });
+
+    useEffect(() => {
+        formik.validateForm();
+    }, [formik.values]);
 
     return (
         <div className='containerPadreR'>
@@ -107,7 +113,7 @@ const RegisterPage = () => {
 
                         <label className='LabelR' htmlFor="tel">Telefono</label>
                         <input className='inputR'
-                            type="tel"
+                            type="number"
                             id='tel'
                             name='tel'
                             placeholder='000-000-00-00'

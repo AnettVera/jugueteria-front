@@ -22,6 +22,8 @@ function SignInPage() {
       email: yup.string().email('El email no es valido').required('El email es obligatorio'),
       password: yup.string().required('La contraseña es obligatoria'),
     }),
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: async (values) => {
       try {
         const response = await axios.post('http://localhost:6868/toystore/login', {
