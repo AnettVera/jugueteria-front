@@ -1,85 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaStar, FaMapMarkerAlt } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import './../../assets/Pages/user/Product.scss';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import ShippingOptions from '../../components/user/ShippingOptions';
 import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert';
-import FloatingButton from '../../components/shared/FloatingButton';
-import Header from '../../components/Elements/Generales/Header';
-import { useNavigate,useParams } from "react-router-dom";
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const Product = () => {
-  const { productId } = useParams();  
-  const [product, setProduct] = useState(null);
-  //const [images, setImages] = useState(product.images ? product.images.map((image) => `http://localhost:6868/${image.image_url}`): []);
-  const [loading, setLoading] = useState(true);
+  const { id } = useParams(); // Obtén el id desde la URL
+  const [product, setProduct] = useState(null); // Estado para el producto
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
+
   const { alert, showAlert } = useCustomAlert();
-  const navigate = useNavigate();
 
+  // Solicita el producto desde el backend
   useEffect(() => {
-    const fetchProductDetails = async () => {
+    const fetchProduct = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:6868/toystore/products/${productId}`);
-        
-        // Safely handle image formatting
-        const images = response.data?.images 
-          ? response.data.images.map(image => 
-            `http://localhost:6868/${image.image_url}`
-            )
-          : ["https://via.placeholder.com/300"];
-
-        // Format product data with safe defaults
-        const formattedProduct = {
-          id: response.data.id,
-          name: response.data.name || 'Producto sin nombre',
-          description: response.data.description || 'Sin descripción',
-          price: response.data.price || 0,
-          category: response.data.category?.name || 'Sin Categoría',
-          images: images,
-          currency: "mx",
-          rating: response.data.rating || 5,
-          comments: response.data.comments || []
-        };
-
-
-        setProduct(formattedProduct);
-        setProduct(product);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error al obtener los detalles del producto:", error);
+        const response = await fetch(`http://localhost:6868/toystore/products/${id}`);
+        if (!response.ok) {
+          throw new Error('Error al obtener el producto');
+        }
+        const data = await response.json();
+        setProduct(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
-    if (productId){
-      fetchProductDetails();
-    }
-  }, [productId]);
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
-  const handleFloatingButtonClick = () => {
-    console.log("Redirigiendo al carrito");
-    navigate("/carrito-de-compras");
-  };
+    fetchProduct();
+  }, [id]);
 
   const handlePrevClick = () => {
-    if (!product || !product.images) return;
-    setCurrentImageIndex((prevIndex) => 
-      (prevIndex - 1 + product.images.length) % product.images.length
-    );
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + (product?.images.length || 1)) % (product?.images.length || 1));
   };
 
   const handleNextClick = () => {
-    if (!product || !product.images) return;
-    setCurrentImageIndex((prevIndex) => 
-      (prevIndex + 1) % product.images.length
-    );
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % (product?.images.length || 1));
   };
 
   const handleModalOpen = () => {
@@ -91,8 +55,6 @@ const Product = () => {
   };
 
   const handleAddToCart = async () => {
-    console.log("Producto agregado al carrito");
-
     await showAlert({
       title: "Producto agregado",
       text: `${product.name} se ha añadido al carrito correctamente.`,
@@ -100,73 +62,62 @@ const Product = () => {
     });
   };
 
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
-    <>
-      <Header />
-      <div className="product-details">
-        <button className="back" onClick={handleBackClick}>
-          <IoIosArrowBack /> Productos
-        </button>
-        <FloatingButton onClick={handleFloatingButtonClick} />
-
-        <div className='content-details'>
-
-          <div className="image-carousel">
-            <button className="carousel-control prev" onClick={handlePrevClick}>{<IoIosArrowBack />}</button>
-            <img
-              src={product.images[currentImageIndex]}
-              alt="Producto"
-              className="product-image"
-            />
-            <button 
-            className="carousel-control next" 
-            onClick={handleNextClick}
-            disabled={!product || product.images.length === 0}
-            >
-              {<IoIosArrowForward />}
-            </button>
-          </div>
-
-          <div className="product-info">
-            <h1 className="product-name">{product.name}</h1>
-            <p className="product-description">{product.description}</p>
-            <div className="actions">
-              <div className="product-rating">
-                {[...Array(product.rating)].map((_, i) => (
-                  <FaStar key={i} className="star" />
-                ))}
-              </div>
-              <div className="quantity-selector">
-                <label htmlFor="quantity">Cantidad:</label>
-                <input id="quantity" type="number" min="1" defaultValue="1" />
-              </div>
-            </div>
-            <button className="zipcode-btn" onClick={handleModalOpen}>
-              <FaMapMarkerAlt /> Realiza un pedido a domicilio de México
-            </button>
-            <div className="actions">
-              <button className="add-to-cart" onClick={handleAddToCart}>
-                <FaCartShopping /> Agregar al carrito
-              </button>
-              <span className="price-label">${product.price.toFixed(2)} {product.currency}</span>
-            </div>
-          </div>
+    <div className="product-details">
+      <div className='content-details'>
+        <div className="image-carousel">
+          <button className="carousel-control prev" onClick={handlePrevClick}>{<IoIosArrowBack />}</button>
+          <img
+            src={product.images[currentImageIndex]?.url || "https://via.placeholder.com/300"}
+            alt="Producto"
+            className="product-image"
+          />
+          <button className="carousel-control next" onClick={handleNextClick}>{<IoIosArrowForward />}</button>
         </div>
 
-        <div className="product-comments">
-          <h3>Comentarios:</h3>
-          {product.comments.map((comment, index) => (
-            <p key={index} className="comments-text">
-              {comment.user}: {comment.comment}
-            </p>
-          ))}
+        <div className="product-info">
+          <h2 className="product-brand">{product.category?.name || "Sin categoría"}</h2>
+          <h1 className="product-name">{product.name}</h1>
+          <p className="product-description">{product.description}</p>
+          <div className="actions">
+            <div className="product-rating">
+              {[...Array(5)].map((_, i) => (
+                <FaStar key={i} className={i < product.rating ? "star active" : "star"} />
+              ))}
+            </div>
+            <div className="quantity-selector">
+              <label htmlFor="quantity">Cantidad:</label>
+              <input id="quantity" type="number" min="1" defaultValue="1" />
+            </div>
+          </div>
+          <button className="zipcode-btn" onClick={handleModalOpen}>
+            <FaMapMarkerAlt /> Realiza un pedido a domicilio de México
+          </button>
+          <div className="actions">
+            <button className="add-to-cart" onClick={handleAddToCart}>
+              <FaCartShopping /> Agregar al carrito
+            </button>
+            <span className="price-label">${parseFloat(product.price).toFixed(2)} MXN</span>
+          </div>
         </div>
-
-        {isModalOpen && <ShippingOptions onClose={handleModalClose} />}
-
-        {alert}
       </div>
-    </>
+
+      <div className="product-comments">
+        <h3>Comentarios:</h3>
+        {/* Renderiza comentarios si están disponibles */}
+        {product.comments?.map((comment, index) => (
+          <p key={index} className="comments-text">
+            {comment.user}: {comment.comment}
+          </p>
+        )) || <p>No hay comentarios disponibles.</p>}
+      </div>
+
+      {isModalOpen && <ShippingOptions onClose={handleModalClose} />}
+      {alert}
+    </div>
   );
 };
 
