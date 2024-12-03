@@ -7,11 +7,13 @@ import '../../assets/Pages/SignInPage.scss';
 import login from '../../assets/images/login.svg';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import {useCustomAlert} from './../../components/Elements/Generales/CustomAlert';
 
 function SignInPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { dispatch } = useContext(AuthContext);
+  const { alert, showAlert } = useCustomAlert(); 
 
   const formik = useFormik({
     initialValues: {
@@ -19,7 +21,7 @@ function SignInPage() {
       password: '',
     },
     validationSchema: yup.object({
-      email: yup.string().email('El email no es valido').required('El email es obligatorio'),
+      email: yup.string().email('El email no es válido').required('El email es obligatorio'),
       password: yup.string().required('La contraseña es obligatoria'),
     }),
     validateOnChange: true,
@@ -37,7 +39,12 @@ function SignInPage() {
         dispatch({ type: 'SIGNIN', payload: { roles: [{ type: role }] } });
         navigate('/');
       } catch (err) {
-        setError('Error al iniciar sesión. Por favor, verifica tus credenciales.');
+        console.error('Error al iniciar sesión:', err);
+        await showAlert({
+          title: 'Error de inicio de sesión',
+          text: 'Verifica tus credenciales y vuelve a intentarlo.',
+          icon: 'error', // Tipo de icono de la alerta
+        });
       }
     },
   });
@@ -50,7 +57,7 @@ function SignInPage() {
           <img src={login} alt='Imagen de inicio de sesión' />
         </div>
         <div className='containerForm'>
-          <h2>!Bienvenido!</h2>
+          <h2>¡Bienvenido!</h2>
           <form onSubmit={formik.handleSubmit}>
             <label htmlFor="email">Email</label>
             <input
@@ -71,7 +78,7 @@ function SignInPage() {
               type="password"
               id="password"
               name="password"
-              placeholder='***********'
+              placeholder='*'
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -86,6 +93,7 @@ function SignInPage() {
           </form>
         </div>
       </div>
+      {alert} 
       <div className='circulo1'></div>
       <div className='circulo2'></div>
     </div>

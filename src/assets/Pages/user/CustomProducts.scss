@@ -9,6 +9,7 @@
     width: 100vw;
     position: relative;
     box-sizing: border-box;
+    z-index: 5;
 
     &.default-wave {
       background: red;

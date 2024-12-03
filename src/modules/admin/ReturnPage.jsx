@@ -1,60 +1,61 @@
 import React, { useEffect, useState } from 'react';
 import CardReturn from '../../components/Admin/CardReturn';
 import '../../assets/Pages/admin_pages/ReturnPage.scss';
+import axios from 'axios';
 
 const ReturnPage = () => {
   const [returnedProducts, setReturnedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const returnedProductsData = {
-      "returned_products": [
-        {
-          "id": 1,
-          "name": "Robot de Cocina",
-          "problema": "No funciona",
-          "fechaDeCompra": "2021-12-12",
-          "fechaDeSolicitud": "2021-12-12",
-          "image_url": "https://example.com/imagenes/robot_cocina.jpg"
-        },
-        {
-          "id": 2,
-          "name": "Licuadora",
-          "problema": "Ruidosa",
-          "fechaDeCompra": "2021-11-15",
-          "fechaDeSolicitud": "2021-11-20",
-          "image_url": "https://example.com/imagenes/licuadora.jpg"
-        },
-        {
-          "id": 3,
-          "name": "Plancha",
-          "problema": "No calienta",
-          "fechaDeCompra": "2021-10-05",
-          "fechaDeSolicitud": "2021-10-10",
-          "image_url": "https://example.com/imagenes/plancha.jpg"
-        }
-      ]
+    const fetchReturns = async () => {
+      try {
+        const response = await axios.get('http://localhost:6868/toystore/returns');
+        setReturnedProducts(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error al obtener las devoluciones:', error);
+        setError(error);
+        setLoading(false);
+      }
     };
 
-    setReturnedProducts(returnedProductsData.returned_products);
+    fetchReturns();
   }, []);
+
+  const renderReturns = () => {
+    if (loading) {
+      return <div>Cargando...</div>;
+    }
+
+    if (error) {
+      return <div>Error al cargar las devoluciones</div>;
+    }
+
+    if (returnedProducts.length === 0) {
+      return <div>No hay solicitudes de devolución</div>;
+    }
+
+    return returnedProducts.map((product) => (
+      <CardReturn
+        key={product.return_id}
+        id={product.return_id}
+        nameProduct={product.product_id} 
+        problema={product.reason}
+        fechaDeCompra={product.order_id} 
+        fechaDeSolicitud={product.createdAt}
+        imageUrl={product.evidence_url}
+        customerName={"Marbein Cruz"} 
+      />
+    ));
+  };
 
   return (
     <div className='returnPage'>
       <p>DEVOLUCIONES</p>
       <div className='returnPage__content'>
-      {returnedProducts.map((product) => (
-  <CardReturn
-    key={product.id}
-    id={product.id}
-    nameProduct={product.name}
-    problema={product.problema}
-    fechaDeCompra={product.fechaDeCompra}
-    fechaDeSolicitud={product.fechaDeSolicitud}
-    imageUrl={product.image_url}
-    customerName={"Marbein Cruz"} 
-  />
-))}
-
+        {renderReturns()}
       </div>
     </div>
   );

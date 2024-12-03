@@ -133,15 +133,7 @@ const Product = () => {
           </div>
         </div>
 
-        <div className="product-comments">
-          <h3>Comentarios:</h3>
-          {/* Renderiza comentarios si están disponibles */}
-          {product.comments?.map((comment, index) => (
-            <p key={index} className="comments-text">
-              {comment.user}: {comment.comment}
-            </p>
-          )) || <p>No hay comentarios disponibles.</p>}
-        </div>
+{/**aqui iban los comentarios */}
 
         {isModalOpen && <ShippingOptions onClose={handleModalClose} />}
         {alert}
