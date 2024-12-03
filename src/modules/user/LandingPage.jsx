@@ -10,6 +10,11 @@ import FloatingButton from "../../components/shared/FloatingButton";
 import CustomProducts from "./CustomProducts";
 import axios from "axios";
 import { BeatLoader } from "react-spinners";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation } from "swiper/modules"; // Módulos necesarios
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 const LandingPage = () => {
   const [selectedProducts, setSelectedProducts] = useState("Lo más popular");
@@ -128,35 +133,65 @@ const LandingPage = () => {
       </div>
 
       <div className="landing-page">
-        <h2 className="section-title">¿Quienes Somos?</h2>
-        <div className="image-section">
-          <img
-            src="https://www.dondeir.com/wp-content/uploads/2018/12/jugueterias-en-ciudad-de-mexico.jpg"
-            alt="Nuestro Equipo"
-            className="rounded-image"
-          />
+        <h2 className="section-title">¿Quiénes Somos?</h2>
+        <div className="about-us">
+          <div className="about-us__content">
+            <img
+              src="https://www.dondeir.com/wp-content/uploads/2018/12/jugueterias-en-ciudad-de-mexico.jpg"
+              alt="Nuestro Equipo"
+              className="rounded-image"
+            />
+            <p className="about-text">
+              Somos una empresa comprometida con ofrecer los mejores productos para nuestros clientes.
+              Contamos con años de experiencia en el mercado, siempre buscando innovación y satisfacción para ti.
+            </p>
+          </div>
         </div>
 
         <div className="branches-section">
-          <h2 className="section-title">Nuestras Sucursales</h2>
-          <div className="branches-grid">
+        <h2 className="section-title">Nuestras Sucursales</h2>
+        <Swiper
+          spaceBetween={20}
+          slidesPerView={3}
+          loop={true}
+          pagination={{ clickable: true }}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+          breakpoints={{
+            320: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+        >
+          <SwiperSlide>
             <img
               src="https://www.dondeir.com/wp-content/uploads/2018/12/jugueterias-en-ciudad-de-mexico.jpg"
               className="branch"
+              alt="Sucursal 1"
             />
+          </SwiperSlide>
+          <SwiperSlide>
             <img
               src="https://media.timeout.com/images/103845688/750/562/image.jpg"
               className="branch"
+              alt="Sucursal 2"
             />
+          </SwiperSlide>
+          <SwiperSlide>
             <img
-              src="https://www.forbes.com.mx/2016/04/image-1.jpeg"
+              src="https://www.forbes.com.mx/2016/04/image-1.jpeg" 
               className="branch"
+              alt="Sucursal 3"
             />
+          </SwiperSlide>
+          <SwiperSlide>
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQfS1HoZwF1zcxR6hdYRHMb1hnP32QcLs7wA&s"
               className="branch"
+              alt="Sucursal 4"
             />
-          </div>
+          </SwiperSlide>
+        </Swiper>
         </div>
       </div>
       <Footer />
