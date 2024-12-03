@@ -19,14 +19,14 @@ const Sidebar = ({ children }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const categoriesList = [
-    { id: 1, name: 'Electrónicos', icon: <RiRobot2Fill /> },
-    { id: 2, name: 'Demesa', icon: <FaDice /> },
-    { id: 3, name: 'Construcción', icon: <PiLegoDuotone /> },
-    { id: 4, name: 'Exteriores', icon: <PiFlowerTulipFill /> },
-    { id: 5, name: 'Peluches', icon: <RiBearSmileFill /> },
-    { id: 6, name: 'Educativos', icon: <IoSchoolSharp /> }
-  ];
+  const iconMapping = {
+    'Electrónicos': <RiRobot2Fill />,
+    'De Mesa': <FaDice />,
+    'Construcción': <PiLegoDuotone />,
+    'Exterior': <PiFlowerTulipFill />,
+    'Peluches': <RiBearSmileFill />,
+    'Educativos': <IoSchoolSharp />
+  };
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -74,10 +74,10 @@ const Sidebar = ({ children }) => {
               {isOpen && <span>Dashboard</span>}
             </li>
           </Link>
-          {categoriesList.map((category) => (
-            <li key={category.id} className="menu-link" onClick={() => navigate(`/productos?category=${category.name}`)}>
-              <span className="menu-icon">{category.icon}</span>
-              <span className="menu-text">{category.name}</span>
+          {categories.map((category) => (
+            <li key={category.id} className="menu-link" onClick={() => navigate(`/productos?category=${category.id}`)}>
+              <span className="menu-icon">{iconMapping[category.name]}</span>
+              {isOpen && <span>{category.name}</span>}
             </li>
           ))}
           <li className="menu-link" onClick={handleAddProduct}>

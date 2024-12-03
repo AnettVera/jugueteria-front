@@ -8,7 +8,7 @@ import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert'
 
 const AddProductModal = ({ onClose, onSave }) => {
   const fileInputRefs = useRef([]);
-  const [images, setImages] = useState([null]);
+  const [images, setImages] = useState([null, null, null, null, null]);
   const [categories, setCategories] = useState([]);
   const { alert, showAlert } = useCustomAlert();
 
@@ -49,9 +49,9 @@ const AddProductModal = ({ onClose, onSave }) => {
       .required('Las categorías son obligatorias'),
     images: yup
       .array()
-      .min(1, 'Debes subir al menos una imagen')
-      .test('at-least-one-image', 'Debes subir al menos una imagen', (value) =>
-        value.some((image) => image !== null)
+      .min(5, 'Debes subir al menos 5 imágenes')
+      .test('all-images-present', 'Debes subir las 5 imágenes', (value) =>
+        value.every((image) => image !== null)
       ),
   });
 
@@ -119,11 +119,6 @@ const AddProductModal = ({ onClose, onSave }) => {
     }
   };
 
-  const addImageField = () => {
-    setImages([...images, null]);
-    formik.setFieldValue('images', [...formik.values.images, null]);
-  };
-
   const categoryOptions = categories.map((category) => ({
     value: category.name,
     label: category.name,
@@ -160,7 +155,6 @@ const AddProductModal = ({ onClose, onSave }) => {
                     />
                   </div>
                 ))}
-                <button type="button" onClick={addImageField}>Agregar otra imagen</button>
               </div>
               {formik.errors.images && formik.touched.images && (
                 <div className="error-message">{formik.errors.images}</div>
