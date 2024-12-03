@@ -1,13 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './../../assets/Pages/user/PurchaseHistory.scss';
-import { useLocation, useNavigate } from "react-router-dom"; // Importamos useNavigate
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from '../../components/Elements/Generales/Header';
 import { IoIosArrowBack } from "react-icons/io";
+import axios from 'axios';
 
 const PurchaseHistory = () => {
-
   const location = useLocation();
   const navigate = useNavigate();
+  const [orders, setOrders] = useState([]);
+  const email = location.state?.email;
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get(`http://localhost:6868/toystore/user/email/${email}/orders`);
+        console.log("Respuesta", response);
+        setOrders(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error al obtener las órdenes del usuario', error);
+        setError('Error al obtener las órdenes del usuario');
+        setLoading(false);
+      }
+    };
+
+    if (email) {
+      fetchOrders(); 
+    } else {
+      setLoading(false);
+      setError('Correo electrónico no proporcionado');
+    }
+  }, [email]);
+
   const handleBackClick = () => {
     navigate(-1);
   };
@@ -44,9 +71,7 @@ const PurchaseHistory = () => {
   return (
     <>
       <Header />
-
       <div className="purchase-history">
-
         <button className="back" onClick={handleBackClick}>
           <IoIosArrowBack /> Historial de compra
         </button>
@@ -65,7 +90,6 @@ const PurchaseHistory = () => {
                 <p className="delivery-date">Fecha de entrega:</p>
                 <p>{purchase.deliveryDate}</p>
               </div>
-            
               <button
                 className="purchase-button"
                 onClick={() => navigate(`/historial/detalles/${purchase.id}`)}
@@ -75,7 +99,6 @@ const PurchaseHistory = () => {
             </div>
           ))}
         </div>
-
       </div>
     </>
   );

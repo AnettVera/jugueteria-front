@@ -36,7 +36,7 @@ const ModalUsuario = ({ role, name, email, onClose }) => {
   };
 
   const handlePurchaseHistory = () => {
-    navigate('/historial');
+    navigate('/historial', { state: { email } });
     onClose();
   };
 
@@ -54,14 +54,12 @@ const ModalUsuario = ({ role, name, email, onClose }) => {
         </span>
       </button>
       <div className="user-modal__body">
-      {role === 'CLIENT' && (
+      {role === 'user' && (
           <button className="user-modal__option" onClick={handlePurchaseHistory}>
             <RiShoppingBag4Fill className="user-modal__icon" /> Historial de Compras
           </button>
         )}
-        <button className="user-modal__option">
-          <PiGearSix className="user-modal__icon" /> Gestionar perfil
-        </button>
+       
       
         <button className="user-modal__option" onClick={handleLogout}>
           <BiLogOut className="user-modal__icon" /> Cerrar sesión
