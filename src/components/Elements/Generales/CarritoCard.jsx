@@ -2,8 +2,8 @@ import React from 'react';
 import '../../../assets/Pages/CarritoCard.scss';
 import Trashcan from '../../../assets/images/Trashcan.svg';
 
-const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputChange }) => {
-    const { name, description, price, quantity } = product;
+const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputChange, handleRemove }) => {
+    const { name, description, price, quantity, id } = product;
 
     return (
         <div className="carritoPage__cartItem">
@@ -18,7 +18,7 @@ const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputCha
                 </div>
             </div>
             <div className="carritoPage__cartItemQuantity">
-            <button onClick={() => handleDecrement(product)} disabled={product.quantity === 1}>-</button>
+                <button onClick={() => handleDecrement(product)} disabled={product.quantity === 1}>-</button>
                 <input
                     type="number"
                     min={1}
@@ -28,7 +28,9 @@ const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputCha
                 <button onClick={() => handleIncrement(product)}>+</button>
             </div>
             <div className="carritoPage__cartItemDelete">
-                <button>
+            <button onClick={() => handleRemove(product.product_id)}>
+
+            {/* Llama a handleRemove */}
                     <img src={Trashcan} alt="eliminar producto" />
                 </button>
             </div>
@@ -37,3 +39,5 @@ const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputCha
 };
 
 export default CarritoCard;
+
+

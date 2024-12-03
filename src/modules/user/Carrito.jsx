@@ -10,7 +10,7 @@ import { AuthContext } from '../../config/context/auth-context';
 
 const Carrito = () => {
     const { user } = useContext(AuthContext);
-    const { getCart, addToCart } = useCart();
+    const { getCart, addToCart, removeFromCart } = useCart(); // Agregar removeFromCart
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();
 
@@ -56,6 +56,16 @@ const Carrito = () => {
         }
     };
 
+    const handleRemove = async (productId) => {
+        try {
+            await removeFromCart(productId); // Llama a la función del contexto
+            setProducts((prevProducts) => prevProducts.filter(item => item.id !== productId));
+        } catch (error) {
+            console.error('Error al eliminar el producto:', error);
+            alert('No se pudo eliminar el producto del carrito.');
+        }
+    };
+
     const handleCheckout = async () => {
         try {
             const items = products.map(({ name, price, quantity }) => ({
@@ -64,7 +74,7 @@ const Carrito = () => {
                 quantity,
             }));
 
-            const response = await axios.post('http://localhost:6868/toystore/checkout', { items, email: user.email}); 
+            const response = await axios.post('http://localhost:6868/toystore/checkout', { items, email: user.email }); 
             if (response.data.url) {
                 window.location.replace(response.data.url);
             }
@@ -93,6 +103,7 @@ const Carrito = () => {
                             handleIncrement={handleIncrement}
                             handleDecrement={handleDecrement}
                             handleInputChange={handleInputChange}
+                            handleRemove={handleRemove} // Pasar la función
                         />
                     ))}
 
