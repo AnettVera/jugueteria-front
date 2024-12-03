@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import Header from '../../components/Elements/Generales/Header';
 import '../../assets/Pages/Carrito.scss';
@@ -6,8 +6,10 @@ import CarritoCard from '../../components/Elements/Generales/CarritoCard';
 import { IoIosArrowBack } from "react-icons/io";
 import { useCart } from '../../config/context/useCart';
 import axios from 'axios';
+import { AuthContext } from '../../config/context/auth-context';
 
 const Carrito = () => {
+    const { user } = useContext(AuthContext);
     const { getCart, addToCart } = useCart();
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();
@@ -62,7 +64,7 @@ const Carrito = () => {
                 quantity,
             }));
 
-            const response = await axios.post('http://localhost:6868/toystore/checkout', { items });
+            const response = await axios.post('http://localhost:6868/toystore/checkout', { items, email: user.email}); 
             if (response.data.url) {
                 window.location.replace(response.data.url);
             }
