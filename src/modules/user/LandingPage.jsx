@@ -15,6 +15,7 @@ import { Pagination, Navigation } from "swiper/modules"; // Módulos necesarios
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import _ from "lodash";
 
 const LandingPage = () => {
   const [selectedProducts, setSelectedProducts] = useState("Lo más popular");
@@ -24,6 +25,7 @@ const LandingPage = () => {
   const [currentCategoryId, setCurrentCategoryId] = useState(0);
   const { user } = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
   const navigate = useNavigate();
 
   const fetchProductsByCategory = async (categoryId = null) => {
@@ -68,8 +70,28 @@ const LandingPage = () => {
     fetchProductsByCategory(categoryId);
   };
 
-  const handleSearch = () => {
-    console.log("Buscando:", searchQuery);
+  const debouncedSearch = _.debounce(async (query) => {
+    if (!query) {
+      setSearchResults([]);
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `http://localhost:6868/toystore/products/search/${query}`
+      );
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error("Error al buscar los productos:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, 300);
+
+  const handleSearchInputChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    debouncedSearch(query);
   };
 
   const handleFloatingButtonClick = () => {
@@ -78,6 +100,7 @@ const LandingPage = () => {
   };
 
   const handleProductClick = (productId) => {
+    console.log("Redirigiendo al producto:", productId);
     navigate(`/producto/${productId}`);
   };
 
@@ -117,14 +140,29 @@ const LandingPage = () => {
             placeholder="Busca el producto que deseas"
             className="text-center__input"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchInputChange} // Cambió aquí
           />
-          <span className="search-icon" onClick={handleSearch}>
+          <span className="search-icon">
             <CiSearch />
           </span>
         </div>
+        <div>
+          {loading ? (
+            <BeatLoader color="#EF1A23" />
+          ) : searchResults.length > 0 ? (
+            <ul>
+              {searchResults.map((product) => (
+                <li key={product.product_id}>
+                  <Link to={`/producto/${product.product_id}`}>{product.name}</Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p> </p>
+          )}
+        </div>
       </div>
-
+      
       <h2 className="text-center">{selectedProducts}</h2>
       <FloatingButton onClick={handleFloatingButtonClick} />
 

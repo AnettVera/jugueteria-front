@@ -59,20 +59,22 @@ const AppRouter = () => {
             <Route path="devoluciones/producto/:productId" element={<SpecificReturnPage />} />
           </Route>
         );
-      case 'CLIENT':
+      case 'user':
         return (
           <>
             <Route path="/" element={<LandingPage />} />
-            <Route path="producto/:productId" element={<Product />} />
+            <Route path="producto/:productName" element={<Product />} />
             <Route path="carrito-de-compras" element={<Carrito />} />
             <Route path="historial" element={<PurchaseHistory />} />
             <Route path="historial/detalles/:id" element={<PurchaseDetails />} />
           </>
         )
       case 'countersaleman':
-        return(
+        return (
           <>
-          <Route path="/" element={<Home/>}/>
+            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="*" element={<Home />} />
           </>
         )
 
@@ -84,14 +86,14 @@ const AppRouter = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={user?.roles[0]?.type === 'countersaleman' ? <Home /> : <LandingPage />} />
         <Route path="carrito-de-compras" element={<Carrito />} />
         <Route path="producto/:id" element={<Product />} />
         <Route path="login" element={<SignInPage />} />
         <Route path="register" element={<RegisterPage />} />
         <Route path="recovery-password" element={<PasswordRecovery />} />
         <Route path="reset-password" element={<NewPassword />} />
-        
+
         {loading ? (
           <Route path="*" element={<Loading />} />
         ) : user.signed ? (

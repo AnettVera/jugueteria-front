@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Link, useNavigate } from "react-router-dom";
 import "../../assets/Pages/LandingPage.scss";
 import { CiSearch } from "react-icons/ci";
 import Header from '../../components/Elements/Generales/Header';
@@ -20,7 +19,6 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProductId, setSelectedProductId] = useState(null); // Estado para guardar el ID del producto seleccionado
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProductsByCategory(currentCategoryId);
