@@ -63,7 +63,6 @@ const Header = () => {
     <header className="header">
       <div className="header__logo">
         <Link to="/"><img src={Logo} alt="Logo" /></Link>
-        {user && <span>Bienvenido, {user.name}</span>}
       </div>
 
       <button className="header__menu-icon" onClick={toggleMenu}>
@@ -74,7 +73,7 @@ const Header = () => {
         {authUser.signed ? (
           <>
             {authUser.roles.some(role => role.type === 'ADMIN') ? (
-              <Link to="/dashboard" className="header__link">Panel de Administrador</Link>
+              <Link to="/dashboard" className="header__link"></Link>
             ) : (
               <>
                 <button className="header__link" onClick={() => navigateAndScroll('quienes-somos')}>¿Quiénes somos?</button>

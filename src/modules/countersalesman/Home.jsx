@@ -8,6 +8,7 @@ import CustomProducts from '../user/CustomProducts';
 import PurchaseModal from './../../components/Elements/Generales/PurchaseModal'; // Asegúrate de que el path sea correcto
 import axios from "axios";
 import { BeatLoader } from "react-spinners";
+import _ from "lodash";
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
@@ -19,6 +20,8 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProductId, setSelectedProductId] = useState(null); // Estado para guardar el ID del producto seleccionado
   const { user } = useContext(AuthContext);
+  const [searchResults, setSearchResults] = useState([]);
+
 
   useEffect(() => {
     fetchProductsByCategory(currentCategoryId);
@@ -66,13 +69,37 @@ const Home = () => {
   };
 
   const handleBuyClick = (productId) => {
-    setSelectedProductId(productId); // Guardar el ID del producto seleccionado
+    setSelectedProductId(productId); 
     setIsModalOpen(true);
   };
 
+
+  const debouncedSearch = _.debounce(async (query) => {
+    if (!query) {
+      setSearchResults([]);
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `http://localhost:6868/toystore/products/search/${query}`
+      );
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error("Error al buscar los productos:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, 300);
+
+  const handleSearchInputChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    debouncedSearch(query);
+  };
   const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedProductId(null); // Limpiar el ID del producto seleccionado cuando se cierra el modal
+    setIsModalOpen(false); 
+    setSelectedProductId(null);// quita el id del producto seleccionado cuando se cierra el modal
   };
 
   const renderProducts = () => {
@@ -87,7 +114,11 @@ const Home = () => {
     if (products.length === 0) {
       return <div>No hay productos en esta categoría</div>;
     }
-
+    const handleSearchInputChange = (e) => {
+      const query = e.target.value;
+      setSearchQuery(query);
+      debouncedSearch(query);
+    };
     return products.map((product) => (
       <ProductCardPurchase
         key={product.id}
@@ -104,18 +135,33 @@ const Home = () => {
     <div className="bg-background">
       <Header />
       <CustomProducts onCategoryChange={handleCategoryChange} />
-      <div className="text-center">
+      <div className="buscador">
         <div className="search-wrapper">
           <input
             type="text"
             placeholder="Busca el producto que deseas"
             className="text-center__input"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchInputChange}
           />
-          <span className="search-icon" onClick={handleSearch}>
+          <span className="search-icon">
             <CiSearch />
           </span>
+        </div>
+        <div className="results">
+          {loading ? (
+            <BeatLoader color="#EF1A23" />
+          ) : searchResults.length > 0 ? (
+            <ul>
+              {searchResults.map((product) => (
+                <li key={product.product_id}>
+                  <Link to={`/producto/${product.product_id}`}>{product.name}</Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p> </p>
+          )}
         </div>
       </div>
 

@@ -11,7 +11,7 @@ import CustomProducts from "./CustomProducts";
 import axios from "axios";
 import { BeatLoader } from "react-spinners";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation } from "swiper/modules"; // Módulos necesarios
+import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -37,20 +37,20 @@ const LandingPage = () => {
       }
 
       const response = await axios.get(url);
-      const formattedProducts = response.data.map((product) => ({
-        id: product.product_id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        images: [
-          product.image_url || "https://via.placeholder.com/300",
-          "https://via.placeholder.com/300",
-          "https://via.placeholder.com/300",
-          "https://via.placeholder.com/300"
-        ],
-        stock: product.stock
-      }));
-
+      const formattedProducts = response.data.map((product) => {
+        const images = product.images?.map((img) => `http://localhost:6868/${img.image_url}`) || ["https://via.placeholder.com/300"];
+        return {
+          id: product.product_id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          images: images.length > 0 ? images : ["https://via.placeholder.com/300"],
+          stock: product.stock,
+        };
+      });
+      
+      console.log(response);
+      
       setProducts(formattedProducts);
       setLoading(false);
     } catch (error) {
@@ -121,7 +121,7 @@ const LandingPage = () => {
       <ProductCard
         key={product.id}
         name={product.name}
-        image={product.images[0]}
+        images={product.images}        
         description={product.description}
         price={product.price}
         onClick={() => handleProductClick(product.id)}
@@ -133,20 +133,20 @@ const LandingPage = () => {
     <div className="bg-background">
       <Header />
       <CustomProducts onCategoryChange={handleCategoryChange} />
-      <div className="text-center">
+      <div className="buscador">
         <div className="search-wrapper">
           <input
             type="text"
             placeholder="Busca el producto que deseas"
             className="text-center__input"
             value={searchQuery}
-            onChange={handleSearchInputChange} // Cambió aquí
+            onChange={handleSearchInputChange}
           />
           <span className="search-icon">
             <CiSearch />
           </span>
         </div>
-        <div>
+        <div className="results">
           {loading ? (
             <BeatLoader color="#EF1A23" />
           ) : searchResults.length > 0 ? (
@@ -162,13 +162,15 @@ const LandingPage = () => {
           )}
         </div>
       </div>
-      
-      <h2 className="text-center">{selectedProducts}</h2>
-      <FloatingButton onClick={handleFloatingButtonClick} />
 
-      <div className="products">
-        {renderProducts()}
+      <div className="main">
+        <h2 className="text-center">{selectedProducts}</h2>
+        <FloatingButton onClick={handleFloatingButtonClick} />
+        <div className="products">
+          {renderProducts()}
+        </div>
       </div>
+
 
       <div className="landing-page">
         <h2 className="section-title">¿Quiénes Somos?</h2>
@@ -187,49 +189,49 @@ const LandingPage = () => {
         </div>
 
         <div className="branches-section">
-        <h2 className="section-title">Nuestras Sucursales</h2>
-        <Swiper
-          spaceBetween={20}
-          slidesPerView={3}
-          loop={true}
-          pagination={{ clickable: true }}
-          navigation={true}
-          modules={[Pagination, Navigation]}
-          breakpoints={{
-            320: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-          }}
-        >
-          <SwiperSlide>
-            <img
-              src="https://www.dondeir.com/wp-content/uploads/2018/12/jugueterias-en-ciudad-de-mexico.jpg"
-              className="branch"
-              alt="Sucursal 1"
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img
-              src="https://media.timeout.com/images/103845688/750/562/image.jpg"
-              className="branch"
-              alt="Sucursal 2"
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img
-              src="https://www.forbes.com.mx/2016/04/image-1.jpeg" 
-              className="branch"
-              alt="Sucursal 3"
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQfS1HoZwF1zcxR6hdYRHMb1hnP32QcLs7wA&s"
-              className="branch"
-              alt="Sucursal 4"
-            />
-          </SwiperSlide>
-        </Swiper>
+          <h2 className="section-title">Nuestras Sucursales</h2>
+          <Swiper
+            spaceBetween={20}
+            slidesPerView={3}
+            loop={true}
+            pagination={{ clickable: true }}
+            navigation={true}
+            modules={[Pagination, Navigation]}
+            breakpoints={{
+              320: { slidesPerView: 1 },
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
+          >
+            <SwiperSlide>
+              <img
+                src="https://www.dondeir.com/wp-content/uploads/2018/12/jugueterias-en-ciudad-de-mexico.jpg"
+                className="branch"
+                alt="Sucursal 1"
+              />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img
+                src="https://media.timeout.com/images/103845688/750/562/image.jpg"
+                className="branch"
+                alt="Sucursal 2"
+              />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img
+                src="https://www.forbes.com.mx/2016/04/image-1.jpeg"
+                className="branch"
+                alt="Sucursal 3"
+              />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQfS1HoZwF1zcxR6hdYRHMb1hnP32QcLs7wA&s"
+                className="branch"
+                alt="Sucursal 4"
+              />
+            </SwiperSlide>
+          </Swiper>
         </div>
       </div>
       <Footer />

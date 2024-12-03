@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
+import { HiPlus, HiOutlinePencilSquare } from "react-icons/hi2";
+
 import './../../assets/Components/admin/SideBar.scss';
 import axios from 'axios';
 import AddProductModal from '../../components/Admin/AddProductModal';
@@ -80,9 +82,13 @@ const Sidebar = ({ children }) => {
               {isOpen && <span>{category.name}</span>}
             </li>
           ))}
-          <li className="menu-link" onClick={handleAddProduct}>
-            <span className="menu-icon">Añadir nuevo producto</span>
-          </li>
+         
+          <Link  className="menu-link">
+            <li onClick={handleAddProduct}>
+              <MdDashboard className="menu-icon" />
+              {isOpen && <span>Añadir nuevo producto</span>}
+            </li>
+          </Link>        
           <Link to="/devoluciones" className="menu-link">
             <li>
               <TbTruckReturn className="menu-icon" />

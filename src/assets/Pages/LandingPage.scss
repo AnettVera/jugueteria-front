@@ -3,50 +3,102 @@
   padding-top: 50px;
 }
 
-.text-center {
-  text-align: center;
-  padding: 1rem;
-  color: var(--lg-text-color);
 
-  &__input {
+ 
+
+
+
+.buscador {
+  justify-content: center;
+  width: 80%;
+  margin: auto;
+  position: relative; /* Añadir esto para que .results se posicione correctamente */
+
+  .search-wrapper {
+    position: relative;
+    display: flex;
+    width: 100%;
+    font-family: var(--font-family-afacad);
+    align-items: center;
     margin-top: 1rem;
-    padding: 0.4rem 1rem;
+    padding: 0 10px;
     border: 1px solid var(--border-color-inverted);
     border-radius: 1.5rem;
-    width: 100%;
-    max-width: 800px;
-    font-size: 1rem;
-    outline: none;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    justify-content: space-between;
 
-    &::placeholder {
-      color: var(--placeholder-text-color);
-    }
-
-    &:focus {
+    &:focus-within {
       border: 1px solid var(--primary-color);
       box-shadow: 0px 0px 6px rgba(0, 123, 255, 0.5);
+    }
+
+    input {
+      padding: 0.4rem 1rem;
+      width: 100%;
+      font-size: 1rem;
+      outline: none;
+      border: none;
+      transition: all 0.3s ease;
+      background-color: transparent;
+
+      &::placeholder {
+        color: var(--placeholder-text-color);
+      }
+    }
+
+    .search-icon {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+  }
+
+  .results {
+    background-color: var(--background-color-content);
+    font-family: var(--font-family-afacad);
+    width: 100%;
+    z-index: 10;
+    border-radius: 20px;
+    color: var(--lg-text-color);
+    transition: transform 0.2s ease-in-out;   
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+    position: absolute; 
+    top: 100%;
+    margin-top: 1rem; 
+
+    p {
+      color: var(--base-text-color);
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      transition: transform 0.2s ease-in-out;
+      padding: 10px;
+      cursor: pointer;
+      color: var(--lg-text-color);
+
+      &:hover {
+        background-color: var(--background-color);
+      }
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    a:hover {
+      color: var(--lg-text-color);
     }
   }
 }
 
-.search-wrapper {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-
-  .search-icon {
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    transform: translateY(-50%);
-    font-size: 1.5rem;
-    color: var(--text-muted);
-    cursor: pointer;
-  }
+.main{
+z-index: 3;  
+text-align: center;
 }
 
 .products {
@@ -84,10 +136,14 @@
     }
   }
 
+
+
 /* ¿Quiénes Somos? */
 .about-us {
-  background-color: #f7c04a; /* Fondo amarillo */
-  padding: 40px 20px;
+  background-color: var(--secondary-color); 
+  padding: 15px 20px;
+  font-family: var(--font-family-afacad);
+  border-radius: 20px;
 }
 
 .about-us__content {
@@ -99,8 +155,8 @@
 
 .about-us .rounded-image {
   border-radius: 50%;
-  width: 250px;
-  height: 250px;
+  width: 200px;
+  height: 200px;
   object-fit: cover;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
