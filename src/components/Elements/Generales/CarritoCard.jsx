@@ -3,7 +3,8 @@ import '../../../assets/Pages/CarritoCard.scss';
 import Trashcan from '../../../assets/images/Trashcan.svg';
 
 const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputChange }) => {
-    const { id, name, description, price, quantity } = product;
+    const { name, description, price, quantity } = product;
+
     return (
         <div className="carritoPage__cartItem">
             <img src="https://via.placeholder.com/150" alt="imagen de producto" />
@@ -17,9 +18,10 @@ const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputCha
                 </div>
             </div>
             <div className="carritoPage__cartItemQuantity">
-                <button onClick={() => handleDecrement(product)}>-</button>
+            <button onClick={() => handleDecrement(product)} disabled={product.quantity === 1}>-</button>
                 <input
                     type="number"
+                    min={1}
                     value={quantity}
                     onChange={(e) => handleInputChange(product, e.target.value)}
                 />
