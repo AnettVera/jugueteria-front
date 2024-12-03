@@ -5,6 +5,7 @@ import '../../assets/Pages/Carrito.scss';
 import CarritoCard from '../../components/Elements/Generales/CarritoCard';
 import { IoIosArrowBack } from "react-icons/io";
 import { useCart } from '../../config/context/useCart';
+import axios from 'axios';
 
 const Carrito = () => {
     const { getCart, addToCart } = useCart();
