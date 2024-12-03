@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useContext, useMemo } from 'react';
-import { useNavigate, useSearchParams } from "react-router-dom";
+import React, { useEffect, useState, useMemo } from 'react';
+import { useNavigate } from "react-router-dom";
 import Header from '../../components/Elements/Generales/Header';
 import '../../assets/Pages/Carrito.scss';
 import CarritoCard from '../../components/Elements/Generales/CarritoCard';
 import { IoIosArrowBack } from "react-icons/io";
-import axios from 'axios';
 import { useCart } from '../../config/context/useCart';
 
 const Carrito = () => {
-    const { getCart } = useCart();
+    const { getCart, addToCart } = useCart();
     const [products, setProducts] = useState([]);
     const [quantities, setQuantities] = useState({});
     const navigate = useNavigate();
@@ -21,7 +20,6 @@ const Carrito = () => {
         const fetchCart = async () => {
             const cart = await getCart();
             setProducts(cart);
-            console.log(cart);
             const initialQuantities = cart.reduce((acc, product) => {
                 acc[product.id] = product.quantity || 1;
                 return acc;
@@ -31,35 +29,36 @@ const Carrito = () => {
         fetchCart();
     }, [getCart]);
 
-    const handleIncrement = (id) => {
-        console.log("Incrementando cantidad del producto con ID:", id);
+    const handleIncrement = (product) => {
         setQuantities((prev) => {
-            const newQuantity = prev[id] + 1; // Calcula el nuevo valor
+            const newQuantity = prev[product.id] + 1;
             return {
                 ...prev,
-                [id]: newQuantity, // Actualiza solo este producto
+                [product.id]: newQuantity,
             };
         });
+        addToCart(product, 1);
     };
 
-    const handleDecrement = (id) => {
-        console.log("Decrementando cantidad del producto con ID:", id);
+    const handleDecrement = (product) => {
         setQuantities((prev) => {
-            const newQuantity = Math.max(prev[id] - 1, 1); // Evita valores menores a 1
+            const newQuantity = Math.max(prev[product.id] - 1, 1);
             return {
                 ...prev,
-                [id]: newQuantity,
+                [product.id]: newQuantity,
             };
         });
+        addToCart(product, -1);
     };
 
-    const handleInputChange = (id, value) => {
-        const parsedValue = parseInt(value, 10); // Convierte a número
+    const handleInputChange = (product, value) => {
+        const parsedValue = parseInt(value, 10);
         if (!isNaN(parsedValue) && parsedValue > 0) {
             setQuantities((prev) => ({
                 ...prev,
-                [id]: parsedValue, // Actualiza el valor ingresado
+                [product.id]: parsedValue,
             }));
+            addToCart(product, parsedValue - (quantities[product.id] || 1));
         }
     };
 
@@ -103,11 +102,7 @@ const Carrito = () => {
                     {displayedProducts.map(product => (
                         <CarritoCard
                             key={product.id}
-                            id={product.id}
-                            name={product.name}
-                            description={product.description}
-                            price={product.price}
-                            quantity={quantities[product.id] || 1} // Usa la cantidad del estado
+                            product={product}
                             handleIncrement={handleIncrement}
                             handleDecrement={handleDecrement}
                             handleInputChange={handleInputChange}

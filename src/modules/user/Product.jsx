@@ -14,12 +14,13 @@ import Footer from '../../components/Elements/Generales/Footer';
 
 const Product = () => {
   const { id } = useParams();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { alert, showAlert } = useCustomAlert();
-  const { addToCart } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,19 +67,14 @@ const Product = () => {
   };
 
   const handleAddToCart = async () => {
-    const productToAdd = {
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-    };
-
-    await addToCart(productToAdd, 1);
-    await showAlert({
-      title: "Producto agregado",
-      text: `${product.name} se ha añadido al carrito correctamente.`,
-      icon: "success",
-    });
+    if (product) {
+      await addToCart(product, quantity);
+      await showAlert({
+        title: "Producto agregado",
+        text: `${product.name} se ha añadido al carrito correctamente.`,
+        icon: "success",
+      });
+    }
   };
 
   if (loading) {
@@ -93,7 +89,7 @@ const Product = () => {
     <>
       <Header />
       <div className="product-details">
-        <button className='back' onClick={handleBackClick}>{<IoIosArrowBack/>} Regresar</button>
+        <button className='back' onClick={handleBackClick}>{<IoIosArrowBack />} Regresar</button>
         <FloatingButton onClick={handleFloatingButtonClick} />
         <div className='content-details'>
           <div className="image-carousel">
@@ -118,17 +114,23 @@ const Product = () => {
               </div>
               <div className="quantity-selector">
                 <label htmlFor="quantity">Cantidad:</label>
-                <input id="quantity" type="number" min="1" defaultValue="1" />
+                <input
+                  id="quantity"
+                  type="number"
+                  min="1"
+                  value={quantity}
+                  onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
+                />
               </div>
-            </div>
-            <button className="zipcode-btn" onClick={handleModalOpen}>
-              <FaMapMarkerAlt /> Realiza un pedido a domicilio de México
-            </button>
-            <div className="actions">
-              <button className="add-to-cart" onClick={handleAddToCart}>
-                <FaCartShopping /> Agregar al carrito
+              <button className="zipcode-btn" onClick={handleModalOpen}>
+                <FaMapMarkerAlt /> Realiza un pedido a domicilio de México
               </button>
-              <span className="price-label">${parseFloat(product.price).toFixed(2)} MXN</span>
+              <div className="actions">
+                <button className="add-to-cart" onClick={handleAddToCart}>
+                  <FaCartShopping /> Agregar al carrito
+                </button>
+                <span className="price-label">${parseFloat(product.price).toFixed(2)} MXN</span>
+              </div>
             </div>
           </div>
         </div>

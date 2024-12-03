@@ -2,7 +2,8 @@ import React from 'react';
 import '../../../assets/Pages/CarritoCard.scss';
 import Trashcan from '../../../assets/images/Trashcan.svg';
 
-const CarritoCard = ({ id, name, description, price, quantity, handleIncrement, handleDecrement, handleInputChange }) => {
+const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputChange }) => {
+    const { id, name, description, price, quantity } = product;
     return (
         <div className="carritoPage__cartItem">
             <img src="https://via.placeholder.com/150" alt="imagen de producto" />
@@ -16,13 +17,13 @@ const CarritoCard = ({ id, name, description, price, quantity, handleIncrement, 
                 </div>
             </div>
             <div className="carritoPage__cartItemQuantity">
-                <button onClick={() => handleDecrement(id)}>-</button>
+                <button onClick={() => handleDecrement(product)}>-</button>
                 <input
                     type="number"
                     value={quantity}
-                    onChange={(e) => handleInputChange(id, e.target.value)}
+                    onChange={(e) => handleInputChange(product, e.target.value)}
                 />
-                <button onClick={() => handleIncrement(id)}>+</button>
+                <button onClick={() => handleIncrement(product)}>+</button>
             </div>
             <div className="carritoPage__cartItemDelete">
                 <button>

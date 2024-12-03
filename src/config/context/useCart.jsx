@@ -1,84 +1,132 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect, useCallback } from 'react';
 import { AuthContext } from './auth-context';
 import axios from 'axios';
 
 export const useCart = () => {
     const { user } = useContext(AuthContext);
+    const [cart, setCart] = useState([]);
 
-    const getLocalCart = async () => {
-        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-        return Array.isArray(storedCart) ? storedCart : [];
-    };
+    useEffect(() => {
+        const loadCart = async () => {
+            const userId = user?.user_id || localStorage.getItem('user_id');
+            if (user?.signed && userId) {
+                try {
+                    let cartId;
+                    const existingCartResponse = await axios.get(`http://localhost:6868/toystore/cart-user/${userId}`);
+                    if (existingCartResponse.data?.data?.id) {
+                        cartId = existingCartResponse.data.data.id;
+                    } else {
+                        const response = await axios.post(`http://localhost:6868/toystore/cart-user/${userId}`, {});
+                        cartId = response.data.data.cart_id;
+                    }
+                    localStorage.setItem('cart_id', cartId); // Almacenar el cart_id en localStorage
+                    const cartResponse = await axios.get(`http://localhost:6868/toystore/cart-user/${userId}`);
+                    setCart(cartResponse.data.data.cartProducts || []);
+                } catch (error) {
+                    if (error.response && error.response.status === 404) {
+                        // Create the cart if not found
+                        try {
+                            const response = await axios.post(`http://localhost:6868/toystore/cart-user/${userId}`, {});
+                            const cartId = response.data.data.cart_id;
+                            localStorage.setItem('cart_id', cartId); // Almacenar el cart_id en localStorage
+                            const cartResponse = await axios.get(`http://localhost:6868/toystore/cart-user/${userId}`);
+                            setCart(cartResponse.data.data.cartProducts || []);
+                        } catch (createError) {
+                            console.error('Error al crear el carrito:', createError);
+                        }
+                    } else {
+                        console.error('Error al cargar el carrito desde la base de datos:', error);
+                    }
+                }
+            } else {
+                const storedCart = JSON.parse(localStorage.getItem('cart'));
+                if (storedCart) {
+                    setCart((prevCart) => (prevCart.length > 0 ? prevCart : storedCart));
+                }
+            }
+        };
+        loadCart();
+    }, [user]);
 
+    useEffect(() => {
+        if (!user?.signed) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+    }, [cart, user]);
 
-    const setLocalCart = (cart) => {
-        localStorage.setItem('cart', JSON.stringify(cart));
-    };
-
-    const addToCart = async (product, quantity) => {
-        if (user.signed) {
+    const addToCart = useCallback(async (product, quantity) => {
+        const userId = user?.user_id || localStorage.getItem('user_id');
+        const cartId = localStorage.getItem('cart_id');
+        if (user?.signed && userId && cartId) {
             try {
-                const responseCreateCart = await axios.post(`http://localhost:6868/toystore/carts/carts-user/${user.id}`, {});
-                if (responseCreateCart.status === 200) {
+                const existingProductResponse = await axios.get(`http://localhost:6868/toystore/cart-products`, {
+                    params: { cart_id: cartId, product_id: product.product_id }
+                });
+                if (existingProductResponse.data.length > 0) {
+                    // Update the quantity of the existing product in the cart
+                    const cartProductId = existingProductResponse.data[0].id;
+                    await axios.put(`http://localhost:6868/toystore/cart-products/${cartProductId}`, {
+                        quantity: existingProductResponse.data[0].quantity + quantity,
+                    });
+                } else {
+                    // Add the new product to the cart
                     await axios.post('http://localhost:6868/toystore/cart-products', {
-                        cart_id: responseCreateCart.data.cart_id,
-                        product_id: product.id,
+                        cart_id: cartId,
+                        product_id: product.product_id,
                         quantity,
                     });
                 }
+
+                setCart((prevCart) => {
+                    const existingProductIndex = prevCart.findIndex((item) => item.product_id === product.product_id);
+                    if (existingProductIndex !== -1) {
+                        const updatedCart = [...prevCart];
+                        updatedCart[existingProductIndex].quantity += quantity;
+                        return updatedCart;
+                    } else {
+                        return [...prevCart, { ...product, quantity }];
+                    }
+                });
             } catch (error) {
-                console.error("Error al añadir producto al carrito del usuario:", error);
+                console.error('Error al añadir producto al carrito del usuario:', error);
             }
         } else {
-            // Asegúrate de usar await para obtener el carrito local
-            const cart = await getLocalCart();
-            const existingProduct = cart.find((item) => item.id === product.id);
-
-            if (existingProduct) {
-                existingProduct.quantity += quantity;
-            } else {
-                cart.push({ ...product, quantity });
-            }
-
-            setLocalCart(cart);
+            setCart((prevCart) => {
+                const existingProductIndex = prevCart.findIndex((item) => item.product_id === product.product_id);
+                if (existingProductIndex !== -1) {
+                    const updatedCart = [...prevCart];
+                    updatedCart[existingProductIndex].quantity += quantity;
+                    return updatedCart;
+                } else {
+                    return [...prevCart, { ...product, quantity }];
+                }
+            });
         }
-    };
+    }, [user]);
 
+    const getCart = useCallback(() => {
+        return cart;
+    }, [cart]);
 
-    const getCart = async () => {
-        if (user.signed) {
+    const removeFromCart = useCallback(async (productId) => {
+        const userId = user?.user_id || localStorage.getItem('user_id');
+        const cartId = localStorage.getItem('cart_id');
+        if (user?.signed && userId && cartId) {
             try {
-                const response = await axios.get(`http://localhost:6868/toystore/carts/user/${user.id}`);
-                console.log(response.data);
-                return response.data;
+                await axios.delete(`http://localhost:6868/toystore/cart-products/${cartId}/${productId}`);
+                setCart((prevCart) => prevCart.filter((item) => item.product_id !== productId));
             } catch (error) {
-                console.error('Error al obtener el carrito:', error);
+                console.error('Error al eliminar el producto del carrito del usuario:', error);
             }
         } else {
-            const localCart = await getLocalCart();
-            console.log(localCart);
-            return localCart;
+            setCart((prevCart) => prevCart.filter((item) => item.product_id !== productId));
         }
-    };
-
-    const removeProduct = async (productId) => {
-        if (user.signed) {
-            try {
-                await axios.delete(`http://localhost:6868/toystore/cart-products/${productId}`);
-            } catch (error) {
-                console.error('Error al eliminar el producto:', error);
-            }
-        } else {
-            const cart = await getLocalCart(); // Usar await
-            const updatedCart = cart.filter((product) => product.id !== productId);
-            setLocalCart(updatedCart);
-        }
-    };
+    }, [user]);
 
     return {
+        cart,
         addToCart,
+        removeFromCart,
         getCart,
-        removeProduct,
     };
-
-}
+};
