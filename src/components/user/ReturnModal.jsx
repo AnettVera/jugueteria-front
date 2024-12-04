@@ -7,82 +7,89 @@ const ReturnModal = ({ onClose, orderId, productId, userId }) => {
   const [problem, setProblem] = useState('');
   const [description, setDescription] = useState('');
   const [evidenceUrl, setEvidenceUrl] = useState('');
-  const [error, setError] = useState(null);
-  const { alert, showAlert } = useCustomAlert(); 
+  const [error, setError] = useState({ message: null, type: null });
+  const [isLoading, setIsLoading] = useState(false);
+  const { alert, showAlert } = useCustomAlert();
 
+  const validateForm = () => {
+    if (!problem || !evidenceUrl) {
+      setError({ message: "Por favor, llena todos los campos requeridos.", type: "validation" });
+      return false;
+    }
+    return true;
+  };
 
-  const handleConfirmClick = async (event) => {
-    event.preventDefault();
+  const submitRequest = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.post('http://localhost:6868/toystore/return', {
         order_id: orderId,
         product_id: productId,
         user_id: userId,
-        quantity: 1, 
+        quantity: 1,
         reason: problem,
-        evidence_url: evidenceUrl
+        evidence_url: evidenceUrl,
       });
       console.log("Solicitud de devolución creada:", response.data);
+      showAlert("Solicitud enviada con éxito", "success");
       onClose();
-      // llamar alerta de éxito
     } catch (error) {
       console.error("Error al crear la solicitud de devolución:", error);
-      setError("No se pudo crear la solicitud de devolución. Inténtalo de nuevo.");
-      // llamar alerta de error
+      setError({ message: "No se pudo crear la solicitud. Inténtalo de nuevo.", type: "server" });
+      showAlert("Ocurrió un error al enviar la solicitud", "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleConfirmClick = (event) => {
+    event.preventDefault();
+    if (validateForm()) {
+      submitRequest();
     }
   };
 
   return (
-    <div className="modal-container">
+    <div className="modal-container" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-description">
       <div className="modal returns-modal">
         <button className="close-button" onClick={onClose}>×</button>
         <div className="modal-content">
-          <h2>Solicitud de devolución</h2>
+          <h2 id="modal-title">Solicitud de devolución</h2>
+          <p id="modal-description">Formulario para registrar una solicitud de devolución de un producto.</p>
           <form onSubmit={handleConfirmClick}>
             <div className="upload-container">
-              <div className="image-placeholder">Imagen</div>
-              <button 
-                type="button" 
-                className="upload-button" 
-                onClick={() => setEvidenceUrl("URL_DE_EVIDENCIA") }
-              >
-                Adjuntar evidencia
-              </button>
+             
               <p className="upload-instructions">
                 Se debe adjuntar una evidencia fotográfica, dado que influye en la respuesta.
               </p>
             </div>
-
             <div className="form-group">
               <label htmlFor="problem">¿Cuál es el problema con el artículo?</label>
-              <input 
-                type="text" 
-                id="problem" 
-                name="problem" 
+              <input
+                type="text"
+                id="problem"
+                name="problem"
                 value={problem}
                 onChange={(e) => setProblem(e.target.value)}
               />
             </div>
-
             <div className="form-group">
               <label htmlFor="description">¿Describe qué ha pasado?</label>
-              <textarea 
-                id="description" 
-                name="description" 
-                rows="4" 
+              <textarea
+                id="description"
+                name="description"
+                rows="4"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
-
-            {error && <p className="error-message">{error}</p>}
-
+            {error.message && <p className="error-message">{error.message}</p>}
             <div className="modal-buttons">
               <button type="button" className="cancel-button" onClick={onClose}>
                 Cancelar
               </button>
-              <button type="submit" className="save-button">
-                Enviar solicitud
+              <button type="submit" className="save-button" disabled={isLoading}>
+                {isLoading ? "Enviando..." : "Enviar solicitud"}
               </button>
             </div>
           </form>
@@ -90,7 +97,6 @@ const ReturnModal = ({ onClose, orderId, productId, userId }) => {
       </div>
       {alert}
     </div>
-  
   );
 };
 

@@ -38,6 +38,7 @@ const Header = () => {
 
   const toggleModal = () => {
     setIsModalOpen((prev) => !prev);
+    
   };
 
   const closeModal = () => {
@@ -85,6 +86,7 @@ const Header = () => {
             </button>
             {isModalOpen && (
               <ModalUsuario
+                user_id={user?.user_id}
                 role={user?.role}
                 name={`${user?.name} ${user?.last_name}`}
                 email={user?.email}

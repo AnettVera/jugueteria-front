@@ -7,7 +7,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { RiShoppingBag4Fill } from "react-icons/ri";
 
 
-const ModalUsuario = ({ role, name, email, onClose }) => {
+const ModalUsuario = ({user_id, role, name, email, onClose }) => {
   
   const { theme, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ const ModalUsuario = ({ role, name, email, onClose }) => {
   };
 
   const handlePurchaseHistory = () => {
-    navigate('/historial', { state: { email } });
+    navigate('/historial', { state: { user_id } });
     onClose();
   };
 

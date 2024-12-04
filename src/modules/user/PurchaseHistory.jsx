@@ -9,64 +9,43 @@ const PurchaseHistory = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
-  const email = location.state?.email;
-  const [loading, setLoading] = useState(true); 
+  const user_id = location.state?.user_id;
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`http://localhost:6868/toystore/user/email/${email}/orders`);
-        console.log("Respuesta", response);
+        const response = await axios.get(`http://localhost:6868/toystore/user/${user_id}/orders`);
+        console.log("Respuesta", response.data);
         setOrders(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error al obtener las órdenes del usuario', error);
-        setError('Error al obtener las órdenes del usuario');
+        console.error('Error al obtener las órdenes del usuario:', error);
+        setError('Error al obtener las órdenes del usuario.');
         setLoading(false);
       }
     };
 
-    if (email) {
-      fetchOrders(); 
+    if (user_id) {
+      fetchOrders();
     } else {
       setLoading(false);
-      setError('Correo electrónico no proporcionado');
+      setError('Usuario no proporcionado.');
     }
-  }, [email]);
+  }, [user_id]);
 
   const handleBackClick = () => {
     navigate(-1);
   };
 
-  const purchases = [
-    {
-      id: '65000500',
-      images: [
-        "https://manuals.plus/wp-content/uploads/2024/06/ENERGIZE-LAB-Eilik-Cute-Robot-Pet-product.png?ezimgfmt=rs:368x447/rscb1/ngcb1/notWebP",
-        "https://via.placeholder.com/300",
-        "https://via.placeholder.com/300",
-        "https://via.placeholder.com/300",
-        "https://via.placeholder.com/300"
-      ],
-      items: 2,
-      message: 'Estimado cliente tu compra ha sido entregada',
-      deliveryDate: '07/11/30',
-    },
-    {
-      id: '65000500',
-      images: [
-        "https://manuals.plus/wp-content/uploads/2024/06/ENERGIZE-LAB-Eilik-Cute-Robot-Pet-product.png?ezimgfmt=rs:368x447/rscb1/ngcb1/notWebP",
-        "https://via.placeholder.com/300",
-        "https://via.placeholder.com/300",
-        "https://via.placeholder.com/300",
-        "https://via.placeholder.com/300"
-      ],
-      items: 2,
-      message: 'Estimado cliente tu compra ha sido entregada',
-      deliveryDate: '07/11/30',
-    },
-  ];
+  if (loading) {
+    return <p>Cargando órdenes...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <>
@@ -76,26 +55,26 @@ const PurchaseHistory = () => {
           <IoIosArrowBack /> Historial de compra
         </button>
         <div className="purchase-list">
-          {purchases.map((purchase, index) => (
-            <div className="purchase-card" key={index}>
-              <div className="purchase-image">
-                <img src={purchase.images[0]} alt={`Imagen de compra ${purchase.id}`} />
-              </div>
+          {orders.map((order) => (
+            <div className="purchase-card" key={order.order_id}>
               <div className="purchase-details">
-                <p className="purchase-id">Compra #{purchase.id}</p>
-                <p className="purchase-items">{purchase.items} artículos</p>
-                <p className="purchase-message">{purchase.message}</p>
-              </div>
-              <div className="purchase-delivery">
-                <p className="delivery-date">Fecha de entrega:</p>
-                <p>{purchase.deliveryDate}</p>
+                <p className="purchase-id">Orden #{order.order_id}</p>
+                <p className="purchase-date">Fecha: {new Date(order.date).toLocaleDateString()}</p>
+                <p className="purchase-status">Estado: {order.status}</p>
+                <p className="purchase-total">Total: ${order.total}</p>
               </div>
               <button
                 className="purchase-button"
-                onClick={() => navigate(`/historial/detalles/${purchase.id}`)}
+                onClick={() => navigate(`/historial/detalles/${order.order_id}`, {
+                  state: {
+                    user_id,
+                    order_id: order.order_id,
+                  },
+                })}
               >
                 Ver más
               </button>
+
             </div>
           ))}
         </div>
