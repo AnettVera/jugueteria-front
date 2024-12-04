@@ -9,69 +9,68 @@ import axios from 'axios';
 import { AuthContext } from '../../config/context/auth-context';
 
 const Carrito = () => {
+    const { getCart, addToCart, removeFromCart } = useCart();
     const { user } = useContext(AuthContext);
-    const { getCart, addToCart, removeFromCart } = useCart(); // Agregar removeFromCart
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCart = async () => {
             const cart = await getCart();
-            const normalizedCart = cart.map(product => ({
-                ...product,
-                quantity: product.quantity || 1,
-            }));
-            setProducts(normalizedCart);
+            setProducts(cart);
+            const initialQuantities = cart.reduce((acc, product) => {
+                acc[product.product_id] = product.quantity || 1;
+                return acc;
+            }, {});
+            setQuantities(initialQuantities);
         };
         fetchCart();
     }, [getCart]);
 
     const handleIncrement = (product) => {
-        const updatedProducts = products.map(item =>
-            item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-        setProducts(updatedProducts);
+        setQuantities((prev) => {
+            const newQuantity = prev[product.product_id] + 1;
+            return {
+                ...prev,
+                [product.product_id]: newQuantity,
+            };
+        });
         addToCart(product, 1);
     };
 
     const handleDecrement = (product) => {
-        const updatedProducts = products.map(item =>
-            item.id === product.id
-                ? { ...item, quantity: Math.max(item.quantity - 1, 1) }
-                : item
-        );
-        setProducts(updatedProducts);
+        setQuantities((prev) => {
+            const newQuantity = Math.max(prev[product.product_id] - 1, 1);
+            return {
+                ...prev,
+                [product.product_id]: newQuantity,
+            };
+        });
         addToCart(product, -1);
     };
 
     const handleInputChange = (product, value) => {
         const parsedValue = parseInt(value, 10);
         if (!isNaN(parsedValue) && parsedValue > 0) {
-            const updatedProducts = products.map(item =>
-                item.id === product.id ? { ...item, quantity: parsedValue } : item
-            );
-            setProducts(updatedProducts);
-            const difference = parsedValue - product.quantity;
-            addToCart(product, difference);
+            setQuantities((prev) => ({
+                ...prev,
+                [product.product_id]: parsedValue,
+            }));
+            addToCart(product, parsedValue - (quantities[product.product_id] || 1));
         }
     };
 
     const handleRemove = async (productId) => {
-        try {
-            await removeFromCart(productId); // Llama a la función del contexto
-            setProducts((prevProducts) => prevProducts.filter(item => item.id !== productId));
-        } catch (error) {
-            console.error('Error al eliminar el producto:', error);
-            alert('No se pudo eliminar el producto del carrito.');
-        }
+        await removeFromCart(productId);
+        setProducts((prevProducts) => prevProducts.filter((product) => product.product_id !== productId));
     };
 
     const handleCheckout = async () => {
         try {
-            const items = products.map(({ name, price, quantity }) => ({
-                name,
-                price,
-                quantity,
+            const items = products.map((product) => ({
+                name: product.productCart.name,
+                price: product.productCart.price,
+                quantity: quantities[product.product_id],
             }));
 
             const response = await axios.post('http://localhost:6868/toystore/checkout', { items, email: user.email }); 
@@ -83,7 +82,14 @@ const Carrito = () => {
             alert("Hubo un problema al procesar tu compra. Por favor, intenta nuevamente.");
         }
     };
-
+  
+    const displayedProducts = useMemo(() => {
+        return products.map((product) => ({
+            ...product,
+            quantity: quantities[product.product_id] || 1,
+        }));
+    }, [products, quantities]);
+  
     return (
         <>
             <Header />
@@ -98,12 +104,12 @@ const Carrito = () => {
 
                     {products.map(product => (
                         <CarritoCard
-                            key={product.id}
+                            key={product.product_id}
                             product={product}
                             handleIncrement={handleIncrement}
                             handleDecrement={handleDecrement}
                             handleInputChange={handleInputChange}
-                            handleRemove={handleRemove} // Pasar la función
+                            handleRemove={handleRemove}
                         />
                     ))}
 
