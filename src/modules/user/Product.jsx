@@ -32,6 +32,8 @@ const Product = () => {
           throw new Error('Error al obtener el producto');
         }
         setProduct(response.data);
+        console.log(response);
+        
       } catch (err) {
         console.error(err.message);
       } finally {
@@ -95,10 +97,11 @@ const Product = () => {
           <div className="image-carousel">
             <button className="carousel-control prev" onClick={handlePrevClick}>{<IoIosArrowBack />}</button>
             <img
-              src={product.images[currentImageIndex] || "https://via.placeholder.com/300"}
-              alt="Producto"
-              className="product-image"
-            />
+  src={`http://localhost:6868/${product.images[currentImageIndex]?.image_url}` || "https://via.placeholder.com/300"}
+  alt="Producto"
+  className="product-image"
+/>
+
             <button className="carousel-control next" onClick={handleNextClick}>{<IoIosArrowForward />}</button>
           </div>
 
@@ -107,11 +110,6 @@ const Product = () => {
             <h1 className="product-name">{product.name}</h1>
             <p className="product-description">{product.description}</p>
             <div className="actions">
-              <div className="product-rating">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} className={i < product.rating ? "star active" : "star"} />
-                ))}
-              </div>
               <div className="quantity-selector">
                 <label htmlFor="quantity">Cantidad:</label>
                 <input
@@ -122,16 +120,15 @@ const Product = () => {
                   onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
                 />
               </div>
-              <button className="zipcode-btn" onClick={handleModalOpen}>
-                <FaMapMarkerAlt /> Realiza un pedido a domicilio de México
-              </button>
+              </div>
+             
               <div className="actions">
                 <button className="add-to-cart" onClick={handleAddToCart}>
                   <FaCartShopping /> Agregar al carrito
                 </button>
                 <span className="price-label">${parseFloat(product.price).toFixed(2)} MXN</span>
               </div>
-            </div>
+            
           </div>
         </div>
 

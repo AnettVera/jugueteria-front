@@ -32,9 +32,8 @@
       height: 200px; 
       width: 100%; 
       color: var(--lg-text-color);
-      clip-path: path('M0,200  Q301,130 602,160  T1204,180  L2144,0  L0,0  Z');
+      clip-path: path('M0,200 Q301,130 602,160 T1204,180 Q1500,190 1999,100 L1999,0 L0,0 Z');
     }
-
     .header-content {
       height: 100%;
       padding: 30px 0px;

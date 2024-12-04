@@ -1,20 +1,18 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import Header from '../../components/Elements/Generales/Header';
 import '../../assets/Pages/Carrito.scss';
 import CarritoCard from '../../components/Elements/Generales/CarritoCard';
 import { IoIosArrowBack } from "react-icons/io";
 import { useCart } from '../../config/context/useCart';
+import axios from 'axios';
+import { AuthContext } from '../../config/context/auth-context';
 
 const Carrito = () => {
     const { getCart, addToCart, removeFromCart } = useCart();
+    const { user } = useContext(AuthContext);
     const [products, setProducts] = useState([]);
-    const [quantities, setQuantities] = useState({});
     const navigate = useNavigate();
-
-    const handleBackClick = () => {
-        navigate(-1);
-    };
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -75,7 +73,7 @@ const Carrito = () => {
                 quantity: quantities[product.product_id],
             }));
 
-            const response = await axios.post('http://localhost:6868/toystore/checkout', { items });
+            const response = await axios.post('http://localhost:6868/toystore/checkout', { items, email: user.email }); 
             if (response.data.url) {
                 window.location.replace(response.data.url);
             }
@@ -84,19 +82,19 @@ const Carrito = () => {
             alert("Hubo un problema al procesar tu compra. Por favor, intenta nuevamente.");
         }
     };
-
+  
     const displayedProducts = useMemo(() => {
         return products.map((product) => ({
             ...product,
             quantity: quantities[product.product_id] || 1,
         }));
     }, [products, quantities]);
-
+  
     return (
         <>
             <Header />
             <div className="carritoPage">
-                <button className="back" onClick={handleBackClick}>
+                <button className="back" onClick={() => navigate(-1)}>
                     <IoIosArrowBack /> Productos
                 </button>
                 <div className="carritoPage__cart">
@@ -104,7 +102,7 @@ const Carrito = () => {
                         <p>Productos en carrito</p>
                     </div>
 
-                    {displayedProducts.map(product => (
+                    {products.map(product => (
                         <CarritoCard
                             key={product.product_id}
                             product={product}

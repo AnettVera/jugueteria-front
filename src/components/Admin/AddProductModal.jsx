@@ -66,7 +66,7 @@ const AddProductModal = ({ onClose, onSave }) => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      onClose(); // Cerrar el modal inmediatamente después de enviar el formulario
+      
       try {
         const category = categories.find(cat => cat.name === values.categories[0]);
         const formData = new FormData();

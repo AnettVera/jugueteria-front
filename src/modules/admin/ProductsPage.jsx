@@ -26,7 +26,7 @@ const ProductsPage = () => {
         if (response.data.message === 'No se encontraron productos para esta categoría') {
           setProducts([]);
         } else {
-          setProducts(response.data);
+          setProducts(response.data);          
         }
       } catch (error) {
         console.error('Error fetching products:', error);

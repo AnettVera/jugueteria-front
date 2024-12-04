@@ -42,6 +42,7 @@
   form {
     display: flex;
     flex-direction: column;
+    font-family: var(--font-family-afacad);
   }
 
   form div {
@@ -54,7 +55,7 @@
     font-weight: bold;
     align-self: start;
     font-family: var(--font-family-afacad);
-    font-size: var(--font-subtitle-small);
+    font-size: 18px;
     color: var(--light-color)
   }
 
@@ -77,7 +78,7 @@
   }
 
   .buttonForm {
-    padding: 10px;
+    padding: 0px;
     color: var(--light-color);
     border: 2px solid var(--light-color);
     border-radius: 20px;
@@ -85,7 +86,6 @@
     align-self: center;
     margin-top: 50px;
     width: 80%;
-    height: 50px;
     font-family: var(--font-family-afacad);
     font-size: var(--font-subtitle-small);
 
