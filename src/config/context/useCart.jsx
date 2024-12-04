@@ -70,6 +70,7 @@ export const useCart = () => {
                     });
                 } else {
                     // Add the new product to the cart
+                    console.log('Adding product to cart:', product.product_id, quantity);
                     await axios.post('http://localhost:6868/toystore/cart-products', {
                         cart_id: cartId,
                         product_id: product.product_id,
@@ -104,24 +105,24 @@ export const useCart = () => {
         }
     }, [user]);
 
-    const getCart = useCallback(() => {
-        return cart;
-    }, [cart]);
-
-    const removeFromCart = useCallback(async (productId) => {
+    const removeFromCart = useCallback(async (cartProductId) => {
         const userId = user?.user_id || localStorage.getItem('user_id');
         const cartId = localStorage.getItem('cart_id');
         if (user?.signed && userId && cartId) {
             try {
-                await axios.delete(`http://localhost:6868/toystore/cart-products/${cartId}/${productId}`);
-                setCart((prevCart) => prevCart.filter((item) => item.product_id !== productId));
+                await axios.delete(`http://localhost:6868/toystore/cart-products/${cartProductId}`);
+                setCart((prevCart) => prevCart.filter((item) => item.id !== cartProductId));
             } catch (error) {
                 console.error('Error al eliminar el producto del carrito del usuario:', error);
             }
         } else {
-            setCart((prevCart) => prevCart.filter((item) => item.product_id !== productId));
+            setCart((prevCart) => prevCart.filter((item) => item.id !== cartProductId));
         }
     }, [user]);
+
+    const getCart = useCallback(() => {
+        return cart;
+    }, [cart]);
 
     return {
         cart,
