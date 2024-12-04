@@ -124,10 +124,17 @@ export const useCart = () => {
         return cart;
     }, [cart]);
 
+    const clearCart = useCallback(() => {
+        localStorage.removeItem('cart');
+        localStorage.removeItem('cart_id');
+        setCart([]);
+    }, []);
+
     return {
         cart,
         addToCart,
         removeFromCart,
         getCart,
+        clearCart,
     };
 };

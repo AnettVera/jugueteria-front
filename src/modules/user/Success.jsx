@@ -3,11 +3,13 @@ import './../../assets/Pages/user/PurchaseDetails.scss';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { BeatLoader } from 'react-spinners';
 import axios from 'axios';
+import { useCart } from '../../config/context/useCart';
 
 const Success = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { clearCart } = useCart();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
@@ -23,6 +25,7 @@ const Success = () => {
       try {
         const response = await axios.get(`http://localhost:6868/toystore/success?session_id=${sessionId}`);
         console.log(response.data);
+        clearCart();
       } catch (error) {
         console.error("Error al obtener los detalles de la compra:", error);
       } finally {

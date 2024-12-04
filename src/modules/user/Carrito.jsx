@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import Header from '../../components/Elements/Generales/Header';
 import '../../assets/Pages/Carrito.scss';
@@ -8,10 +8,32 @@ import { useCart } from '../../config/context/useCart';
 import axios from 'axios';
 
 const Carrito = () => {
+    const [user, setUser] = useState(null);
     const { getCart, addToCart, removeFromCart } = useCart();
     const [products, setProducts] = useState([]);
     const [quantities, setQuantities] = useState({});
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const token = localStorage.getItem('jwt_token');
+            const userId = localStorage.getItem('user_id');
+            if (token && userId) {
+                try {
+                    const response = await axios.get(`http://localhost:6868/toystore/users/${userId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    setUser(response.data);
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+            }
+        };
+        console.log(user);
+        fetchUserData();
+    }, []);
 
     const handleBackClick = () => {
         navigate(-1);
@@ -78,10 +100,8 @@ const Carrito = () => {
                     quantity: quantities[product.product_id],
                 };
             });
-
-            const response = await axios.post('http://localhost:6868/toystore/checkout', { items });
+            const response = await axios.post('http://localhost:6868/toystore/checkout', { items, email: user?.email });
             const checkoutUrl = response.data.url;
-
             if (checkoutUrl && checkoutUrl.startsWith('http')) {
                 window.location.replace(checkoutUrl);
             } else {
@@ -112,19 +132,24 @@ const Carrito = () => {
                         <p>Productos en carrito</p>
                     </div>
 
-                    {displayedProducts.map(product => (
-                        <CarritoCard
-                            key={product.product_id}
-                            product={product}
-                            handleIncrement={handleIncrement}
-                            handleDecrement={handleDecrement}
-                            handleInputChange={handleInputChange}
-                            handleRemove={handleRemove}
-                        />
-                    ))}
-
+                    {products.length === 0 ? (
+                        <div className="carritoPage__empty">
+                            <p>No hay productos en el carrito</p>
+                        </div>
+                    ) : (
+                        displayedProducts.map(product => (
+                            <CarritoCard
+                                key={product.product_id}
+                                product={product}
+                                handleIncrement={handleIncrement}
+                                handleDecrement={handleDecrement}
+                                handleInputChange={handleInputChange}
+                                handleRemove={handleRemove}
+                            />
+                        ))
+                    )}
                     <div className="carritoPage__footer">
-                        <button onClick={handleCheckout}>Realizar compra</button>
+                        <button onClick={handleCheckout} disabled={products.length === 0}>Realizar compra</button>
                     </div>
                 </div>
             </div>
