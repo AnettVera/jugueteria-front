@@ -5,6 +5,7 @@ import '../../assets/Pages/Carrito.scss';
 import CarritoCard from '../../components/Elements/Generales/CarritoCard';
 import { IoIosArrowBack } from "react-icons/io";
 import { useCart } from '../../config/context/useCart';
+import axios from 'axios';
 
 const Carrito = () => {
     const { getCart, addToCart, removeFromCart } = useCart();
@@ -69,15 +70,22 @@ const Carrito = () => {
 
     const handleCheckout = async () => {
         try {
-            const items = products.map((product) => ({
-                name: product.productCart.name,
-                price: product.productCart.price,
-                quantity: quantities[product.product_id],
-            }));
+            const items = products.map((product) => {
+                const productCart = product.productCart || product; // Usa product directamente si productCart es undefined
+                return {
+                    name: productCart.name,
+                    price: productCart.price,
+                    quantity: quantities[product.product_id],
+                };
+            });
 
             const response = await axios.post('http://localhost:6868/toystore/checkout', { items });
-            if (response.data.url) {
-                window.location.replace(response.data.url);
+            const checkoutUrl = response.data.url;
+
+            if (checkoutUrl && checkoutUrl.startsWith('http')) {
+                window.location.replace(checkoutUrl);
+            } else {
+                throw new Error('URL de redirección no válida');
             }
         } catch (error) {
             console.error("Error durante el proceso de compra:", error);

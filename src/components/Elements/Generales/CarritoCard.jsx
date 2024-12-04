@@ -3,9 +3,8 @@ import '../../../assets/Pages/CarritoCard.scss';
 import Trashcan from '../../../assets/images/Trashcan.svg';
 
 const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputChange, handleRemove }) => {
-
     const { productCart, quantity } = product || {};
-    const { name, description, price } = productCart || {};
+    const { name, description, price, images } = productCart || {};
 
     // Obtener datos del local storage si no están disponibles en el objeto product
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -14,10 +13,14 @@ const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputCha
     const productName = name || storedProduct.name;
     const productDescription = description || storedProduct.description;
     const productPrice = price || storedProduct.price;
+    const productImages = images || storedProduct.images || [];
+    const productImageUrl = productImages.length > 0 
+        ? (productImages[0]?.image_url ? `http://localhost:6868/${productImages[0].image_url}` : productImages[0])
+        : "https://via.placeholder.com/150";
 
     return (
         <div className="carritoPage__cartItem">
-            <img src="https://via.placeholder.com/150" alt="imagen de producto" />
+            <img src={productImageUrl} alt="imagen de producto" />
             <div className="carritoPage__cartItemDetails">
                 <div className="carritoPage__cartItemInfo">
                     <h3>{productName}</h3>
