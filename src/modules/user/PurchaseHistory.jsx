@@ -17,7 +17,7 @@ const PurchaseHistory = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(`http://localhost:6868/toystore/user/${user_id}/orders`);
-        console.log("Respuesta", response.data);
+        console.log("Respuesta de la ordenes", response.data);
         setOrders(response.data);
         setLoading(false);
       } catch (error) {

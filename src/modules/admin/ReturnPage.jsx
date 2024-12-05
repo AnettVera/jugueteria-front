@@ -7,11 +7,13 @@ const ReturnPage = () => {
   const [returnedProducts, setReturnedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [order, setOrder]= useState([]);
 
   useEffect(() => {
     const fetchReturns = async () => {
       try {
         const response = await axios.get('http://localhost:6868/toystore/returns');
+        console.log(response); 
         setReturnedProducts(response.data);
         setLoading(false);
       } catch (error) {
@@ -41,10 +43,11 @@ const ReturnPage = () => {
       <CardReturn
         key={product.return_id}
         id={product.return_id}
-        nameProduct={product.product_id} 
+        nameProduct={product.product_name} 
         problema={product.reason}
+        descripcion={product.rejection_reason}
         fechaDeCompra={product.order_id} 
-        fechaDeSolicitud={product.createdAt}
+        fechaDeSolicitud={product.return_date}
         imageUrl={product.evidence_url}
         customerName={"Marbein Cruz"} 
       />

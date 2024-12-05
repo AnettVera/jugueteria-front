@@ -5,6 +5,8 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Header from '../../components/Elements/Generales/Header';
+import Purchase from './../../assets/images/purchase.jpeg';
+import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert';
 
 const PurchaseDetails = () => {
   const location = useLocation();
@@ -14,6 +16,22 @@ const PurchaseDetails = () => {
   const [orderDetails, setOrderDetails] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { alert, showAlert } = useCustomAlert(); 
+
+  const openSucces=()=>{
+    showAlert({
+      title: 'Disfruta de tus juguetes',
+      text: 'En ToyStore trabajamos para ofrecerte una buena experiencia de compra, vuelve pronto.',
+      icon: 'success', 
+    });
+  }
+  const openInfo=()=>{
+    showAlert({
+          title: 'Lamentamos la demora',
+          text: 'Tu pedido tiene un periodo de 15 posteriores a la fecha de compra para llegar a la ubicación registrada, si no lo recibes en ese periodo contactanos al correo toystore@gmail.com',
+          icon: 'info', 
+        });
+  }
 
   const handleBackClick = () => {
     navigate(-1);
@@ -76,10 +94,10 @@ const PurchaseDetails = () => {
           <div className="details-container">
             <div className="product-image">
               <img
-                src="https://manuals.plus/wp-content/uploads/2024/06/ENERGIZE-LAB-Eilik-Cute-Robot-Pet-product.png?ezimgfmt=rs:368x447/rscb1/ngcb1/notWebP"
-                alt="Robot Eilik"
+                src={Purchase}
+                alt="Logo compra"
               />
-              <p className="product-name">Robot Eilik</p>
+              <p className="product-name">Compra #{orderDetails.order_id}</p>
             </div>
 
             <div className="order-info">
@@ -89,17 +107,17 @@ const PurchaseDetails = () => {
               <p><strong>Plazo de entrega:</strong> pendiente</p>
 
               <p className="delivery-message">
-                Tus artículos han sido entregados. Esperamos que el envío haya
+                Esperamos que el envío haya
                 salido bien y que los artículos hayan llegado en buen estado. Si no
-                es así, puedes solicitar una devolución con evidencias dentro de los
+                es así, puedes solicitar una devolución explicando la razón de la solicitud dentro de los
                 10 días posteriores a la entrega, y de ser aceptada, te
                 reembolsaremos tu dinero. ¡Esperamos que te diviertas y vuelvas
                 pronto a ToyStore!
               </p>
               <div className="buttons">
-                <button className="not-received">No he recibido mis artículos</button>
+                <button className="not-received" onClick={openInfo}>No he recibido mis artículos</button>
                 <button className="return" onClick={openModal}>Solicitar devolución</button>
-                <button className="received">He recibido mis artículos</button>
+                <button className="received" onClick={openSucces}>He recibido mis artículos</button>
               </div>
             </div>
           </div>
@@ -112,6 +130,7 @@ const PurchaseDetails = () => {
           productId={1}
           userId={user_id}
           onClose={closeModal} />}
+          {alert}
       </div>
     </>
   );

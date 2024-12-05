@@ -7,6 +7,7 @@ import ModalUsuario from './ModalUsuario';
 import { AuthContext } from './../../../config/context/auth-context';
 import axios from 'axios';
 import { HiMenu } from "react-icons/hi";
+import { useCustomAlert } from './CustomAlert';
 
 const Header = () => {
   const { user: authUser } = useContext(AuthContext);
@@ -14,6 +15,7 @@ const Header = () => {
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchUserData = async () => {

@@ -5,6 +5,7 @@ import { useCustomAlert } from '../Elements/Generales/CustomAlert';
 
 const ReturnModal = ({ onClose, orderId, productId, userId }) => {
   const [problem, setProblem] = useState('');
+  const [product, setProduct] = useState('');
   const [description, setDescription] = useState('');
   const [evidenceUrl, setEvidenceUrl] = useState('');
   const [error, setError] = useState({ message: null, type: null });
@@ -12,7 +13,7 @@ const ReturnModal = ({ onClose, orderId, productId, userId }) => {
   const { alert, showAlert } = useCustomAlert();
 
   const validateForm = () => {
-    if (!problem || !evidenceUrl) {
+    if (!problem || !description || !product) {
       setError({ message: "Por favor, llena todos los campos requeridos.", type: "validation" });
       return false;
     }
@@ -28,15 +29,24 @@ const ReturnModal = ({ onClose, orderId, productId, userId }) => {
         user_id: userId,
         quantity: 1,
         reason: problem,
+        rejection_reason: description,
+        product_name:product,
         evidence_url: evidenceUrl,
       });
       console.log("Solicitud de devolución creada:", response.data);
-      showAlert("Solicitud enviada con éxito", "success");
+      await showAlert({
+        title: 'Se ha enviado la solicitud devolución',
+        text: 'Hemos recibido tu solicitud de devolución en unos días recibiras una respuesta.',
+        icon: 'success', // Tipo de icono de la alerta
+      });
       onClose();
     } catch (error) {
       console.error("Error al crear la solicitud de devolución:", error);
-      setError({ message: "No se pudo crear la solicitud. Inténtalo de nuevo.", type: "server" });
-      showAlert("Ocurrió un error al enviar la solicitud", "error");
+      await showAlert({
+        title: 'Error al enviar la solicitud',
+        text: 'Verifica que hayas llenado los datos correspondientes y que tu sesion siga activa',
+        icon: 'error', 
+      });    
     } finally {
       setIsLoading(false);
     }
@@ -55,13 +65,19 @@ const ReturnModal = ({ onClose, orderId, productId, userId }) => {
         <button className="close-button" onClick={onClose}>×</button>
         <div className="modal-content">
           <h2 id="modal-title">Solicitud de devolución</h2>
-          <p id="modal-description">Formulario para registrar una solicitud de devolución de un producto.</p>
           <form onSubmit={handleConfirmClick}>
             <div className="upload-container">
-             
-              <p className="upload-instructions">
-                Se debe adjuntar una evidencia fotográfica, dado que influye en la respuesta.
-              </p>
+            
+            </div>
+            <div className="form-group">
+              <label htmlFor="product">¿Cuál es el problema con el artículo?</label>
+              <input
+                type="text"
+                id="product"
+                name="product"
+                value={product}
+                onChange={(e) => setProduct(e.target.value)}
+              />
             </div>
             <div className="form-group">
               <label htmlFor="problem">¿Cuál es el problema con el artículo?</label>

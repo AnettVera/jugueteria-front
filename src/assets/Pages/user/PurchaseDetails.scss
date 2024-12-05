@@ -144,4 +144,27 @@
       }
 }
 
+.success{
+  margin-top: 50px;
+  padding: 50px 20px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-family-afacad);
+  color: var(--lg-text-color);
+
+  h1{
+    font-size: 4.5rem;
+  }
+  
+  button{
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    margin-top: 30px;
+    padding: 5px 25px;
+    color: #fff;
+    font-size: 1.5rem;
+  }
+}
+
   

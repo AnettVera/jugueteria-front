@@ -1,10 +1,13 @@
 import React from 'react';
 import '../../../assets/Pages/CarritoCard.scss';
 import Trashcan from '../../../assets/images/Trashcan.svg';
+import { useCustomAlert } from './CustomAlert';
 
 const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputChange, handleRemove }) => {
     const { productCart, quantity } = product || {};
     const { name, description, price, images } = productCart || {};
+    const { alert, showAlert } = useCustomAlert(); 
+
 
     // Obtener datos del local storage si no están disponibles en el objeto product
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -45,6 +48,7 @@ const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputCha
                     <img src={Trashcan} alt="eliminar producto" />
                 </button>
             </div>
+            {alert}
         </div>
     );
 };

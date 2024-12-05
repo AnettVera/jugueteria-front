@@ -4,6 +4,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { BeatLoader } from 'react-spinners';
 import axios from 'axios';
 import { useCart } from '../../config/context/useCart';
+import Header from '../../components/Elements/Generales/Header';
 
 const Success = () => {
   const [loading, setLoading] = useState(true);
@@ -44,7 +45,8 @@ const Success = () => {
 
   return (
     <>
-      <div className='purchase'>
+    <Header/>
+      <div className='success'>
         <h1>¡Gracias por tu compra!</h1>
         <h2>Te hemos enviado un correo confirmando tu compra</h2>
         <h3>¡Vuelve pronto!</h3>
