@@ -87,7 +87,6 @@ const ProductsPage = () => {
         formData.append('category_id', updatedProduct.category_id);
         formData.append('stock', updatedProduct.stock);
 
-        // Añadir las imágenes al FormData
         if (updatedProduct.images && updatedProduct.images.length > 0) {
             updatedProduct.images.forEach((image, index) => {
                 if (image) {

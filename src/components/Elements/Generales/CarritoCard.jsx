@@ -21,6 +21,7 @@ const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputCha
         ? (productImages[0]?.image_url ? `http://localhost:6868/${productImages[0].image_url}` : productImages[0])
         : "https://via.placeholder.com/150";
 
+        const totalPrice = productPrice * quantity;
     return (
         <div className="carritoPage__cartItem">
             <img src={productImageUrl} alt="imagen de producto" />
@@ -30,7 +31,7 @@ const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputCha
                     <p>{productDescription}</p>
                 </div>
                 <div className="carritoPage__cartItemPrice">
-                    <p>$ {productPrice} mx</p>
+                    <p>$ {totalPrice} mx</p>
                 </div>
             </div>
             <div className="carritoPage__cartItemQuantity">

@@ -37,7 +37,16 @@ function SignInPage() {
         localStorage.setItem('user_id', userId);
         localStorage.setItem('role', role);
         dispatch({ type: 'SIGNIN', payload: { roles: [{ type: role }] } });
-        navigate('/');
+        if (role === 'ADMIN') {
+          navigate('/', { replace: true });
+        } if(role === 'user'){
+          navigate('/', { replace: true });
+        }if( navigate==='countersaleman'){
+          navigate('/', { replace: true });
+        }else {
+          navigate(location.pathname, { replace: true });
+        }
+        window.location.reload();
       } catch (err) {
         console.error('Error al iniciar sesión:', err);
         await showAlert({

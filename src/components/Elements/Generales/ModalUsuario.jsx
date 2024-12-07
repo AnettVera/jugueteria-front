@@ -27,12 +27,9 @@ const ModalUsuario = ({user_id, role, name, email, onClose }) => {
     localStorage.removeItem('jwt_token');
     localStorage.removeItem('user_id');
     localStorage.removeItem('role');
-    if (role === 'ADMIN') {
-      navigate('/', { replace: true });
-    } else {
-      navigate(location.pathname, { replace: true });
-    }
+    navigate('/', { replace: true });
     window.location.reload();
+    
   };
 
   const handlePurchaseHistory = () => {

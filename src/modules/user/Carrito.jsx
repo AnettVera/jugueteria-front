@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from "react-router-dom";
 import Header from '../../components/Elements/Generales/Header';
 import '../../assets/Pages/Carrito.scss';
@@ -31,7 +31,6 @@ const Carrito = () => {
                 }
             }
         };
-        console.log(user);
         fetchUserData();
     }, []);
 
@@ -93,7 +92,7 @@ const Carrito = () => {
     const handleCheckout = async () => {
         try {
             const items = products.map((product) => {
-                const productCart = product.productCart || product; // Usa product directamente si productCart es undefined
+                const productCart = product.productCart || product; 
                 return {
                     name: productCart.name,
                     price: productCart.price,
@@ -119,6 +118,14 @@ const Carrito = () => {
             quantity: quantities[product.product_id] || 1,
         }));
     }, [products, quantities]);
+
+    const totalAmount = useMemo(() => {
+        return displayedProducts.reduce((total, product) => {
+            const price = product.productCart?.price || product.price || 0;
+            const quantity = quantities[product.product_id] || 1;
+            return total + price * quantity;
+        }, 0);
+    }, [displayedProducts, quantities]);
 
     return (
         <>
@@ -149,7 +156,12 @@ const Carrito = () => {
                         ))
                     )}
                     <div className="carritoPage__footer">
-                        <button onClick={handleCheckout} disabled={products.length === 0}>Realizar compra</button>
+                        <p className="carritoPage__total">
+                            Total a pagar: <strong>$ {totalAmount.toFixed(2)} mx</strong>
+                        </p>
+                        <button onClick={handleCheckout} disabled={products.length === 0}>
+                            Realizar compra
+                        </button>
                     </div>
                 </div>
             </div>
