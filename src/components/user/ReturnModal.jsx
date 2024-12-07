@@ -29,7 +29,7 @@ const ReturnModal = ({ onClose, orderId, productId, userId }) => {
         user_id: userId,
         quantity: 1,
         reason: problem,
-        rejection_reason: description,
+        description: description,
         product_name:product,
         evidence_url: evidenceUrl,
       });

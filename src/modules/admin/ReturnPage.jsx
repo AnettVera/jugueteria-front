@@ -41,11 +41,11 @@ const ReturnPage = () => {
 
     return returnedProducts.map((product) => (
       <CardReturn
-        key={product.return_id}
-        id={product.return_id}
+        key={product.id_return}
+        id={product.id_return}
         nameProduct={product.product_name} 
         problema={product.reason}
-        descripcion={product.rejection_reason}
+        descripcion={product.description}
         fechaDeCompra={product.order_id} 
         fechaDeSolicitud={product.return_date}
         imageUrl={product.evidence_url}
