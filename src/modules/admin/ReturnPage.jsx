@@ -7,18 +7,17 @@ const ReturnPage = () => {
   const [returnedProducts, setReturnedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [order, setOrder]= useState([]);
 
   useEffect(() => {
     const fetchReturns = async () => {
       try {
         const response = await axios.get('http://localhost:6868/toystore/returns');
-        console.log(response); 
+        console.log("Devoluciones obtenidas:", response.data); 
         setReturnedProducts(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Error al obtener las devoluciones:', error);
-        setError(error);
+        setError('Hubo un problema al cargar las devoluciones.');
         setLoading(false);
       }
     };
@@ -32,24 +31,29 @@ const ReturnPage = () => {
     }
 
     if (error) {
-      return <div>Error al cargar las devoluciones</div>;
+      return <div>{error}</div>;
     }
 
-    if (returnedProducts.length === 0) {
-      return <div>No hay solicitudes de devolución</div>;
+    const filteredReturns = returnedProducts.filter(
+      product => product.status && product.status.trim().toLowerCase() === 'pendiente'
+    );
+
+    if (filteredReturns.length === 0) {
+      return <div style={{fontFamily:'var(--font-family-afacad)', color:'var(--lg-text-color)'}}>No hay solicitudes de devolución pendientes</div>;
     }
 
-    return returnedProducts.map((product) => (
+    // Renderizar las devoluciones filtradas
+    return filteredReturns.map((product) => (
       <CardReturn
         key={product.id_return}
         id={product.id_return}
-        nameProduct={product.product_name} 
+        nameProduct={product.product_name}
         problema={product.reason}
         descripcion={product.description}
-        fechaDeCompra={product.order_id} 
+        fechaDeCompra={product.order_id}
         fechaDeSolicitud={product.return_date}
         imageUrl={product.evidence_url}
-        customerName={"Marbein Cruz"} 
+        customerName={"Marbein Cruz"} // Actualízalo si es necesario
       />
     ));
   };

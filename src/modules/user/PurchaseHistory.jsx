@@ -9,6 +9,7 @@ const PurchaseHistory = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
+  const [returnStatuses, setReturnStatuses] = useState({});
   const user_id = location.state?.user_id;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,7 +18,6 @@ const PurchaseHistory = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(`http://localhost:6868/toystore/user/${user_id}/orders`);
-        console.log("Respuesta de la ordenes", response.data);
         setOrders(response.data);
         setLoading(false);
       } catch (error) {
@@ -34,6 +34,27 @@ const PurchaseHistory = () => {
       setError('Usuario no proporcionado.');
     }
   }, [user_id]);
+
+  useEffect(() => {
+    const fetchReturnStatuses = async () => {
+      try {
+        const statuses = {};
+        for (const order of orders) {
+          const response = await axios.get(`http://localhost:6868/toystore/returns/${order.order_id}`);
+          if (response.data) {
+            statuses[order.order_id] = response.data.status; 
+          }
+        }
+        setReturnStatuses(statuses); 
+      } catch (error) {
+        console.error('Error al obtener el estado de devoluciones:', error);
+      }
+    };
+
+    if (orders.length > 0) {
+      fetchReturnStatuses();
+    }
+  }, [orders]);
 
   const handleBackClick = () => {
     navigate(-1);
@@ -62,6 +83,11 @@ const PurchaseHistory = () => {
                 <p className="purchase-date">Fecha: {new Date(order.date).toLocaleDateString()}</p>
                 <p className="purchase-status">Estado: {order.status}</p>
                 <p className="purchase-total">Total: ${order.total}</p>
+                {returnStatuses[order.order_id] && (
+                  <p className="purchase-status">
+                    Estado de devolución: {returnStatuses[order.order_id]}
+                  </p>
+                )}
               </div>
               <button
                 className="purchase-button"
@@ -74,7 +100,6 @@ const PurchaseHistory = () => {
               >
                 Ver más
               </button>
-
             </div>
           ))}
         </div>
