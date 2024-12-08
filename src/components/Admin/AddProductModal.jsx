@@ -4,13 +4,13 @@ import './../../assets/Components/general/Modal.scss';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
-import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert';
+import { useOutletContext } from 'react-router-dom';
 
 const AddProductModal = ({ onClose, onSave }) => {
   const fileInputRefs = useRef([]);
   const [images, setImages] = useState([null, null, null, null, null]);
   const [categories, setCategories] = useState([]);
-  const { alert, showAlert } = useCustomAlert();
+  const { handleAlert, handleRedirect } = useOutletContext() || {};
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -49,8 +49,8 @@ const AddProductModal = ({ onClose, onSave }) => {
       .required('Las categorías son obligatorias'),
     images: yup
       .array()
-      .min(5, 'Debes subir al menos 5 imágenes')
-      .test('all-images-present', 'Debes subir las 5 imágenes', (value) =>
+      .min(5, 'Debes subir al menos 5 imagenes')
+      .test('at-least-one-image', 'Debes subir al menos una imagen', (value) =>
         value.every((image) => image !== null)
       ),
   });
@@ -66,7 +66,6 @@ const AddProductModal = ({ onClose, onSave }) => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      
       try {
         const category = categories.find(cat => cat.name === values.categories[0]);
         const formData = new FormData();
@@ -77,7 +76,7 @@ const AddProductModal = ({ onClose, onSave }) => {
         formData.append('stock', values.quantity);
         values.images.forEach((image) => {
           if (image) {
-            formData.append('images', image); // Usar 'images' como nombre del campo
+            formData.append('images', image);
           }
         });
 
@@ -88,13 +87,14 @@ const AddProductModal = ({ onClose, onSave }) => {
         });
 
         onSave(response.data.product);
-        await showAlert({
+        await handleAlert({
           title: "Producto agregado",
           text: "El producto se ha añadido correctamente.",
           icon: "success",
         });
+        handleRedirect('/dashboard');
       } catch (error) {
-        await showAlert({
+        await handleAlert({
           title: "Error",
           text: "Ocurrió un error al crear el producto. Por favor, intenta de nuevo.",
           icon: "error",
@@ -156,11 +156,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                   </div>
                 ))}
               </div>
-              {formik.errors.images && formik.touched.images && (
-                <div className="error-message">{formik.errors.images}</div>
-              )}
             </div>
-
             <div className="modal-right">
               <div className="form-group">
                 <label htmlFor="name">Nombre:</label>
@@ -176,7 +172,6 @@ const AddProductModal = ({ onClose, onSave }) => {
                   <div className="error-message">{formik.errors.name}</div>
                 )}
               </div>
-
               <div className="form-group">
                 <label htmlFor="description">Descripción:</label>
                 <textarea
@@ -190,7 +185,6 @@ const AddProductModal = ({ onClose, onSave }) => {
                   <div className="error-message">{formik.errors.description}</div>
                 )}
               </div>
-
               <div className="form-group-inline">
                 <div className="form-group">
                   <label htmlFor="quantity">Cantidad:</label>
@@ -198,6 +192,7 @@ const AddProductModal = ({ onClose, onSave }) => {
                     type="number"
                     id="quantity"
                     name="quantity"
+                    min="1"
                     value={formik.values.quantity}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -212,6 +207,8 @@ const AddProductModal = ({ onClose, onSave }) => {
                     type="number"
                     id="price"
                     name="price"
+                    min="1"
+                    step="0.01"
                     value={formik.values.price}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -221,22 +218,14 @@ const AddProductModal = ({ onClose, onSave }) => {
                   )}
                 </div>
               </div>
-
               <div className="form-group">
-                <label htmlFor="categories">Categorías:</label>
+                <label htmlFor="categories">Categoría:</label>
                 <Select
                   id="categories"
-                  isMulti
                   options={categoryOptions}
-                  value={formik.values.categories.map((cat) => ({
-                    value: cat,
-                    label: cat,
-                  }))}
-                  onChange={(selectedOptions) =>
-                    formik.setFieldValue(
-                      'categories',
-                      selectedOptions.map((option) => option.value)
-                    )
+                  value={categoryOptions.find(option => option.value === formik.values.categories[0])}
+                  onChange={(selectedOption) =>
+                    formik.setFieldValue('categories', [selectedOption.value])
                   }
                   onBlur={() => formik.setFieldTouched('categories', true)}
                 />
@@ -244,7 +233,6 @@ const AddProductModal = ({ onClose, onSave }) => {
                   <div className="error-message">{formik.errors.categories}</div>
                 )}
               </div>
-
               <div className="modal-buttons">
                 <button
                   className="cancel-button"
