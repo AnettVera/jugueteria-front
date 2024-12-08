@@ -10,27 +10,29 @@ import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert'
 
 const PurchaseDetails = () => {
   const location = useLocation();
-  const { user_id, order_id } = location.state || {};
+  const { order_id } = location.state || {};
   const navigate = useNavigate();
   const [isModalOpen, setModalOpen] = useState(false);
   const [orderDetails, setOrderDetails] = useState(null);
+  const [productDetails, setProductDetails] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { alert, showAlert } = useCustomAlert(); 
+  const { alert, showAlert } = useCustomAlert();
+  const user_id = localStorage.getItem('user_id');
 
-  const openSucces=()=>{
+  const openSucces = () => {
     showAlert({
       title: 'Disfruta de tus juguetes',
       text: 'En ToyStore trabajamos para ofrecerte una buena experiencia de compra, vuelve pronto.',
-      icon: 'success', 
+      icon: 'success',
     });
   }
-  const openInfo=()=>{
+  const openInfo = () => {
     showAlert({
-          title: 'Lamentamos la demora',
-          text: 'Tu pedido tiene un periodo de 15 posteriores a la fecha de compra para llegar a la ubicación registrada, si no lo recibes en ese periodo contactanos al correo toystore@gmail.com',
-          icon: 'info', 
-        });
+      title: 'Lamentamos la demora',
+      text: 'Tu pedido tiene un periodo de 15 posteriores a la fecha de compra para llegar a la ubicación registrada, si no lo recibes en ese periodo contactanos al correo toystore@gmail.com',
+      icon: 'info',
+    });
   }
 
   const handleBackClick = () => {
@@ -40,11 +42,26 @@ const PurchaseDetails = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:6868/toystore/orders/${order_id}`); 
+        const response = await axios.get(`http://localhost:6868/toystore/orders/${order_id}`);
         setOrderDetails(response.data);
+
+        const productsResponse = await axios.get(`http://localhost:6868/toystore/orders/${order_id}/products`);
+        const productDetailsPromises = productsResponse.data.map(async (product) => {
+          const productInfo = await axios.get(`http://localhost:6868/toystore/products/${product.product_id}`);
+          return {
+            ...product,
+            name: productInfo.data.name,
+            // Añade una imagen por defecto si no hay imágenes
+            image: productInfo.data.images.length > 0
+              ? productInfo.data.images[0]
+              : 'https://via.placeholder.com/150'
+          };
+        })
+
+        const completeProductDetails = await Promise.all(productDetailsPromises);
+        setProductDetails(completeProductDetails);
         setLoading(false);
-       
-        
+
       } catch (error) {
         console.error("Error al obtener detalles de la orden:", error);
         setError("Error al obtener los detalles de la orden.");
@@ -63,7 +80,7 @@ const PurchaseDetails = () => {
   useEffect(() => {
     if (!user_id || !order_id) {
       console.error("Faltan datos necesarios para el componente.");
-      navigate(-1); 
+      navigate(-1);
     }
   }, [user_id, order_id, navigate]);
 
@@ -92,13 +109,6 @@ const PurchaseDetails = () => {
         </button>
         <div className="purchase-details-page">
           <div className="details-container">
-            <div className="product-image">
-              <img
-                src={Purchase}
-                alt="Logo compra"
-              />
-              <p className="product-name">Compra #{orderDetails.order_id}</p>
-            </div>
 
             <div className="order-info">
               <p><strong>Compra:</strong> #{orderDetails.order_id}</p>
@@ -114,6 +124,26 @@ const PurchaseDetails = () => {
                 reembolsaremos tu dinero. ¡Esperamos que te diviertas y vuelvas
                 pronto a ToyStore!
               </p>
+
+              <div className="order-products">
+                <h3>Productos comprados</h3>
+                {productDetails.map((product) => (
+                  <div key={product.id} className="product-item">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="product-image"
+                    />
+                    <div className="product-details">
+                      <p><strong>Nombre:</strong> {product.name}</p>
+                      <p><strong>Precio unitario:</strong> ${product.unit_price}</p>
+                      <p><strong>Cantidad:</strong> {product.quantity}</p>
+                      <p><strong>Precio total:</strong> ${product.total_price}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
               <div className="buttons">
                 <button className="not-received" onClick={openInfo}>No he recibido mis artículos</button>
                 <button className="return" onClick={openModal}>Solicitar devolución</button>
@@ -122,15 +152,15 @@ const PurchaseDetails = () => {
             </div>
           </div>
 
-      
+
         </div>
 
-        {isModalOpen && <ReturnModal 
+        {isModalOpen && <ReturnModal
           orderId={order_id}
           productId={1}
           userId={user_id}
           onClose={closeModal} />}
-          {alert}
+        {alert}
       </div>
     </>
   );

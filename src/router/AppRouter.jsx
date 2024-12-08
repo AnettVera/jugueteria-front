@@ -63,7 +63,7 @@ const AppRouter = () => {
       case 'user':
         return (
           <>
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={<LandingPage />}/>
             <Route path="producto/:productName" element={<Product />} />
             <Route path="carrito-de-compras" element={<Carrito />} />
             <Route path="historial" element={<PurchaseHistory />} />
