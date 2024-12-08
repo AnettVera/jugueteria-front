@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+                                                                                                                          import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/Pages/LandingPage.scss";
 import { AuthContext } from "../../config/context/auth-context";
@@ -110,7 +110,7 @@ const LandingPage = () => {
     }
 
     if (error) {
-      return <div>Error</div>;
+      return <div className="section-error">Error</div>;
     }
 
     if (products.length === 0) {

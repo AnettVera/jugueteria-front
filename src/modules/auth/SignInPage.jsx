@@ -7,13 +7,13 @@ import '../../assets/Pages/SignInPage.scss';
 import login from '../../assets/images/login.svg';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import {useCustomAlert} from './../../components/Elements/Generales/CustomAlert';
+import { useCustomAlert } from './../../components/Elements/Generales/CustomAlert';
 
 function SignInPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { dispatch } = useContext(AuthContext);
-  const { alert, showAlert } = useCustomAlert(); 
+  const { alert, showAlert } = useCustomAlert();
 
   const formik = useFormik({
     initialValues: {
@@ -21,7 +21,7 @@ function SignInPage() {
       password: '',
     },
     validationSchema: yup.object({
-      email: yup.string().email('El email no es válido').required('El email es obligatorio'),
+      email: yup.string().email('El email no es válido').required('El email es obligatorio').test('no-whitespace', 'El apellido no puede contener espacios', (value) => value && value.trim() !== ''),
       password: yup.string().required('La contraseña es obligatoria'),
     }),
     validateOnChange: true,
@@ -39,11 +39,11 @@ function SignInPage() {
         dispatch({ type: 'SIGNIN', payload: { roles: [{ type: role }] } });
         if (role === 'ADMIN') {
           navigate('/', { replace: true });
-        } if(role === 'user'){
+        } if (role === 'user') {
           navigate('/', { replace: true });
-        }if( navigate==='countersaleman'){
+        } if (navigate === 'countersaleman') {
           navigate('/', { replace: true });
-        }else {
+        } else {
           navigate(location.pathname, { replace: true });
         }
         window.location.reload();
@@ -102,7 +102,7 @@ function SignInPage() {
           </form>
         </div>
       </div>
-      {alert} 
+      {alert}
       <div className='circulo1'></div>
       <div className='circulo2'></div>
     </div>
