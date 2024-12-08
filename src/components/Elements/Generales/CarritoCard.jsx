@@ -1,15 +1,12 @@
 import React from 'react';
 import '../../../assets/Pages/CarritoCard.scss';
 import Trashcan from '../../../assets/images/Trashcan.svg';
-import { useCustomAlert } from './CustomAlert';
 
 const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputChange, handleRemove }) => {
     const { productCart, quantity } = product || {};
-    const { name, description, price, images } = productCart || {};
-    const { alert, showAlert } = useCustomAlert(); 
+    const { name, description, price, images, stock } = productCart || {};
 
-
-    // Obtener datos del local storage si no están disponibles en el objeto product
+    // Validación para obtener datos del localStorage si productCart no tiene información
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     const storedProduct = storedCart.find(item => item.product_id === product?.product_id) || {};
 
@@ -17,11 +14,14 @@ const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputCha
     const productDescription = description || storedProduct.description;
     const productPrice = price || storedProduct.price;
     const productImages = images || storedProduct.images || [];
-    const productImageUrl = productImages.length > 0 
-        ? (productImages[0]?.image_url ? `http://localhost:6868/${productImages[0].image_url}` : productImages[0])
+    const productStock = stock || storedProduct.stock || 0;
+
+    const productImageUrl = productImages?.[0]?.image_url
+        ? `http://localhost:6868/${productImages[0].image_url}`
         : "https://via.placeholder.com/150";
 
-        const totalPrice = productPrice * quantity;
+    const totalPrice = (productPrice || 0) * quantity;
+
     return (
         <div className="carritoPage__cartItem">
             <img src={productImageUrl} alt="imagen de producto" />
@@ -31,29 +31,31 @@ const CarritoCard = ({ product, handleIncrement, handleDecrement, handleInputCha
                     <p>{productDescription}</p>
                 </div>
                 <div className="carritoPage__cartItemPrice">
-                    <p>$ {totalPrice} mx</p>
+                    <p>$ {totalPrice.toFixed(2)} mx</p>
                 </div>
             </div>
             <div className="carritoPage__cartItemQuantity">
-                <button onClick={() => handleDecrement(product)} disabled={product.quantity === 1}>-</button>
+                <button onClick={() => handleDecrement(product)} disabled={quantity <= 1}>-</button>
                 <input
                     type="number"
                     min={1}
                     value={quantity}
                     onChange={(e) => handleInputChange(product, e.target.value)}
                 />
-                <button onClick={() => handleIncrement(product)}>+</button>
+                <button
+                    onClick={() => handleIncrement(product)}
+                    className={quantity >= productStock ? "disabled-button" : ""}
+                >
+                    +
+                </button>
             </div>
             <div className="carritoPage__cartItemDelete">
-                <button onClick={() => handleRemove(product.id)}>
+                <button onClick={() => handleRemove(product.product_id)}>
                     <img src={Trashcan} alt="eliminar producto" />
                 </button>
             </div>
-            {alert}
         </div>
     );
 };
 
 export default CarritoCard;
-
-

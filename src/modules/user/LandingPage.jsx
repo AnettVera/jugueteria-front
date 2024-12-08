@@ -103,6 +103,10 @@ const LandingPage = () => {
     console.log("Redirigiendo al producto:", productId);
     navigate(`/producto/${productId}`);
   };
+  const availableProducts = products.filter((product) => product.stock > 0);
+  if (availableProducts.length === 0) {
+    return <div>No hay productos disponibles con stock mayor a 0</div>;
+  }
 
   const renderProducts = () => {
     if (loading) {
@@ -117,18 +121,18 @@ const LandingPage = () => {
       return <div>No hay productos en esta categoría</div>;
     }
 
-    return products.map((product) => (
+    return availableProducts.map((product) => (
       <ProductCard
         key={product.id}
         name={product.name}
-        images={product.images}        
+        images={product.images}
         description={product.description}
         price={product.price}
         onClick={() => handleProductClick(product.id)}
       />
     ));
   };
-
+ 
   return (
     <div className="bg-background">
       <Header />

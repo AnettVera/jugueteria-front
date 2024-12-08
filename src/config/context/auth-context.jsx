@@ -4,10 +4,11 @@ import { authManager } from './auth-manager';
 
 const initialAuthState = {
   user: {
-    signed: false,
-    roles: [{type: localStorage.getItem('role') || 'CLIENT'}],
+    signed: !!localStorage.getItem('jwt_token'),
+    roles: [{ type: localStorage.getItem('role') || 'CLIENT' }],
   },
 };
+
 
 const AuthContext = createContext(initialAuthState);
 

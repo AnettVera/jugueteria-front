@@ -46,7 +46,7 @@ const RegisterPage = () => {
                 localStorage.setItem('jwt_token', token);
                 localStorage.setItem('user_id', userId);
                 localStorage.setItem('role', role);
-                dispatch({ type: 'SIGNIN', payload: { roles: [{ type: role }] } });
+                dispatch({ type: 'SIGNIN', payload: { roles: [{ type: 'user' }] } });
                 navigate('/');
             } catch (error) {
                 if (error.response) {

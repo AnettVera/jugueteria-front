@@ -33,7 +33,7 @@ const Product = () => {
         }
         setProduct(response.data);
         console.log(response);
-        
+
       } catch (err) {
         console.error(err.message);
       } finally {
@@ -97,10 +97,10 @@ const Product = () => {
           <div className="image-carousel">
             <button className="carousel-control prev" onClick={handlePrevClick}>{<IoIosArrowBack />}</button>
             <img
-  src={`http://localhost:6868/${product.images[currentImageIndex]?.image_url}` || "https://via.placeholder.com/300"}
-  alt="Producto"
-  className="product-image"
-/>
+              src={`http://localhost:6868/${product.images[currentImageIndex]?.image_url}` || "https://via.placeholder.com/300"}
+              alt="Producto"
+              className="product-image"
+            />
 
             <button className="carousel-control next" onClick={handleNextClick}>{<IoIosArrowForward />}</button>
           </div>
@@ -112,27 +112,73 @@ const Product = () => {
             <div className="actions">
               <div className="quantity-selector">
                 <label htmlFor="quantity">Cantidad:</label>
-                <input
-                  id="quantity"
-                  type="number"
-                  min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
-                />
+                <div className="quantity-selector">
+                  <label htmlFor="quantity">Cantidad:</label>
+                  <input
+                    id="quantity"
+                    type="number"
+                    min="1"
+                    value={quantity}
+                    onChange={(e) => {
+                      const newQuantity = parseInt(e.target.value, 10);
+                      if (newQuantity > product.stock) {
+                        showAlert({
+                          title: "Stock insuficiente",
+                          text: `El stock disponible es ${product.stock}. No puedes añadir más.`,
+                          icon: "error",
+                        });
+                        return;
+                      }
+                      setQuantity(newQuantity);
+                    }}
+                  />
+                </div>
               </div>
-              </div>
-             
-              <div className="actions">
-                <button className="add-to-cart" onClick={handleAddToCart}>
-                  <FaCartShopping /> Agregar al carrito
-                </button>
-                <span className="price-label">${parseFloat(product.price).toFixed(2)} MXN</span>
-              </div>
-            
+            </div>
+            <div
+              style={{
+                backgroundColor:
+                  product.stock === 0
+                    ? "#e74c3c "
+                    : product.stock <= 20
+                      ? "#abb2b9"
+                      : "#229954",
+                color: "white",
+                width: '50%',
+                margin: '0px auto',
+                padding: "2px 10px ",
+                borderRadius: "5px",
+                textAlign: "center",
+
+              }}
+            >
+              {product.stock === 0
+                ? "Producto agotado"
+                : product.stock <= 20
+                  ? "Producto casi agotado"
+                  : "Producto disponible"}
+            </div>
+
+            <div className="actions">
+              <button
+                className="add-to-cart"
+                onClick={handleAddToCart}
+                disabled={product.stock <= 0} // Deshabilita el botón si el stock es <= 0
+                style={{
+                  backgroundColor: product.stock <= 0 ? "#aeb6bf" : "#EF1A23",
+                  cursor: product.stock <= 0 ? "not-allowed" : "pointer",
+                }}
+              >
+                <FaCartShopping /> Agregar al carrito
+              </button>
+
+              <span className="price-label">${parseFloat(product.price).toFixed(2)} MXN</span>
+            </div>
+
           </div>
         </div>
 
-{/**aqui iban los comentarios */}
+        {/**aqui iban los comentarios */}
 
         {isModalOpen && <ShippingOptions onClose={handleModalClose} />}
         {alert}
