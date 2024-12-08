@@ -13,8 +13,8 @@ import { BeatLoader } from 'react-spinners';
 const NewPassword = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false); 
-  const { alert, showAlert } = useCustomAlert(); 
+  const [isLoading, setIsLoading] = useState(false);
+  const { alert, showAlert } = useCustomAlert();
   const token = searchParams.get('token');
 
   useEffect(() => {
@@ -35,11 +35,15 @@ const NewPassword = () => {
       passwordConfirm: '',
     },
     validationSchema: yup.object({
-      password: yup.string().required('La contraseña es obligatoria'),
+      password: yup
+        .string()
+        .required('La contraseña es obligatoria')
+        .test('no-whitespace', 'La contraseña no puede contener espacios', (value) => value && value.trim() !== ''),
       passwordConfirm: yup
         .string()
         .oneOf([yup.ref('password'), null], 'Las contraseñas no coinciden')
-        .required('La confirmación de la contraseña es obligatoria'),
+        .required('La confirmación de la contraseña es obligatoria')
+        .test('no-whitespace', 'La contraseña no puede contener espacios', (value) => value && value.trim() !== ''),
     }),
     onSubmit: async (values) => {
       setIsLoading(true);
@@ -119,10 +123,10 @@ const NewPassword = () => {
               <span>{formik.errors.passwordConfirm}</span>
             ) : null}
             {formik.errors.passwordConfirm && <div>{formik.errors.passwordConfirm}</div>}
-            <button 
-            className='buttonForm'
-            type="submit" 
-            disabled={formik.errors.password || formik.errors.passwordConfirm || isLoading}>
+            <button
+              className='buttonForm'
+              type="submit"
+              disabled={formik.errors.password || formik.errors.passwordConfirm || isLoading}>
               {isLoading ? <BeatLoader size={15} color={"#EF1A23"} /> : 'Actualizar contraseña'}
             </button>
           </form>

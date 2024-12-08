@@ -24,12 +24,12 @@ const RegisterPage = () => {
         validationSchema: yup.object({
             name: yup.string().required('El nombre es obligatorio').test('no-whitespace', 'El nombre no puede contener espacios', (value) => value && value.trim() !== ''),
             lastname: yup.string().required('El apellido es obligatorio').test('no-whitespace', 'El apellido no puede contener espacios', (value) => value && value.trim() !== ''),
-            email: yup.string().email('El email no es valido').required('El email es obligatorio'),
+            email: yup.string().email('El email no es valido').required('El email es obligatorio').test('no-whitespace', 'El correo no puede contener espacios', (value) => value && value.trim() !== ''),
             tel: yup.string()
                 .matches(/^[0-9]{10}$/, 'El telefono debe tener exactamente 10 números')
                 .required('El telefono es obligatorio'),
-            password: yup.string().required('La contraseña es obligatoria').test('no-whitespace', 'El nombre no puede contener espacios', (value) => value && value.trim() !== ''),
-            passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas no coinciden').required('La confirmación de la contraseña es obligatoria').test('no-whitespace', 'El nombre no puede contener espacios', (value) => value && value.trim() !== ''),
+            password: yup.string().required('La contraseña es obligatoria').test('no-whitespace', 'La contraseña no puede contener espacios', (value) => value && value.trim() !== ''),
+            passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas no coinciden').required('La confirmación de la contraseña es obligatoria').test('no-whitespace', 'La contraseña no puede contener espacios', (value) => value && value.trim() !== ''),
         }),
         validateOnChange: true,
         validateOnBlur: true,

@@ -21,8 +21,8 @@ function SignInPage() {
       password: '',
     },
     validationSchema: yup.object({
-      email: yup.string().email('El email no es válido').required('El email es obligatorio').test('no-whitespace', 'El apellido no puede contener espacios', (value) => value && value.trim() !== ''),
-      password: yup.string().required('La contraseña es obligatoria'),
+      email: yup.string().email('El email no es válido').required('El email es obligatorio').test('no-whitespace', 'El correo no puede contener espacios', (value) => value && value.trim() !== ''),
+      password: yup.string().required('La contraseña es obligatoria').test('no-whitespace', 'La contraseña no puede contener espacios', (value) => value && value.trim() !== ''),
     }),
     validateOnChange: true,
     validateOnBlur: true,
@@ -37,9 +37,8 @@ function SignInPage() {
         localStorage.setItem('user_id', userId);
         localStorage.setItem('role', role);
         dispatch({ type: 'SIGNIN', payload: { roles: [{ type: role }] } });
-          navigate('/', { replace: true });
-     
-        window.location.reload();
+        navigate('/', { replace: true });
+        w.location.reload();
       } catch (err) {
         console.error('Error al iniciar sesión:', err);
         await showAlert({

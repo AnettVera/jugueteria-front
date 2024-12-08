@@ -19,7 +19,11 @@ const PasswordRecovery = () => {
       email: '',
     },
     validationSchema: yup.object({
-      email: yup.string().email('El email no es válido').required('El email es obligatorio'),
+      email: yup
+        .string()
+        .email('El email no es válido')
+        .required('El email es obligatorio')
+        .test('no-whitespace', 'El email no puede contener espacios', (value) => value && value.trim() !== ''),
     }),
     validateOnChange: true,
     validateOnBlur: true,
