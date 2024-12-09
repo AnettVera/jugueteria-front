@@ -53,7 +53,7 @@ const ReturnPage = () => {
         fechaDeCompra={product.order_id}
         fechaDeSolicitud={product.return_date}
         imageUrl={product.evidence_url}
-        customerName={"Marbein Cruz"} // Actualízalo si es necesario
+        userId={product.user_id} 
       />
     ));
   };

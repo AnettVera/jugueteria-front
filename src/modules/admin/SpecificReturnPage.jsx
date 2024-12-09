@@ -21,7 +21,7 @@ const SpecificReturnPage = () => {
     fechaDeCompra,
     fechaDeSolicitud,
     imageUrl,
-    customerName,
+    userId,
   } = location.state || {};
 
   const handleBackClick = () => navigate(-1);
@@ -31,6 +31,7 @@ const SpecificReturnPage = () => {
       await axios.put(`http://localhost:6868/toystore/returns/${id}`, {
         status: "aprobada",
         rejection_reason: null,
+        user_id: userId,
       });
       await showAlert({
         title: "Devolución aceptada",
@@ -90,6 +91,7 @@ const SpecificReturnPage = () => {
         <RejectionReturn
           onClose={() => setIsRejectModalOpen(false)}
           returnId={id}
+          userId={userId}
         />
       )}
 

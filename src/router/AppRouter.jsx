@@ -89,7 +89,6 @@ const AppRouter = () => {
       <>
         <Route path="/" element={user?.roles[0]?.type === 'countersaleman' ? <Home /> : <LandingPage />} />
         <Route path="carrito-de-compras" element={<Carrito />} />
-
         <Route path="success" element={<Success />} />
         <Route path="producto/:id" element={<Product />} />
         <Route path="login" element={<SignInPage />} />

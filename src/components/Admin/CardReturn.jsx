@@ -12,7 +12,7 @@ const CardReturn = ({
   fechaDeCompra,
   fechaDeSolicitud,
   imageUrl,
-  customerName,
+  userId,
 }) => {
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
@@ -41,7 +41,6 @@ const CardReturn = ({
   };
 
   const handleViewClick = () => {
-    console.log(id);
     
     navigate(`/devoluciones/producto/${id}`, {
       state: {
@@ -52,7 +51,7 @@ const CardReturn = ({
         fechaDeCompra: order?.createdAt,
         fechaDeSolicitud,
         imageUrl,
-        customerName,
+        userId,
       },
     });
   };

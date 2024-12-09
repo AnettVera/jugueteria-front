@@ -3,7 +3,7 @@ import axios from "axios";
 import { useCustomAlert } from "../Elements/Generales/CustomAlert";
 import "./../../assets/Components/admin/CardReturn.scss";
 
-const RejectionReturn = ({ onClose, returnId }) => {
+const RejectionReturn = ({ onClose, returnId, userId }) => {
   const [rejectionReason, setRejectionReason] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { alert, showAlert } = useCustomAlert();
@@ -26,6 +26,7 @@ const RejectionReturn = ({ onClose, returnId }) => {
       await axios.put(`http://localhost:6868/toystore/returns/${returnId}`, {
         status: "rechazada",
         rejection_reason: rejectionReason,
+        user_id: userId,
       });
 
       await showAlert({
