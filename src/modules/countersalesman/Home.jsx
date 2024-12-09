@@ -5,20 +5,20 @@ import Header from '../../components/Elements/Generales/Header';
 import { AuthContext } from '../../config/context/auth-context';
 import ProductCardPurchase from '../../components/Elements/Generales/ProductCardPurchase';
 import CustomProducts from '../user/CustomProducts';
-import PurchaseModal from './../../components/Elements/Generales/PurchaseModal'; // Asegúrate de que el path sea correcto
+import PurchaseModal from './../../components/Elements/Generales/PurchaseModal'; 
 import axios from "axios";
 import { BeatLoader } from "react-spinners";
 import _ from "lodash";
 
 const Home = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const [selectedProducts, setSelectedProducts] = useState("Lo más popular");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentCategoryId, setCurrentCategoryId] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedProductId, setSelectedProductId] = useState(null); // Estado para guardar el ID del producto seleccionado
+  const [selectedProductId, setSelectedProductId] = useState(null); 
   const { user } = useContext(AuthContext);
   const [searchResults, setSearchResults] = useState([]);
 

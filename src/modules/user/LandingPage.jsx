@@ -162,7 +162,7 @@ const LandingPage = () => {
               ))}
             </ul>
           ) : (
-            <p> </p>
+            <p style={{textAlign:'center'}}>No hay coincidencias de esta busqueda</p>
           )}
         </div>
       </div>
