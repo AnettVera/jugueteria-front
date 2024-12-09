@@ -3,6 +3,7 @@
     font-family: var(--font-family-afacad);
     border-radius: 5px;
     width: 280px;
+    cursor: pointer;
     box-shadow: var(--light-shadow1);
     transition: var(--default-transition);
     overflow: hidden;
@@ -59,7 +60,7 @@
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 30px;
+      font-size: 1.2rem;
       color: var(--primary-color);
   
     }

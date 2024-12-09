@@ -5,7 +5,6 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Header from '../../components/Elements/Generales/Header';
-import Purchase from './../../assets/images/purchase.jpeg';
 import { useCustomAlert } from '../../components/Elements/Generales/CustomAlert';
 
 const PurchaseDetails = () => {
@@ -26,14 +25,14 @@ const PurchaseDetails = () => {
       text: 'En ToyStore trabajamos para ofrecerte una buena experiencia de compra, vuelve pronto.',
       icon: 'success',
     });
-  }
+  };
   const openInfo = () => {
     showAlert({
       title: 'Lamentamos la demora',
-      text: 'Tu pedido tiene un periodo de 15 posteriores a la fecha de compra para llegar a la ubicación registrada, si no lo recibes en ese periodo contactanos al correo toystore@gmail.com',
+      text: 'Tu pedido tiene un periodo de 15 días posteriores a la fecha de compra para llegar a la ubicación registrada. Si no lo recibes en ese periodo, contáctanos al correo toystore@gmail.com',
       icon: 'info',
     });
-  }
+  };
 
   const handleBackClick = () => {
     navigate(-1);
@@ -48,15 +47,15 @@ const PurchaseDetails = () => {
         const productsResponse = await axios.get(`http://localhost:6868/toystore/orders/${order_id}/products`);
         const productDetailsPromises = productsResponse.data.map(async (product) => {
           const productInfo = await axios.get(`http://localhost:6868/toystore/products/${product.product_id}`);
+          
           return {
             ...product,
             name: productInfo.data.name,
-            // Añade una imagen por defecto si no hay imágenes
             image: productInfo.data.images.length > 0
-              ? productInfo.data.images[0]
+              ? `http://localhost:6868/${productInfo.data.images[0].image_url}`
               : 'https://via.placeholder.com/150'
           };
-        })
+        });
 
         const completeProductDetails = await Promise.all(productDetailsPromises);
         setProductDetails(completeProductDetails);
@@ -109,7 +108,6 @@ const PurchaseDetails = () => {
         </button>
         <div className="purchase-details-page">
           <div className="details-container">
-
             <div className="order-info">
               <p><strong>Compra:</strong> #{orderDetails.order_id}</p>
               <p><strong>Cantidad pagada:</strong> {orderDetails.total} mx</p>
@@ -117,11 +115,9 @@ const PurchaseDetails = () => {
               <p><strong>Plazo de entrega:</strong> pendiente</p>
 
               <p className="delivery-message">
-                Esperamos que el envío haya
-                salido bien y que los artículos hayan llegado en buen estado. Si no
+                Esperamos que el envío haya salido bien y que los artículos hayan llegado en buen estado. Si no
                 es así, puedes solicitar una devolución explicando la razón de la solicitud dentro de los
-                10 días posteriores a la entrega, y de ser aceptada, te
-                reembolsaremos tu dinero. ¡Esperamos que te diviertas y vuelvas
+                10 días posteriores a la entrega, y de ser aceptada, te reembolsaremos tu dinero. ¡Esperamos que te diviertas y vuelvas
                 pronto a ToyStore!
               </p>
 
@@ -133,8 +129,9 @@ const PurchaseDetails = () => {
                       src={product.image}
                       alt={product.name}
                       className="product-image"
+                      onError={(e) => { e.target.src = 'https://via.placeholder.com/150'; }}
                     />
-                    <div className="product-details">
+                    <div className="product-details-order">
                       <p><strong>Nombre:</strong> {product.name}</p>
                       <p><strong>Precio unitario:</strong> ${product.unit_price}</p>
                       <p><strong>Cantidad:</strong> {product.quantity}</p>
@@ -151,8 +148,6 @@ const PurchaseDetails = () => {
               </div>
             </div>
           </div>
-
-
         </div>
 
         {isModalOpen && <ReturnModal

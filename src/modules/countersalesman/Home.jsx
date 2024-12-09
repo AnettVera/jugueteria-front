@@ -9,6 +9,8 @@ import PurchaseModal from './../../components/Elements/Generales/PurchaseModal';
 import axios from "axios";
 import { BeatLoader } from "react-spinners";
 import _ from "lodash";
+import { Link, useNavigate } from "react-router-dom";
+
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); 
@@ -36,19 +38,19 @@ const Home = () => {
       }
 
       const response = await axios.get(url);
-      const formattedProducts = response.data.map((product) => ({
-        id: product.product_id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        images: [
-          product.image_url || "https://via.placeholder.com/300",
-          "https://via.placeholder.com/300",
-          "https://via.placeholder.com/300",
-          "https://via.placeholder.com/300"
-        ],
-        stock: product.stock
-      }));
+      const formattedProducts = response.data.map((product) => {
+        const images = product.images?.map((img) => `http://localhost:6868/${img.image_url}`) || ["https://via.placeholder.com/300"];
+        return {
+          id: product.product_id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          images: images.length > 0 ? images : ["https://via.placeholder.com/300"],
+          stock: product.stock,
+        };
+      });
+
+      console.log(response);
 
       setProducts(formattedProducts);
       setLoading(false);
@@ -58,6 +60,7 @@ const Home = () => {
       setLoading(false);
     }
   };
+
 
   const handleCategoryChange = (products, categoryId) => {
     setSelectedProducts(products);
@@ -144,23 +147,27 @@ const Home = () => {
             value={searchQuery}
             onChange={handleSearchInputChange}
           />
- 
+          <span className="search-icon">
+            <CiSearch />
+          </span>
         </div>
-        <div className="results">
-          {loading ? (
-            <BeatLoader color="#EF1A23" />
-          ) : searchResults.length > 0 ? (
-            <ul>
-              {searchResults.map((product) => (
-                <li key={product.product_id}>
-                  <Link to={`/producto/${product.product_id}`}>{product.name}</Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p> </p>
-          )}
-        </div>
+        {searchQuery && (
+          <div className="results">
+            {loading ? (
+              <BeatLoader color="#EF1A23" />
+            ) : searchResults.length > 0 ? (
+              <ul>
+                {searchResults.map((product) => (
+                  <li key={product.product_id}>
+                    <Link to={`/producto/${product.product_id}`}>{product.name}</Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p style={{ textAlign: 'center' }}>No hay coincidencias de esta búsqueda</p>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="products">

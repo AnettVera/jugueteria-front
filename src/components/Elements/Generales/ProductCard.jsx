@@ -33,7 +33,6 @@ const ProductCard = ({ name, images, description, price, onClick }) => {
           toggleCart();
         }}
       >
-        {isAddedToCart ? <PiShoppingCartSimpleFill /> : <PiShoppingCartSimpleBold />}
       </button>
     </div>
   );
