@@ -45,9 +45,12 @@ const RegisterPage = () => {
                 const { token, userId, role } = response.data;
                 localStorage.setItem('jwt_token', token);
                 localStorage.setItem('user_id', userId);
-                localStorage.setItem('role', role);
-                dispatch({ type: 'SIGNIN', payload: { roles: [{ type: 'user' }] } });
-                navigate('/');
+                localStorage.setItem('role', 'user');
+                dispatch({ type: 'SIGNIN', payload: { roles: [{ type: role }] } });
+                navigate('/', { replace: true });
+                window.location.reload();
+
+                           
             } catch (error) {
                 if (error.response) {
                     console.error('Error al crear el usuario:', error.response.data);

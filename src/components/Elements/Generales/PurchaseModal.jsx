@@ -64,19 +64,23 @@ const PurchaseModal = ({ onClose, productId }) => {
 
       const total = Number(product.price) * quantity;
       const orderData = {
-        user_id: userId,
-        status: "completada",
-        total: total,
-        products: [
-          {
-            product_id: productId,
-            quantity: quantity,
-          },
-        ],
-      };
-
-      const response = await axios.post(`http://localhost:6868/toystore/orders`, orderData);
+        user_id: userId, 
+        status: "completada", 
+        total: total, 
+        delivery_address: null, 
+        orderDetails: [ 
+            {
+                name: product.name, 
+                quantity: quantity, 
+                unit_price: product.price, 
+            }
+        ]
+    };
+    
+      
+      const response = await axios.post("http://localhost:6868/toystore/orders", orderData);
       console.log("Orden creada:", response.data);
+      
 
       await axios.put(`http://localhost:6868/toystore/products/${productId}/stock/${quantity}`);
 

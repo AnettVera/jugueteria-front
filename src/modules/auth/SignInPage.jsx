@@ -38,7 +38,7 @@ function SignInPage() {
         localStorage.setItem('role', role);
         dispatch({ type: 'SIGNIN', payload: { roles: [{ type: role }] } });
         navigate('/', { replace: true });
-        w.location.reload();
+        window.location.reload();
       } catch (err) {
         console.error('Error al iniciar sesión:', err);
         await showAlert({

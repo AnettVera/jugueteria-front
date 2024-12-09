@@ -40,13 +40,9 @@ const AppRouter = () => {
       const roles = [{ type: role }];
       dispatch({ type: 'SIGNIN', payload: { roles } });
     }
-    // Agregar un retraso artificial de 2 segundos
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
+    setLoading(false);
   }, [dispatch]);
+  
 
   const routesFromRole = (role) => {
     switch (role) {
