@@ -99,7 +99,7 @@ const Home = () => {
   };
   const handleCloseModal = () => {
     setIsModalOpen(false); 
-    setSelectedProductId(null);// quita el id del producto seleccionado cuando se cierra el modal
+    setSelectedProductId(null);
   };
 
   const renderProducts = () => {
@@ -126,7 +126,7 @@ const Home = () => {
         image={product.images[0]}
         description={product.description}
         price={product.price}
-        onClick={() => handleBuyClick(product.id)} // Pasar el ID del producto al hacer clic en comprar
+        onClick={() => handleBuyClick(product.id)} 
       />
     ));
   };
@@ -144,9 +144,7 @@ const Home = () => {
             value={searchQuery}
             onChange={handleSearchInputChange}
           />
-          <span className="search-icon">
-            <CiSearch />
-          </span>
+ 
         </div>
         <div className="results">
           {loading ? (
@@ -165,12 +163,11 @@ const Home = () => {
         </div>
       </div>
 
-      <h2 className="text-center">{selectedProducts}</h2>
       <div className="products">
         {renderProducts()}
       </div>
 
-      {isModalOpen && <PurchaseModal onClose={handleCloseModal} productId={selectedProductId} />} {/* Pasar productId al modal */}
+      {isModalOpen && <PurchaseModal onClose={handleCloseModal} productId={selectedProductId} />} 
     </div>
   );
 };

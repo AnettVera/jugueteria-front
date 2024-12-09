@@ -1,4 +1,4 @@
-                                                                                                                          import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/Pages/LandingPage.scss";
 import { AuthContext } from "../../config/context/auth-context";
@@ -48,9 +48,9 @@ const LandingPage = () => {
           stock: product.stock,
         };
       });
-      
+
       console.log(response);
-      
+
       setProducts(formattedProducts);
       setLoading(false);
     } catch (error) {
@@ -132,7 +132,7 @@ const LandingPage = () => {
       />
     ));
   };
- 
+
   return (
     <div className="bg-background">
       <Header />
@@ -150,21 +150,23 @@ const LandingPage = () => {
             <CiSearch />
           </span>
         </div>
-        <div className="results">
-          {loading ? (
-            <BeatLoader color="#EF1A23" />
-          ) : searchResults.length > 0 ? (
-            <ul>
-              {searchResults.map((product) => (
-                <li key={product.product_id}>
-                  <Link to={`/producto/${product.product_id}`}>{product.name}</Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p style={{textAlign:'center'}}>No hay coincidencias de esta busqueda</p>
-          )}
-        </div>
+        {searchQuery && (
+          <div className="results">
+            {loading ? (
+              <BeatLoader color="#EF1A23" />
+            ) : searchResults.length > 0 ? (
+              <ul>
+                {searchResults.map((product) => (
+                  <li key={product.product_id}>
+                    <Link to={`/producto/${product.product_id}`}>{product.name}</Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p style={{ textAlign: 'center' }}>No hay coincidencias de esta búsqueda</p>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="main">
