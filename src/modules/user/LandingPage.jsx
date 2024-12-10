@@ -103,24 +103,21 @@ const LandingPage = () => {
     console.log("Redirigiendo al producto:", productId);
     navigate(`/producto/${productId}`);
   };
-  const availableProducts = products.filter((product) => product.stock > 0);
-  if (availableProducts.length === 0) {
-    return <div>No hay productos disponibles con stock mayor a 0</div>;
-  }
-
   const renderProducts = () => {
     if (loading) {
       return <BeatLoader color="#EF1A23" />;
     }
-
+  
     if (error) {
       return <div className="section-error">Error</div>;
     }
-
-    if (products.length === 0) {
+  
+    const availableProducts = products.filter((product) => product.stock > 0);
+  
+    if (availableProducts.length === 0) {
       return <div>No hay productos en esta categoría</div>;
     }
-
+  
     return availableProducts.map((product) => (
       <ProductCard
         key={product.id}
@@ -132,6 +129,7 @@ const LandingPage = () => {
       />
     ));
   };
+  
 
   return (
     <div className="bg-background">

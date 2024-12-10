@@ -44,7 +44,7 @@ function SignInPage() {
         await showAlert({
           title: 'Error de inicio de sesión',
           text: 'Verifica tus credenciales y vuelve a intentarlo.',
-          icon: 'error', // Tipo de icono de la alerta
+          icon: 'error', 
         });
       }
     },
